@@ -34,6 +34,7 @@ export interface Inscripto {
 
 export interface Turno {
   id: string
+  fecha: string
   hora: string
   duracionMin: number
   canchaNombre: string

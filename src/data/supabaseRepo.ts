@@ -20,6 +20,7 @@ import {
   estadoCuota,
   type NuevaCancha,
   type NuevoAlumno,
+  type NuevoTurno,
 } from './mock'
 
 // Implementacion real contra Supabase. Solo se usa cuando hay credenciales en
@@ -63,6 +64,7 @@ function mapTurno(row: Record<string, unknown>): Turno {
   const inscripciones = (row.inscripciones as InscripcionRow[] | null) ?? []
   return {
     id: row.id as string,
+    fecha: (row.fecha as string) ?? '',
     hora: row.hora as string,
     duracionMin: row.duracion_min as number,
     canchaNombre: row.cancha_nombre as string,
@@ -102,6 +104,45 @@ export async function getTurno(id: string): Promise<Turno | null> {
   const { data, error } = await db().from('turnos').select(SELECT_TURNO).eq('id', id).maybeSingle()
   if (error) throw error
   return data ? mapTurno(data as Record<string, unknown>) : null
+}
+
+export async function crearTurno(data: NuevoTurno): Promise<void> {
+  const { data: userData } = await db().auth.getUser()
+  const { error } = await db().from('turnos').insert({
+    profe_id: userData.user?.id ?? null,
+    fecha: data.fecha,
+    hora: data.hora,
+    duracion_min: data.duracionMin,
+    cancha_nombre: data.canchaNombre,
+    categoria: data.categoria,
+    precio: data.precio,
+    cupos: data.cupos,
+    estado: 'activo',
+    costo_cancha: data.costoCancha,
+  })
+  if (error) throw error
+}
+
+export async function actualizarTurno(id: string, data: NuevoTurno): Promise<void> {
+  const { error } = await db()
+    .from('turnos')
+    .update({
+      fecha: data.fecha,
+      hora: data.hora,
+      duracion_min: data.duracionMin,
+      cancha_nombre: data.canchaNombre,
+      categoria: data.categoria,
+      precio: data.precio,
+      cupos: data.cupos,
+      costo_cancha: data.costoCancha,
+    })
+    .eq('id', id)
+  if (error) throw error
+}
+
+export async function eliminarTurno(id: string): Promise<void> {
+  const { error } = await db().from('turnos').delete().eq('id', id)
+  if (error) throw error
 }
 
 export async function marcarAsistencia(turnoId: string, alumnoId: string, asistio: boolean): Promise<void> {

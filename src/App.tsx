@@ -8,6 +8,7 @@ import { AlumnosScreen } from './screens/AlumnosScreen'
 import { BalanceScreen } from './screens/BalanceScreen'
 import { AboutScreen } from './screens/AboutScreen'
 import { TurnoDetalleScreen } from './screens/TurnoDetalleScreen'
+import { TurnoFormScreen } from './screens/TurnoFormScreen'
 import { CobranzaDetalleScreen } from './screens/CobranzaDetalleScreen'
 import { AlumnoNuevoScreen } from './screens/AlumnoNuevoScreen'
 import { CanchasScreen } from './screens/CanchasScreen'
@@ -20,7 +21,9 @@ function AppRoutes() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<HoyScreen />} />
+        <Route path="turno/nuevo" element={<TurnoFormScreen />} />
         <Route path="turno/:id" element={<TurnoDetalleScreen />} />
+        <Route path="turno/:id/editar" element={<TurnoFormScreen />} />
         <Route path="cobranzas" element={<CobranzasScreen />} />
         <Route path="cobranza/:id" element={<CobranzaDetalleScreen />} />
         <Route path="alumnos" element={<AlumnosScreen />} />

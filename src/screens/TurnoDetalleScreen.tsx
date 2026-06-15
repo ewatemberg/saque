@@ -5,6 +5,7 @@ import {
   anotarAlumno,
   cambiarEstadoTurno,
   darDeBaja,
+  eliminarTurno,
   getAlumnos,
   getTurno,
   marcarAsistencia,
@@ -59,15 +60,24 @@ export function TurnoDetalleScreen() {
             </div>
           </div>
         </div>
-        {suspendido ? (
-          <button className="btn btn-sm" onClick={() => accion(() => cambiarEstadoTurno(turno.id, 'activo'))}>
-            Reactivar
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            className="btn btn-sm"
+            aria-label="Editar turno"
+            onClick={() => navigate(`/turno/${turno.id}/editar`)}
+          >
+            <Icon name="edit" size={16} />
           </button>
-        ) : (
-          <button className="btn btn-sm" onClick={() => accion(() => cambiarEstadoTurno(turno.id, 'suspendido'))}>
-            Suspender
-          </button>
-        )}
+          {suspendido ? (
+            <button className="btn btn-sm" onClick={() => accion(() => cambiarEstadoTurno(turno.id, 'activo'))}>
+              Reactivar
+            </button>
+          ) : (
+            <button className="btn btn-sm" onClick={() => accion(() => cambiarEstadoTurno(turno.id, 'suspendido'))}>
+              Suspender
+            </button>
+          )}
+        </div>
       </div>
 
       {suspendido && (
@@ -180,6 +190,18 @@ export function TurnoDetalleScreen() {
           ))}
         </>
       )}
+
+      <button
+        className="btn btn-block"
+        style={{ marginTop: 24, color: 'var(--danger)' }}
+        onClick={() => {
+          if (confirm('¿Eliminar este turno? También se borran sus inscripciones.')) {
+            eliminarTurno(turno.id).then(() => navigate(-1))
+          }
+        }}
+      >
+        <Icon name="trash" size={16} /> Eliminar turno
+      </button>
     </>
   )
 }

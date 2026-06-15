@@ -27,16 +27,29 @@ export interface NuevaCancha {
   costoPorHora: number
 }
 
+export interface NuevoTurno {
+  fecha: string
+  hora: string
+  duracionMin: number
+  canchaNombre: string
+  categoria: Categoria
+  precio: number
+  cupos: number
+  costoCancha: number
+}
+
 // Implementacion con datos de ejemplo. Se usa cuando no hay credenciales de
 // Supabase configuradas (ver src/data/repo.ts). Las mutaciones modifican los
 // arreglos en memoria (se pierden al recargar; es solo para desarrollo).
 
 const COSTO_CANCHA = 12000
 const PRECIO_TURNO = 6000
+const HOY = new Date().toISOString().slice(0, 10)
 
 const turnos: Turno[] = [
   {
     id: 't1',
+    fecha: HOY,
     hora: '18:00',
     duracionMin: 60,
     canchaNombre: 'Cancha 1',
@@ -54,6 +67,7 @@ const turnos: Turno[] = [
   },
   {
     id: 't2',
+    fecha: HOY,
     hora: '19:00',
     duracionMin: 60,
     canchaNombre: 'Cancha 1',
@@ -70,6 +84,7 @@ const turnos: Turno[] = [
   },
   {
     id: 't3',
+    fecha: HOY,
     hora: '20:00',
     duracionMin: 60,
     canchaNombre: 'Cancha 2',
@@ -82,6 +97,7 @@ const turnos: Turno[] = [
   },
   {
     id: 't4',
+    fecha: HOY,
     hora: '21:00',
     duracionMin: 60,
     canchaNombre: 'Cancha 2',
@@ -159,6 +175,21 @@ export async function getResumenHoy() {
 export async function getTurno(id: string): Promise<Turno | null> {
   const t = turnos.find((x) => x.id === id)
   return t ? clonar(t) : null
+}
+
+export async function crearTurno(data: NuevoTurno): Promise<void> {
+  const id = `t_${turnos.length + 1}_${Math.random().toString(36).slice(2, 7)}`
+  turnos.push({ id, ...data, inscriptos: [], estado: 'activo' })
+}
+
+export async function actualizarTurno(id: string, data: NuevoTurno): Promise<void> {
+  const t = turnos.find((x) => x.id === id)
+  if (t) Object.assign(t, data)
+}
+
+export async function eliminarTurno(id: string): Promise<void> {
+  const i = turnos.findIndex((x) => x.id === id)
+  if (i >= 0) turnos.splice(i, 1)
 }
 
 export async function marcarAsistencia(turnoId: string, alumnoId: string, asistio: boolean): Promise<void> {

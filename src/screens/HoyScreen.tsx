@@ -8,6 +8,7 @@ import { abrirWhatsApp } from '../lib/whatsapp'
 import type { Turno } from '../types'
 
 export function HoyScreen() {
+  const navigate = useNavigate()
   const turnos = useData(getTurnosHoy)
   const resumen = useData(getResumenHoy)
 
@@ -19,6 +20,9 @@ export function HoyScreen() {
           <div className="sub">jueves 15 jun · Profe Emilio</div>
         </div>
         <div className="header-actions">
+          <button className="icon-btn" aria-label="Nuevo turno" onClick={() => navigate('/turno/nuevo')}>
+            <Icon name="plus" />
+          </button>
           <Icon name="bell" label="Notificaciones" />
           <button className="icon-btn" aria-label="Cerrar sesión" onClick={() => signOut()}>
             <Icon name="user" />

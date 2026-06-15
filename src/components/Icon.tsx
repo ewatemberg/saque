@@ -15,6 +15,7 @@ export type IconName =
   | 'plus'
   | 'trash'
   | 'check'
+  | 'edit'
 
 const paths: Record<IconName, ReactNode> = {
   calendar: (
@@ -76,6 +77,7 @@ const paths: Record<IconName, ReactNode> = {
   plus: <path d="M12 5v14M5 12h14" />,
   trash: <path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13" />,
   check: <path d="M5 12l5 5L20 7" />,
+  edit: <path d="M4 20h4L18 10l-4-4L4 16zM13 7l4 4" />,
 }
 
 interface Props {
