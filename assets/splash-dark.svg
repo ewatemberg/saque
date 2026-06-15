@@ -1,0 +1,7 @@
+<svg width="2732" height="2732" viewBox="0 0 2732 2732" xmlns="http://www.w3.org/2000/svg">
+  <rect width="2732" height="2732" fill="#141310" />
+  <circle cx="1366" cy="1280" r="260" fill="none" stroke="#5dcaa5" stroke-width="50" />
+  <path d="M1210 1195 Q1366 1310 1522 1195" fill="none" stroke="#5dcaa5" stroke-width="50" stroke-linecap="round" />
+  <path d="M1210 1395 Q1366 1510 1522 1395" fill="none" stroke="#5dcaa5" stroke-width="50" stroke-linecap="round" />
+  <text x="1366" y="1700" text-anchor="middle" font-family="Segoe UI, Roboto, sans-serif" font-size="180" font-weight="500" fill="#f3f1ea">Saque</text>
+</svg>

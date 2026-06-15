@@ -26,6 +26,8 @@
 - [x] Términos y Política de Privacidad (pantallas públicas + aceptación en el login)
 - [x] Generar los abonos del mes con un botón (cuota mensual por alumno fijo)
 - [x] Franjas recurrentes (plantilla con roster + generar turnos del mes con manejo de choques)
+- [x] Setup de build Android (Capacitor como WebView del sitio + íconos)
+- [ ] Login con Google (código listo; falta activar el provider en Supabase)
 - [ ] Importar contacto en iOS y en la app nativa (plugin de Capacitor)
 - [ ] Deploy de la web (Vercel/Netlify) para probar desde el celular
 - [ ] ABM de canchas, franjas, turnos y alumnos
