@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
 import { signInEmail, signInGoogle } from '../lib/auth'
@@ -9,10 +10,11 @@ export function LoginScreen() {
   const [enviado, setEnviado] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(false)
+  const [acepto, setAcepto] = useState(false)
 
   const enviarLink = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!email || !acepto) return
     setCargando(true)
     setError(null)
     try {
@@ -42,6 +44,14 @@ export function LoginScreen() {
           </p>
         ) : (
           <>
+            <label className="login-acepto">
+              <input type="checkbox" checked={acepto} onChange={(e) => setAcepto(e.target.checked)} />
+              <span>
+                Acepto los <Link to="/terminos">Términos y Condiciones</Link> y la{' '}
+                <Link to="/privacidad">Política de Privacidad</Link>.
+              </span>
+            </label>
+
             <form onSubmit={enviarLink}>
               <input
                 type="email"
@@ -50,17 +60,22 @@ export function LoginScreen() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <button className="btn btn-accent btn-block" type="submit" disabled={cargando}>
+              <button className="btn btn-accent btn-block" type="submit" disabled={cargando || !acepto}>
                 {cargando ? 'Enviando…' : 'Entrar con email'}
               </button>
             </form>
 
             <div className="login-divider">o</div>
 
-            <button className="btn btn-block" onClick={signInGoogle}>
+            <button className="btn btn-block" onClick={() => acepto && signInGoogle()} disabled={!acepto}>
               <Icon name="user" size={16} /> Entrar con Google
             </button>
 
+            {!acepto && (
+              <p style={{ fontSize: 11.5, color: 'var(--text-3)', marginTop: 10 }}>
+                Aceptá los términos para continuar.
+              </p>
+            )}
             {error && <p className="login-error">{error}</p>}
           </>
         )}

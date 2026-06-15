@@ -21,6 +21,7 @@
 - [x] El profe elige su deporte (pádel/tenis) al entrar; las canchas se filtran por deporte
 - [x] ABM de canchas (compartidas entre profes: dirección, contacto, costo de referencia)
 - [x] ABM de turnos: crear (con selector de cancha), editar y eliminar desde la app
+- [x] Términos y Política de Privacidad (pantallas públicas + aceptación en el login)
 - [ ] Generar los abonos del mes con un botón
 - [ ] Franjas recurrentes (generar turnos de toda la semana de una vez)
 - [ ] Importar contacto en iOS y en la app nativa (plugin de Capacitor)
