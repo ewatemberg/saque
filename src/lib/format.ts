@@ -29,6 +29,15 @@ export function nombreMetodo(metodo?: string): string {
   return metodos[metodo] ?? metodo
 }
 
+/** Normaliza texto para buscar/comparar: minúsculas, sin acentos ni símbolos. */
+export function normalizar(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^a-z0-9]/g, '')
+}
+
 /** Iniciales a partir del nombre: "Juan Díaz" -> "JD". */
 export function iniciales(nombre: string): string {
   const palabras = nombre.trim().split(/\s+/).filter(Boolean)

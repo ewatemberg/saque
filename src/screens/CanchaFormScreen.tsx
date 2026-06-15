@@ -1,22 +1,38 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { actualizarCancha, crearCancha, getCancha } from '../data/repo'
+import { actualizarCancha, crearCancha, getCancha, getCanchas } from '../data/repo'
 import { deporteDeSesion, useSession } from '../lib/auth'
+import { normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
+import type { Cancha } from '../types'
+
+function pareceMismo(a: string, b: string): boolean {
+  const na = normalizar(a)
+  const nb = normalizar(b)
+  if (na.length < 4 || nb.length < 4) return na === nb
+  return na === nb || na.includes(nb) || nb.includes(na)
+}
 
 export function CanchaFormScreen() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { session } = useSession()
+  const deporte = deporteDeSesion(session) ?? undefined
   const editando = Boolean(id)
 
   const [nombre, setNombre] = useState('')
   const [direccion, setDireccion] = useState('')
   const [contacto, setContacto] = useState('')
   const [costo, setCosto] = useState('')
+  const [existentes, setExistentes] = useState<Cancha[]>([])
   const [cargando, setCargando] = useState(editando)
   const [guardando, setGuardando] = useState(false)
+
+  useEffect(() => {
+    if (!id) getCanchas(deporte).then(setExistentes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   useEffect(() => {
     if (!id) return
@@ -33,8 +49,17 @@ export function CanchaFormScreen() {
 
   if (cargando) return <div className="empty">Cargando…</div>
 
+  const posiblesDuplicados =
+    !id && nombre.trim().length >= 3 ? existentes.filter((c) => pareceMismo(c.nombre, nombre)) : []
+
   const guardar = async () => {
     if (!nombre.trim()) return
+    if (
+      posiblesDuplicados.length > 0 &&
+      !window.confirm('Puede que esta cancha ya exista (mirá el aviso de arriba). ¿Crearla igual?')
+    ) {
+      return
+    }
     setGuardando(true)
     const data = {
       nombre: nombre.trim(),
@@ -73,6 +98,31 @@ export function CanchaFormScreen() {
           onChange={(e) => setNombre(e.target.value)}
           placeholder="Ej: Club Norte - Cancha 1"
         />
+
+        {posiblesDuplicados.length > 0 && (
+          <div
+            style={{
+              background: 'var(--warning-bg)',
+              border: '0.5px solid var(--warning)',
+              borderRadius: 'var(--radius)',
+              padding: '10px 12px',
+              margin: '8px 0 4px',
+            }}
+          >
+            <div style={{ fontSize: 12.5, color: 'var(--warning)', fontWeight: 500, marginBottom: 6 }}>
+              <Icon name="alert" size={14} /> ¿No será una de estas que ya existe?
+            </div>
+            {posiblesDuplicados.map((c) => (
+              <div
+                key={c.id}
+                onClick={() => navigate(`/cancha/${c.id}`)}
+                style={{ cursor: 'pointer', fontSize: 13, padding: '4px 0', color: 'var(--text)' }}
+              >
+                • {c.nombre} <span className="card-meta">— usar esta</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         <label className="field-label" htmlFor="dir">Dirección</label>
         <input

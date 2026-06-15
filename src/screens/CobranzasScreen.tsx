@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas } from '../data/repo'
+import { descargarCSV } from '../lib/csv'
 import { formatCompacto, formatPesos, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp } from '../lib/whatsapp'
@@ -85,9 +86,25 @@ export function CobranzasScreen() {
         </button>
       )}
 
-      <button className="btn btn-block" style={{ marginBottom: 14 }} onClick={generar}>
+      <button className="btn btn-block" style={{ marginBottom: 10 }} onClick={generar}>
         <Icon name="plus" size={16} /> Generar cuotas del mes
       </button>
+
+      {items.length > 0 && (
+        <button
+          className="btn btn-block"
+          style={{ marginBottom: 14 }}
+          onClick={() =>
+            descargarCSV(
+              'cobranzas-saque.csv',
+              ['Alumno', 'Detalle', 'Estado', 'Esperado', 'Pagado', 'Método'],
+              items.map((i) => [i.nombre, i.detalle, i.estado, i.montoEsperado, i.montoPagado, i.metodo ?? '']),
+            )
+          }
+        >
+          <Icon name="download" size={16} /> Exportar a CSV
+        </button>
+      )}
 
       {items.length === 0 && (
         <div className="empty">
