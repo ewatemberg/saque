@@ -20,6 +20,10 @@ export function AlumnosScreen() {
         </button>
       </div>
 
+      {alumnos && alumnos.length === 0 && (
+        <div className="empty">Todavía no cargaste alumnos. Tocá "Nuevo" para agregar el primero.</div>
+      )}
+
       {alumnos?.map((a) => (
         <div className="row clickable" key={a.id} onClick={() => navigate(`/alumno/${a.id}`)}>
           <span className={`avatar ${a.tipo === 'ocasional' ? 'neutral' : ''}`}>{a.iniciales}</span>

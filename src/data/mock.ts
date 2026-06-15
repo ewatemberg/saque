@@ -336,6 +336,11 @@ export async function getBalance(): Promise<ResumenBalance> {
   return balanceMes
 }
 
+export async function getConteos(deporte?: Deporte): Promise<{ canchas: number; alumnos: number; franjas: number }> {
+  const c = deporte ? canchas.filter((x) => x.deporte === deporte).length : canchas.length
+  return { canchas: c, alumnos: alumnos.length, franjas: franjas.length }
+}
+
 export async function getCanchas(deporte?: Deporte): Promise<Cancha[]> {
   const lista = deporte ? canchas.filter((c) => c.deporte === deporte) : canchas
   return lista.map((c) => ({ ...c }))

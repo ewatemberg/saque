@@ -228,6 +228,19 @@ export async function getCobranzas(): Promise<{ resumen: ResumenMes; items: Item
   return { resumen: calcularResumenMes(items), items }
 }
 
+export async function getConteos(
+  deporte?: Deporte,
+): Promise<{ canchas: number; alumnos: number; franjas: number }> {
+  let cq = db().from('canchas').select('id', { count: 'exact', head: true })
+  if (deporte) cq = cq.eq('deporte', deporte)
+  const [c, a, f] = await Promise.all([
+    cq,
+    db().from('alumnos').select('id', { count: 'exact', head: true }),
+    db().from('franjas').select('id', { count: 'exact', head: true }),
+  ])
+  return { canchas: c.count ?? 0, alumnos: a.count ?? 0, franjas: f.count ?? 0 }
+}
+
 export async function getCanchas(deporte?: Deporte): Promise<Cancha[]> {
   let q = db().from('canchas').select('*').order('nombre')
   if (deporte) q = q.eq('deporte', deporte)

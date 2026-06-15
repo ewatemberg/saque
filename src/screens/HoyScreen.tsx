@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { getResumenHoy, getTurnosHoy } from '../data/repo'
-import { signOut } from '../lib/auth'
+import { Onboarding } from '../components/Onboarding'
+import { getConteos, getResumenHoy, getTurnosHoy } from '../data/repo'
+import { deporteDeSesion, signOut, useSession } from '../lib/auth'
 import { formatCompacto } from '../lib/format'
 import { useData } from '../lib/useData'
 import { abrirWhatsApp } from '../lib/whatsapp'
@@ -9,8 +10,11 @@ import type { Turno } from '../types'
 
 export function HoyScreen() {
   const navigate = useNavigate()
+  const { session } = useSession()
+  const deporte = deporteDeSesion(session) ?? undefined
   const turnos = useData(getTurnosHoy)
   const resumen = useData(getResumenHoy)
+  const conteos = useData(() => getConteos(deporte))
 
   return (
     <>
@@ -41,6 +45,24 @@ export function HoyScreen() {
       {turnos?.map((t) => (
         <TurnoCard key={t.id} turno={t} />
       ))}
+
+      {turnos && turnos.length === 0 && conteos && (
+        conteos.canchas === 0 || conteos.alumnos === 0 || conteos.franjas === 0 ? (
+          <Onboarding conteos={conteos} />
+        ) : (
+          <div className="card" style={{ textAlign: 'center', padding: '20px 14px' }}>
+            <div style={{ fontSize: 14, color: 'var(--text-2)' }}>No tenés turnos hoy.</div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 12, justifyContent: 'center' }}>
+              <button className="btn btn-sm" onClick={() => navigate('/turno/nuevo')}>
+                <Icon name="plus" size={16} /> Nuevo turno
+              </button>
+              <button className="btn btn-sm" onClick={() => navigate('/semana')}>
+                <Icon name="calendar" size={16} /> Ver semana
+              </button>
+            </div>
+          </div>
+        )
+      )}
     </>
   )
 }

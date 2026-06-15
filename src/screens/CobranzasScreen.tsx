@@ -83,6 +83,12 @@ export function CobranzasScreen() {
         <Icon name="plus" size={16} /> Generar cuotas del mes
       </button>
 
+      {items.length === 0 && (
+        <div className="empty">
+          No hay cuotas este mes todavía. Tocá "Generar cuotas del mes" para crear las de tus alumnos fijos.
+        </div>
+      )}
+
       {items.map((item) => (
         <CobranzaRow key={item.alumnoId} item={item} />
       ))}
