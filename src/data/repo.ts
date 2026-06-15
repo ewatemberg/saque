@@ -10,6 +10,7 @@ const impl = usandoMock ? mock : remoto
 export const getTurnosHoy = impl.getTurnosHoy
 export const getResumenHoy = impl.getResumenHoy
 export const getTurno = impl.getTurno
+export const getTurnosRango = impl.getTurnosRango
 export const crearTurno = impl.crearTurno
 export const actualizarTurno = impl.actualizarTurno
 export const eliminarTurno = impl.eliminarTurno

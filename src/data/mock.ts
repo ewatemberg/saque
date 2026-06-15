@@ -202,6 +202,13 @@ export async function getTurno(id: string): Promise<Turno | null> {
   return t ? clonar(t) : null
 }
 
+export async function getTurnosRango(desde: string, hasta: string): Promise<Turno[]> {
+  return turnos
+    .filter((t) => t.fecha >= desde && t.fecha <= hasta)
+    .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora))
+    .map(clonar)
+}
+
 export async function crearTurno(data: NuevoTurno): Promise<void> {
   const id = `t_${turnos.length + 1}_${Math.random().toString(36).slice(2, 7)}`
   turnos.push({ id, ...data, inscriptos: [], estado: 'activo' })

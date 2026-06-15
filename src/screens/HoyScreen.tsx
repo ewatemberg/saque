@@ -20,10 +20,12 @@ export function HoyScreen() {
           <div className="sub">jueves 15 jun · Profe Emilio</div>
         </div>
         <div className="header-actions">
+          <button className="icon-btn" aria-label="Ver semana" onClick={() => navigate('/semana')}>
+            <Icon name="calendar" />
+          </button>
           <button className="icon-btn" aria-label="Nuevo turno" onClick={() => navigate('/turno/nuevo')}>
             <Icon name="plus" />
           </button>
-          <Icon name="bell" label="Notificaciones" />
           <button className="icon-btn" aria-label="Cerrar sesión" onClick={() => signOut()}>
             <Icon name="user" />
           </button>

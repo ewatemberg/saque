@@ -3,6 +3,7 @@ import { AppLayout } from './components/AppLayout'
 import { deporteDeSesion, useSession } from './lib/auth'
 import { usandoMock } from './lib/supabase'
 import { HoyScreen } from './screens/HoyScreen'
+import { SemanaScreen } from './screens/SemanaScreen'
 import { TurnoDetalleScreen } from './screens/TurnoDetalleScreen'
 import { TurnoFormScreen } from './screens/TurnoFormScreen'
 import { CobranzasScreen } from './screens/CobranzasScreen'
@@ -42,6 +43,7 @@ export default function App() {
         {/* App (requiere login) */}
         <Route element={<RequireAuth />}>
           <Route index element={<HoyScreen />} />
+          <Route path="semana" element={<SemanaScreen />} />
           <Route path="turno/nuevo" element={<TurnoFormScreen />} />
           <Route path="turno/:id" element={<TurnoDetalleScreen />} />
           <Route path="turno/:id/editar" element={<TurnoFormScreen />} />

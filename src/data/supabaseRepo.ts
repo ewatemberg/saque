@@ -104,6 +104,18 @@ export async function getResumenHoy() {
   return calcularResumenHoy(turnos)
 }
 
+export async function getTurnosRango(desde: string, hasta: string): Promise<Turno[]> {
+  const { data, error } = await db()
+    .from('turnos')
+    .select(SELECT_TURNO)
+    .gte('fecha', desde)
+    .lte('fecha', hasta)
+    .order('fecha')
+    .order('hora')
+  if (error) throw error
+  return (data ?? []).map((r) => mapTurno(r as Record<string, unknown>))
+}
+
 export async function getTurno(id: string): Promise<Turno | null> {
   const { data, error } = await db().from('turnos').select(SELECT_TURNO).eq('id', id).maybeSingle()
   if (error) throw error
