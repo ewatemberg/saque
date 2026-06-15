@@ -10,6 +10,7 @@ import {
   getTurno,
   marcarAsistencia,
 } from '../data/repo'
+import { toast } from '../lib/toast'
 import { abrirWhatsApp } from '../lib/whatsapp'
 import type { Alumno, Turno } from '../types'
 
@@ -42,8 +43,12 @@ export function TurnoDetalleScreen() {
   const disponibles = alumnos.filter((a) => !turno.inscriptos.some((i) => i.alumnoId === a.id))
 
   const accion = async (fn: () => Promise<void>) => {
-    await fn()
-    await reload()
+    try {
+      await fn()
+      await reload()
+    } catch {
+      toast('No se pudo completar la acción. Intentá de nuevo.', 'error')
+    }
   }
 
   return (
@@ -196,7 +201,9 @@ export function TurnoDetalleScreen() {
         style={{ marginTop: 24, color: 'var(--danger)' }}
         onClick={() => {
           if (confirm('¿Eliminar este turno? También se borran sus inscripciones.')) {
-            eliminarTurno(turno.id).then(() => navigate(-1))
+            eliminarTurno(turno.id)
+              .then(() => navigate(-1))
+              .catch(() => toast('No se pudo eliminar. Intentá de nuevo.', 'error'))
           }
         }}
       >

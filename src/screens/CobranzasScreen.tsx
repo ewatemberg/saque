@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas } from '../data/repo'
 import { formatCompacto, formatPesos, nombreMetodo } from '../lib/format'
+import { toast } from '../lib/toast'
 import { abrirWhatsApp } from '../lib/whatsapp'
 import type { ItemCobranza, ResumenMes } from '../types'
 
@@ -18,11 +19,16 @@ export function CobranzasScreen() {
   const generar = async () => {
     const input = window.prompt('Cuota mensual por defecto, para alumnos fijos sin monto propio (en $):', '25000')
     if (input === null) return
-    const creadas = await generarAbonosDelMes(Number(input) || 0)
-    await reload()
-    window.alert(
-      creadas > 0 ? `Se generaron ${creadas} cuota(s) del mes.` : 'No había cuotas nuevas para generar.',
-    )
+    try {
+      const creadas = await generarAbonosDelMes(Number(input) || 0)
+      await reload()
+      toast(
+        creadas > 0 ? `Se generaron ${creadas} cuota(s) del mes.` : 'No había cuotas nuevas para generar.',
+        creadas > 0 ? 'success' : 'info',
+      )
+    } catch {
+      toast('No se pudieron generar las cuotas. Intentá de nuevo.', 'error')
+    }
   }
 
   if (!data) {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { generarTurnosDelMes, getFranjas, proximoMes } from '../data/repo'
 import { formatPesos } from '../lib/format'
+import { toast } from '../lib/toast'
 import type { Franja } from '../types'
 
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
@@ -23,14 +24,21 @@ export function FranjasScreen() {
     if (!window.confirm(`Se van a generar los turnos de ${prox.etiqueta} a partir de tus franjas. ¿Continuar?`)) {
       return
     }
-    let r = await generarTurnosDelMes(false)
-    if (r.conflictos > 0) {
-      const ow = window.confirm(
-        `${r.conflictos} turno(s) ya existían en esas fechas y se saltearon. ¿Querés sobrescribirlos también?`,
+    try {
+      let r = await generarTurnosDelMes(false)
+      if (r.conflictos > 0) {
+        const ow = window.confirm(
+          `${r.conflictos} turno(s) ya existían en esas fechas y se saltearon. ¿Querés sobrescribirlos también?`,
+        )
+        if (ow) r = await generarTurnosDelMes(true)
+      }
+      toast(
+        r.creados > 0 ? `Listo: ${r.creados} turno(s) de ${prox.etiqueta}.` : 'No se generaron turnos nuevos.',
+        r.creados > 0 ? 'success' : 'info',
       )
-      if (ow) r = await generarTurnosDelMes(true)
+    } catch {
+      toast('No se pudieron generar los turnos. Intentá de nuevo.', 'error')
     }
-    window.alert(r.creados > 0 ? `Listo: ${r.creados} turno(s) de ${prox.etiqueta}.` : 'No se generaron turnos nuevos.')
   }
 
   return (

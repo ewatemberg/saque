@@ -10,6 +10,7 @@ import {
   getFranja,
 } from '../data/repo'
 import { deporteDeSesion, useSession } from '../lib/auth'
+import { toast } from '../lib/toast'
 import type { Alumno, Cancha, Categoria } from '../types'
 
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
@@ -107,9 +108,11 @@ export function FranjaFormScreen() {
     try {
       if (id) await actualizarFranja(id, data)
       else await crearFranja(data)
+      toast('Franja guardada', 'success')
       navigate(-1)
     } catch {
       setGuardando(false)
+      toast('No se pudo guardar. Revisá tu conexión e intentá de nuevo.', 'error')
     }
   }
 

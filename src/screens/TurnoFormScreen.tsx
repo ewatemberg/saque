@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { actualizarTurno, crearTurno, getCanchas, getTurno } from '../data/repo'
 import { deporteDeSesion, useSession } from '../lib/auth'
+import { toast } from '../lib/toast'
 import type { Cancha, Categoria } from '../types'
 
 const CATEGORIAS: Categoria[] = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma']
@@ -95,9 +96,11 @@ export function TurnoFormScreen() {
     try {
       if (id) await actualizarTurno(id, data)
       else await crearTurno(data)
+      toast('Turno guardado', 'success')
       navigate(-1)
     } catch {
       setGuardando(false)
+      toast('No se pudo guardar. Revisá tu conexión e intentá de nuevo.', 'error')
     }
   }
 

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { getCuota, registrarPago } from '../data/repo'
 import { formatPesos, nombreMetodo } from '../lib/format'
+import { toast } from '../lib/toast'
 import type { ItemCobranza, MetodoPago } from '../types'
 
 const METODOS: MetodoPago[] = ['mercadopago', 'transferencia', 'efectivo']
@@ -34,8 +35,14 @@ export function CobranzaDetalleScreen() {
     const valor = Number(monto)
     if (!valor || valor <= 0) return
     setGuardando(true)
-    await registrarPago(cuota.id, valor, metodo)
-    navigate(-1)
+    try {
+      await registrarPago(cuota.id, valor, metodo)
+      toast('Pago registrado', 'success')
+      navigate(-1)
+    } catch {
+      setGuardando(false)
+      toast('No se pudo registrar el pago. Intentá de nuevo.', 'error')
+    }
   }
 
   return (

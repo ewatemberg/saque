@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { actualizarCancha, crearCancha, getCancha } from '../data/repo'
 import { deporteDeSesion, useSession } from '../lib/auth'
+import { toast } from '../lib/toast'
 
 export function CanchaFormScreen() {
   const { id } = useParams()
@@ -44,9 +45,11 @@ export function CanchaFormScreen() {
     try {
       if (id) await actualizarCancha(id, data)
       else await crearCancha(data, deporteDeSesion(session) ?? 'padel')
+      toast('Cancha guardada', 'success')
       navigate(-1)
     } catch {
       setGuardando(false)
+      toast('No se pudo guardar. Revisá tu conexión e intentá de nuevo.', 'error')
     }
   }
 

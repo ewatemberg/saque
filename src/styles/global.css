@@ -377,6 +377,41 @@ a {
   display: inline-flex;
 }
 
+/* ---------- Toasts ---------- */
+.toast-host {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  max-width: 440px;
+  padding: 11px 16px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+.toast-error {
+  background: var(--danger);
+}
+.toast-success {
+  background: var(--accent);
+}
+.toast-info {
+  background: var(--text);
+  color: var(--bg);
+}
+
 .app-footer {
   display: flex;
   align-items: center;

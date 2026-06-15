@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { actualizarAlumno, crearAlumno, eliminarAlumno, getAlumno } from '../data/repo'
+import { toast } from '../lib/toast'
 import type { Categoria, TipoAlumno } from '../types'
 
 const CATEGORIAS: Categoria[] = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma']
@@ -64,9 +65,11 @@ export function AlumnoFormScreen() {
     try {
       if (id) await actualizarAlumno(id, data)
       else await crearAlumno(data)
+      toast('Alumno guardado', 'success')
       navigate(-1)
     } catch {
       setGuardando(false)
+      toast('No se pudo guardar. Revisá tu conexión e intentá de nuevo.', 'error')
     }
   }
 

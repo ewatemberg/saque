@@ -1,5 +1,6 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
+import { ToastHost } from './components/ToastHost'
 import { deporteDeSesion, useSession } from './lib/auth'
 import { usandoMock } from './lib/supabase'
 import { HoyScreen } from './screens/HoyScreen'
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="acerca" element={<AboutScreen />} />
         </Route>
       </Routes>
+      <ToastHost />
     </HashRouter>
   )
 }
