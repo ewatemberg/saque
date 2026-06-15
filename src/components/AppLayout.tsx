@@ -43,6 +43,7 @@ export function AppLayout() {
           <span style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <NavLink to="/franjas">Franjas</NavLink>
             <NavLink to="/canchas">Canchas</NavLink>
+            <NavLink to="/apariencia">Apariencia</NavLink>
             <NavLink to="/acerca">Acerca de</NavLink>
             <NavLink to="/terminos">Términos</NavLink>
           </span>

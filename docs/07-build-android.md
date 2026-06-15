@@ -18,18 +18,24 @@ y todo funcionan igual que en la web, y la app se actualiza sola al publicar.
 # 1. Instalar dependencias (incluye Capacitor y el generador de íconos)
 npm install
 
-# 2. Generar los íconos y splash desde assets/ (icon-only.svg, etc.)
-npm run icons
+# 2. Build de la web (Capacitor necesita la carpeta dist)
+npm run build
 
-# 3. Crear el proyecto Android nativo (solo la primera vez)
+# 3. Crear el proyecto Android nativo (solo la primera vez) → crea la carpeta android/
 npm run android:add
 
-# 4. Sincronizar configuración y assets al proyecto nativo
+# 4. Generar los íconos y splash desde assets/ (requiere que android/ ya exista)
+npm run icons
+
+# 5. Sincronizar configuración y assets al proyecto nativo
 npm run android:sync
 
-# 5. Abrir en Android Studio
+# 6. Abrir en Android Studio
 npm run android:open
 ```
+
+> El orden importa: `android:add` debe correr **antes** que `icons`, porque el
+> generador de íconos escribe dentro de la carpeta `android/`.
 
 En Android Studio:
 - **Run ▶** con un emulador o un celular conectado (modo desarrollador + depuración USB) para probarla.
