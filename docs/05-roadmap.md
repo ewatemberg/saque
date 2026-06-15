@@ -21,6 +21,7 @@
 - [x] Editar y eliminar alumno
 - [x] Vista de calendario semanal (con navegación entre semanas)
 - [x] Apariencia: modo claro/oscuro/auto y color de acento (guardado en el dispositivo)
+- [x] PWA: manifest + íconos para instalar con "Agregar a inicio" (standalone, ícono propio)
 - [x] El profe elige su deporte (pádel/tenis) al entrar; las canchas se filtran por deporte
 - [x] ABM de canchas (compartidas entre profes: dirección, contacto, costo de referencia)
 - [x] ABM de turnos: crear (con selector de cancha), editar y eliminar desde la app
