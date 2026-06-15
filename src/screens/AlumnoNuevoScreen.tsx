@@ -17,6 +17,7 @@ export function AlumnoNuevoScreen() {
   const [telefono, setTelefono] = useState('')
   const [categoria, setCategoria] = useState<Categoria>('5ta')
   const [tipo, setTipo] = useState<TipoAlumno>('fijo')
+  const [montoAbono, setMontoAbono] = useState('')
   const [guardando, setGuardando] = useState(false)
 
   const importarContacto = async () => {
@@ -36,7 +37,13 @@ export function AlumnoNuevoScreen() {
     if (!nombre.trim()) return
     setGuardando(true)
     try {
-      await crearAlumno({ nombre: nombre.trim(), telefono: telefono.trim(), categoria, tipo })
+      await crearAlumno({
+        nombre: nombre.trim(),
+        telefono: telefono.trim(),
+        categoria,
+        tipo,
+        montoAbono: Number(montoAbono) || 0,
+      })
       navigate(-1)
     } catch {
       setGuardando(false)
@@ -112,7 +119,22 @@ export function AlumnoNuevoScreen() {
           </button>
         </div>
 
-        <button className="btn btn-accent btn-block" onClick={guardar} disabled={guardando || !nombre.trim()}>
+        {tipo === 'fijo' && (
+          <>
+            <label className="field-label" htmlFor="abono">Cuota mensual (abono)</label>
+            <input
+              id="abono"
+              className="input"
+              type="number"
+              inputMode="numeric"
+              value={montoAbono}
+              onChange={(e) => setMontoAbono(e.target.value)}
+              placeholder="25000"
+            />
+          </>
+        )}
+
+        <button className="btn btn-accent btn-block" style={{ marginTop: 16 }} onClick={guardar} disabled={guardando || !nombre.trim()}>
           <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Guardar alumno'}
         </button>
       </div>

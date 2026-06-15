@@ -18,6 +18,7 @@ export interface NuevoAlumno {
   telefono: string
   categoria: Categoria
   tipo: TipoAlumno
+  montoAbono: number
 }
 
 export interface NuevaCancha {
@@ -128,12 +129,12 @@ const canchas: Cancha[] = [
 ]
 
 const alumnos: Alumno[] = [
-  { id: 'a1', nombre: 'Juan Díaz', iniciales: 'JD', categoria: '4ta', telefono: '+5491100000001', tipo: 'fijo' },
-  { id: 'a2', nombre: 'María Ruiz', iniciales: 'MR', categoria: '5ta', telefono: '+5491100000002', tipo: 'fijo' },
-  { id: 'a3', nombre: 'Pedro López', iniciales: 'PL', categoria: '4ta', telefono: '+5491100000003', tipo: 'fijo' },
-  { id: 'a4', nombre: 'Sofía Fernández', iniciales: 'SF', categoria: '6ta', telefono: '+5491100000004', tipo: 'fijo' },
-  { id: 'a10', nombre: 'Lucas Pérez', iniciales: 'LP', categoria: '3ra', telefono: '+5491100000010', tipo: 'fijo' },
-  { id: 'a11', nombre: 'Caro Méndez', iniciales: 'CM', categoria: '5ta', telefono: '+5491100000011', tipo: 'ocasional' },
+  { id: 'a1', nombre: 'Juan Díaz', iniciales: 'JD', categoria: '4ta', telefono: '+5491100000001', tipo: 'fijo', montoAbono: 25000 },
+  { id: 'a2', nombre: 'María Ruiz', iniciales: 'MR', categoria: '5ta', telefono: '+5491100000002', tipo: 'fijo', montoAbono: 25000 },
+  { id: 'a3', nombre: 'Pedro López', iniciales: 'PL', categoria: '4ta', telefono: '+5491100000003', tipo: 'fijo', montoAbono: 25000 },
+  { id: 'a4', nombre: 'Sofía Fernández', iniciales: 'SF', categoria: '6ta', telefono: '+5491100000004', tipo: 'fijo', montoAbono: 25000 },
+  { id: 'a10', nombre: 'Lucas Pérez', iniciales: 'LP', categoria: '3ra', telefono: '+5491100000010', tipo: 'fijo', montoAbono: 25000 },
+  { id: 'a11', nombre: 'Caro Méndez', iniciales: 'CM', categoria: '5ta', telefono: '+5491100000011', tipo: 'ocasional', montoAbono: 0 },
 ]
 
 export function calcularResumenMes(items: ItemCobranza[]): ResumenMes {
@@ -252,7 +253,28 @@ export async function crearAlumno(data: NuevoAlumno): Promise<void> {
     categoria: data.categoria,
     telefono: data.telefono,
     tipo: data.tipo,
+    montoAbono: data.montoAbono,
   })
+}
+
+export async function generarAbonosDelMes(montoDefault: number): Promise<number> {
+  let creadas = 0
+  for (const a of alumnos.filter((x) => x.tipo === 'fijo')) {
+    if (cobranzas.some((c) => c.alumnoId === a.id)) continue
+    const monto = a.montoAbono > 0 ? a.montoAbono : montoDefault
+    cobranzas.push({
+      id: `c_${cobranzas.length + 1}_${Math.random().toString(36).slice(2, 7)}`,
+      alumnoId: a.id,
+      nombre: a.nombre,
+      iniciales: a.iniciales,
+      detalle: 'Abono mensual',
+      estado: 'debe',
+      montoEsperado: monto,
+      montoPagado: 0,
+    })
+    creadas++
+  }
+  return creadas
 }
 
 export async function getBalance(): Promise<ResumenBalance> {

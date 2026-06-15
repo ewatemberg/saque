@@ -22,7 +22,7 @@
 - [x] ABM de canchas (compartidas entre profes: dirección, contacto, costo de referencia)
 - [x] ABM de turnos: crear (con selector de cancha), editar y eliminar desde la app
 - [x] Términos y Política de Privacidad (pantallas públicas + aceptación en el login)
-- [ ] Generar los abonos del mes con un botón
+- [x] Generar los abonos del mes con un botón (cuota mensual por alumno fijo)
 - [ ] Franjas recurrentes (generar turnos de toda la semana de una vez)
 - [ ] Importar contacto en iOS y en la app nativa (plugin de Capacitor)
 - [ ] Deploy de la web (Vercel/Netlify) para probar desde el celular

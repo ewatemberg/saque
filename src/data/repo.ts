@@ -22,6 +22,7 @@ export const getCuota = impl.getCuota
 export const registrarPago = impl.registrarPago
 export const getAlumnos = impl.getAlumnos
 export const crearAlumno = impl.crearAlumno
+export const generarAbonosDelMes = impl.generarAbonosDelMes
 export const getBalance = impl.getBalance
 export const getCanchas = impl.getCanchas
 export const getCancha = impl.getCancha

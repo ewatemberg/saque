@@ -23,6 +23,7 @@ export interface Alumno {
   categoria: Categoria
   telefono: string
   tipo: TipoAlumno
+  montoAbono: number
 }
 
 export interface Inscripto {

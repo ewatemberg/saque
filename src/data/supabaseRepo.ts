@@ -186,6 +186,7 @@ export async function getAlumnos(): Promise<Alumno[]> {
     categoria: r.categoria as Categoria,
     telefono: r.telefono,
     tipo: r.tipo as TipoAlumno,
+    montoAbono: (r.monto_abono as number) ?? 0,
   }))
 }
 
@@ -277,8 +278,41 @@ export async function crearAlumno(data: NuevoAlumno): Promise<void> {
     categoria: data.categoria,
     telefono: data.telefono,
     tipo: data.tipo,
+    monto_abono: data.montoAbono,
   })
   if (error) throw error
+}
+
+export async function generarAbonosDelMes(montoDefault: number): Promise<number> {
+  const periodo = periodoActual()
+  const { data: userData } = await db().auth.getUser()
+  const profeId = userData.user?.id ?? null
+
+  const [{ data: fijos, error: e1 }, { data: cuotas, error: e2 }] = await Promise.all([
+    db().from('alumnos').select('id,nombre,iniciales,monto_abono').eq('tipo', 'fijo'),
+    db().from('cuotas').select('alumno_id').eq('periodo', periodo),
+  ])
+  if (e1) throw e1
+  if (e2) throw e2
+
+  const conCuota = new Set((cuotas ?? []).map((c) => c.alumno_id))
+  const nuevas = (fijos ?? [])
+    .filter((a) => !conCuota.has(a.id))
+    .map((a) => ({
+      profe_id: profeId,
+      alumno_id: a.id,
+      nombre: a.nombre,
+      iniciales: a.iniciales,
+      detalle: 'Abono mensual',
+      periodo,
+      estado: 'debe',
+      monto_esperado: (a.monto_abono as number) > 0 ? a.monto_abono : montoDefault,
+      monto_pagado: 0,
+    }))
+  if (nuevas.length === 0) return 0
+  const { error } = await db().from('cuotas').insert(nuevas)
+  if (error) throw error
+  return nuevas.length
 }
 
 export async function getCuota(id: string): Promise<ItemCobranza | null> {

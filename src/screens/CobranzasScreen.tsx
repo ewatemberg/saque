@@ -1,13 +1,29 @@
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { getCobranzas } from '../data/repo'
+import { generarAbonosDelMes, getCobranzas } from '../data/repo'
 import { formatCompacto, formatPesos, nombreMetodo } from '../lib/format'
-import { useData } from '../lib/useData'
 import { abrirWhatsApp } from '../lib/whatsapp'
-import type { ItemCobranza } from '../types'
+import type { ItemCobranza, ResumenMes } from '../types'
 
 export function CobranzasScreen() {
-  const data = useData(getCobranzas)
+  const [data, setData] = useState<{ resumen: ResumenMes; items: ItemCobranza[] } | null>(null)
+  const reload = useCallback(() => {
+    getCobranzas().then(setData)
+  }, [])
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  const generar = async () => {
+    const input = window.prompt('Cuota mensual por defecto, para alumnos fijos sin monto propio (en $):', '25000')
+    if (input === null) return
+    const creadas = await generarAbonosDelMes(Number(input) || 0)
+    await reload()
+    window.alert(
+      creadas > 0 ? `Se generaron ${creadas} cuota(s) del mes.` : 'No había cuotas nuevas para generar.',
+    )
+  }
 
   if (!data) {
     return (
@@ -62,6 +78,10 @@ export function CobranzasScreen() {
           <Icon name="whatsapp" size={16} /> Recordar a los que deben ({resumen.deudores})
         </button>
       )}
+
+      <button className="btn btn-block" style={{ marginBottom: 14 }} onClick={generar}>
+        <Icon name="plus" size={16} /> Generar cuotas del mes
+      </button>
 
       {items.map((item) => (
         <CobranzaRow key={item.alumnoId} item={item} />
