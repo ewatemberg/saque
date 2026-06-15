@@ -1,5 +1,6 @@
 // Modelo de datos de Saque (ver docs/02-modelo-de-datos.md)
 
+export type Deporte = 'padel' | 'tenis'
 export type Categoria = '1ra' | '2da' | '3ra' | '4ta' | '5ta' | '6ta' | '7ma'
 export type TipoAlumno = 'fijo' | 'ocasional'
 export type EstadoTurno = 'activo' | 'suspendido' | 'recupero'
@@ -9,7 +10,10 @@ export type MetodoPago = 'mercadopago' | 'transferencia' | 'efectivo'
 export interface Cancha {
   id: string
   nombre: string
+  direccion: string
+  contacto: string
   costoPorHora: number
+  deporte: Deporte
 }
 
 export interface Alumno {

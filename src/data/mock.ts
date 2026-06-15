@@ -1,6 +1,8 @@
 import type {
   Alumno,
+  Cancha,
   Categoria,
+  Deporte,
   EstadoCobranza,
   ItemCobranza,
   MetodoPago,
@@ -16,6 +18,13 @@ export interface NuevoAlumno {
   telefono: string
   categoria: Categoria
   tipo: TipoAlumno
+}
+
+export interface NuevaCancha {
+  nombre: string
+  direccion: string
+  contacto: string
+  costoPorHora: number
 }
 
 // Implementacion con datos de ejemplo. Se usa cuando no hay credenciales de
@@ -95,6 +104,11 @@ const cobranzas: ItemCobranza[] = [
   { id: 'c4', alumnoId: 'a4', nombre: 'Sofía Fernández', iniciales: 'SF', detalle: 'Abono · sáb 10h', estado: 'parcial', montoEsperado: 25000, montoPagado: 12000, metodo: 'efectivo' },
   { id: 'c5', alumnoId: 'a10', nombre: 'Lucas Pérez', iniciales: 'LP', detalle: 'Abono · vie 20h', estado: 'debe', montoEsperado: 25000, montoPagado: 0 },
   { id: 'c6', alumnoId: 'a11', nombre: 'Caro Méndez', iniciales: 'CM', detalle: 'Paquete · ocasional', estado: 'paquete', montoEsperado: 0, montoPagado: 0, clasesRestantes: 3 },
+]
+
+const canchas: Cancha[] = [
+  { id: 'k1', nombre: 'Cancha 1', direccion: 'Club Norte, Av. Siempreviva 123', contacto: '+5491100000100', costoPorHora: 12000, deporte: 'padel' },
+  { id: 'k2', nombre: 'Cancha 2', direccion: 'Club Norte, Av. Siempreviva 123', contacto: '+5491100000100', costoPorHora: 14000, deporte: 'padel' },
 ]
 
 const alumnos: Alumno[] = [
@@ -212,4 +226,24 @@ export async function crearAlumno(data: NuevoAlumno): Promise<void> {
 
 export async function getBalance(): Promise<ResumenBalance> {
   return balanceMes
+}
+
+export async function getCanchas(deporte?: Deporte): Promise<Cancha[]> {
+  const lista = deporte ? canchas.filter((c) => c.deporte === deporte) : canchas
+  return lista.map((c) => ({ ...c }))
+}
+
+export async function getCancha(id: string): Promise<Cancha | null> {
+  const c = canchas.find((x) => x.id === id)
+  return c ? { ...c } : null
+}
+
+export async function crearCancha(data: NuevaCancha, deporte: Deporte): Promise<void> {
+  const id = `k_${canchas.length + 1}_${Math.random().toString(36).slice(2, 7)}`
+  canchas.push({ id, ...data, deporte })
+}
+
+export async function actualizarCancha(id: string, data: NuevaCancha): Promise<void> {
+  const c = canchas.find((x) => x.id === id)
+  if (c) Object.assign(c, data)
 }

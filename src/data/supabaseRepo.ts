@@ -1,7 +1,9 @@
 import { supabase } from '../lib/supabase'
 import type {
   Alumno,
+  Cancha,
   Categoria,
+  Deporte,
   EstadoCobranza,
   EstadoTurno,
   ItemCobranza,
@@ -12,7 +14,13 @@ import type {
   Turno,
 } from '../types'
 import { iniciales } from '../lib/format'
-import { calcularResumenHoy, calcularResumenMes, estadoCuota, type NuevoAlumno } from './mock'
+import {
+  calcularResumenHoy,
+  calcularResumenMes,
+  estadoCuota,
+  type NuevaCancha,
+  type NuevoAlumno,
+} from './mock'
 
 // Implementacion real contra Supabase. Solo se usa cuando hay credenciales en
 // .env (ver src/data/repo.ts). Conserva las mismas firmas que el mock.
@@ -160,6 +168,61 @@ export async function getCobranzas(): Promise<{ resumen: ResumenMes; items: Item
     clasesRestantes: (r.clases_restantes as number | null) ?? undefined,
   }))
   return { resumen: calcularResumenMes(items), items }
+}
+
+export async function getCanchas(deporte?: Deporte): Promise<Cancha[]> {
+  let q = db().from('canchas').select('*').order('nombre')
+  if (deporte) q = q.eq('deporte', deporte)
+  const { data, error } = await q
+  if (error) throw error
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    nombre: r.nombre,
+    direccion: r.direccion ?? '',
+    contacto: r.contacto ?? '',
+    costoPorHora: r.costo_por_hora,
+    deporte: (r.deporte as Deporte) ?? 'padel',
+  }))
+}
+
+export async function getCancha(id: string): Promise<Cancha | null> {
+  const { data: r, error } = await db().from('canchas').select('*').eq('id', id).maybeSingle()
+  if (error) throw error
+  if (!r) return null
+  return {
+    id: r.id,
+    nombre: r.nombre,
+    direccion: r.direccion ?? '',
+    contacto: r.contacto ?? '',
+    costoPorHora: r.costo_por_hora,
+    deporte: (r.deporte as Deporte) ?? 'padel',
+  }
+}
+
+export async function crearCancha(data: NuevaCancha, deporte: Deporte): Promise<void> {
+  const { data: userData } = await db().auth.getUser()
+  const { error } = await db().from('canchas').insert({
+    profe_id: userData.user?.id ?? null,
+    nombre: data.nombre,
+    direccion: data.direccion,
+    contacto: data.contacto,
+    costo_por_hora: data.costoPorHora,
+    deporte,
+  })
+  if (error) throw error
+}
+
+export async function actualizarCancha(id: string, data: NuevaCancha): Promise<void> {
+  const { error } = await db()
+    .from('canchas')
+    .update({
+      nombre: data.nombre,
+      direccion: data.direccion,
+      contacto: data.contacto,
+      costo_por_hora: data.costoPorHora,
+    })
+    .eq('id', id)
+  if (error) throw error
 }
 
 export async function crearAlumno(data: NuevoAlumno): Promise<void> {

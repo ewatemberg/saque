@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
+import type { Deporte } from '../types'
 
 /** Estado de sesion. En modo mock (sin Supabase) devuelve sesion nula sin cargar. */
 export function useSession(): { session: Session | null; loading: boolean } {
@@ -48,4 +49,17 @@ export async function signInGoogle(): Promise<void> {
 export async function signOut(): Promise<void> {
   if (!supabase) return
   await supabase.auth.signOut()
+}
+
+/** Deporte que eligió el profe (guardado en user_metadata). null si no eligió. */
+export function deporteDeSesion(session: Session | null): Deporte | null {
+  const d = session?.user?.user_metadata?.deporte
+  return d === 'padel' || d === 'tenis' ? d : null
+}
+
+/** Guarda el deporte elegido en el perfil del usuario. */
+export async function setDeporte(deporte: Deporte): Promise<void> {
+  if (!supabase) return
+  const { error } = await supabase.auth.updateUser({ data: { deporte } })
+  if (error) throw error
 }

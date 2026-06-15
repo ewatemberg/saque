@@ -1,6 +1,6 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
-import { useSession } from './lib/auth'
+import { deporteDeSesion, useSession } from './lib/auth'
 import { usandoMock } from './lib/supabase'
 import { HoyScreen } from './screens/HoyScreen'
 import { CobranzasScreen } from './screens/CobranzasScreen'
@@ -10,7 +10,10 @@ import { AboutScreen } from './screens/AboutScreen'
 import { TurnoDetalleScreen } from './screens/TurnoDetalleScreen'
 import { CobranzaDetalleScreen } from './screens/CobranzaDetalleScreen'
 import { AlumnoNuevoScreen } from './screens/AlumnoNuevoScreen'
+import { CanchasScreen } from './screens/CanchasScreen'
+import { CanchaFormScreen } from './screens/CanchaFormScreen'
 import { LoginScreen } from './screens/LoginScreen'
+import { DeporteScreen } from './screens/DeporteScreen'
 
 function AppRoutes() {
   return (
@@ -23,6 +26,9 @@ function AppRoutes() {
         <Route path="alumnos" element={<AlumnosScreen />} />
         <Route path="alumno/nuevo" element={<AlumnoNuevoScreen />} />
         <Route path="balance" element={<BalanceScreen />} />
+        <Route path="canchas" element={<CanchasScreen />} />
+        <Route path="cancha/nueva" element={<CanchaFormScreen />} />
+        <Route path="cancha/:id" element={<CanchaFormScreen />} />
         <Route path="acerca" element={<AboutScreen />} />
       </Route>
     </Routes>
@@ -37,6 +43,7 @@ function Root() {
 
   if (loading) return <div className="login">Cargando…</div>
   if (!session) return <LoginScreen />
+  if (!deporteDeSesion(session)) return <DeporteScreen />
   return <AppRoutes />
 }
 

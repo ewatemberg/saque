@@ -20,3 +20,7 @@ export const registrarPago = impl.registrarPago
 export const getAlumnos = impl.getAlumnos
 export const crearAlumno = impl.crearAlumno
 export const getBalance = impl.getBalance
+export const getCanchas = impl.getCanchas
+export const getCancha = impl.getCancha
+export const crearCancha = impl.crearCancha
+export const actualizarCancha = impl.actualizarCancha
