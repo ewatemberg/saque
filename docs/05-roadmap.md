@@ -1,0 +1,46 @@
+# 05 · Roadmap
+
+## Fase 0 — Esqueleto (actual)
+
+- [x] Proyecto React + TypeScript + Vite
+- [x] Navegación y las 4 secciones (Hoy, Cobranzas, Alumnos, Balance)
+- [x] Pantallas Hoy y Cobranzas funcionando con datos de ejemplo
+- [x] Capa de datos mock con la misma firma que tendrá Supabase
+- [x] Capacitor configurado para empaquetar a móvil
+- [x] Esquema de base de datos (SQL + RLS) y capa de acceso a Supabase
+- [x] Login con email (link mágico) y Google
+- [x] Despachador mock / Supabase transparente para las pantallas
+
+## Fase 1 — MVP usable con un profe real
+
+- [x] Auth con email/Google (Supabase)
+- [x] Tablas reales en Supabase y lectura desde la app
+- [x] Detalle de turno: marcar asistencia, dar de baja, anotar alumno, suspender/reactivar
+- [x] Registrar pagos (monto + método) con recálculo de estado y totales
+- [x] Alta de alumno (con importar contacto del teléfono en móvil)
+- [ ] Generar los abonos del mes con un botón
+- [ ] ABM (alta/edición) de canchas, franjas y turnos desde la app
+- [ ] Importar contacto en iOS y en la app nativa (plugin de Capacitor)
+- [ ] Deploy de la web (Vercel/Netlify) para probar desde el celular
+- [ ] ABM de canchas, franjas, turnos y alumnos
+- [ ] Cargar asistencia y dar de baja en el detalle del turno
+- [ ] Generación de abonos a principio de mes
+- [ ] Registrar pagos (método + fecha)
+- [ ] Avisos por WhatsApp (lugar libre, suspensión, cambio de precio)
+- [ ] Pruebas con el primer profe (testeo real)
+
+## Fase 2 — Mejoras
+
+- [ ] Lista de espera inteligente para tapar huecos
+- [ ] Reprogramación de turnos suspendidos (recupero) completa
+- [ ] Paquetes de clases para alumnos ocasionales
+- [ ] Dashboard de balance derivado de datos reales
+- [ ] Builds nativas y publicación en stores
+
+## Fase 3 — A futuro
+
+- [ ] Bot de WhatsApp para altas/bajas (API oficial)
+- [ ] Soporte para tenis y otros deportes de raqueta
+- [ ] Cobro integrado (API de MercadoPago)
+- [ ] Detección de alumnos en riesgo de dejar (retención)
+- [ ] Streaming de partidos / clases

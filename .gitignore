@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+
+# Variables de entorno (NUNCA subir credenciales)
+.env
+.env.local
+.env.*.local
+
+# Plataformas nativas generadas por Capacitor
+/android/
+/ios/
+
+# Editor / herramientas locales
+.idea/
+.vscode/
+.claude/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
