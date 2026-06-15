@@ -47,6 +47,20 @@ export interface Turno {
   costoCancha: number // alquiler que paga el profe por este turno
 }
 
+export interface Franja {
+  id: string
+  diaSemana: number // 0=Domingo .. 6=Sábado
+  hora: string
+  duracionMin: number
+  canchaNombre: string
+  categoria: Categoria
+  precio: number
+  cupos: number
+  costoCancha: number
+  permanente: boolean
+  alumnoIds: string[]
+}
+
 export interface ItemCobranza {
   id: string
   alumnoId: string

@@ -41,6 +41,7 @@ export function AppLayout() {
         <Outlet />
         <footer className="app-footer">
           <span style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+            <NavLink to="/franjas">Franjas</NavLink>
             <NavLink to="/canchas">Canchas</NavLink>
             <NavLink to="/acerca">Acerca de</NavLink>
             <NavLink to="/terminos">Términos</NavLink>

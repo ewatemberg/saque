@@ -1,24 +1,42 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { crearAlumno } from '../data/repo'
+import { actualizarAlumno, crearAlumno, eliminarAlumno, getAlumno } from '../data/repo'
 import type { Categoria, TipoAlumno } from '../types'
 
 const CATEGORIAS: Categoria[] = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma']
 
-// La API de contactos del navegador solo está disponible en móvil (Chrome
-// Android) y sobre HTTPS/localhost. En desktop no aparece el botón.
 const soportaContactos =
   typeof navigator !== 'undefined' && 'contacts' in navigator && 'ContactsManager' in window
 
-export function AlumnoNuevoScreen() {
+export function AlumnoFormScreen() {
+  const { id } = useParams()
   const navigate = useNavigate()
+  const editando = Boolean(id)
+
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
   const [categoria, setCategoria] = useState<Categoria>('5ta')
   const [tipo, setTipo] = useState<TipoAlumno>('fijo')
   const [montoAbono, setMontoAbono] = useState('')
+  const [cargando, setCargando] = useState(editando)
   const [guardando, setGuardando] = useState(false)
+
+  useEffect(() => {
+    if (!id) return
+    getAlumno(id).then((a) => {
+      if (a) {
+        setNombre(a.nombre)
+        setTelefono(a.telefono)
+        setCategoria(a.categoria)
+        setTipo(a.tipo)
+        setMontoAbono(a.montoAbono ? String(a.montoAbono) : '')
+      }
+      setCargando(false)
+    })
+  }, [id])
+
+  if (cargando) return <div className="empty">Cargando…</div>
 
   const importarContacto = async () => {
     try {
@@ -29,21 +47,23 @@ export function AlumnoNuevoScreen() {
         if (c.tel?.[0]) setTelefono(c.tel[0])
       }
     } catch {
-      // el usuario canceló o no dio permiso; no hacemos nada
+      // cancelado o sin permiso
     }
   }
 
   const guardar = async () => {
     if (!nombre.trim()) return
     setGuardando(true)
+    const data = {
+      nombre: nombre.trim(),
+      telefono: telefono.trim(),
+      categoria,
+      tipo,
+      montoAbono: Number(montoAbono) || 0,
+    }
     try {
-      await crearAlumno({
-        nombre: nombre.trim(),
-        telefono: telefono.trim(),
-        categoria,
-        tipo,
-        montoAbono: Number(montoAbono) || 0,
-      })
+      if (id) await actualizarAlumno(id, data)
+      else await crearAlumno(data)
       navigate(-1)
     } catch {
       setGuardando(false)
@@ -57,11 +77,11 @@ export function AlumnoNuevoScreen() {
           <button className="icon-btn" aria-label="Volver" onClick={() => navigate(-1)}>
             <Icon name="chevron-left" size={22} />
           </button>
-          <h1>Nuevo alumno</h1>
+          <h1>{editando ? 'Editar alumno' : 'Nuevo alumno'}</h1>
         </div>
       </div>
 
-      {soportaContactos && (
+      {soportaContactos && !editando && (
         <button className="btn btn-block" style={{ marginBottom: 16 }} onClick={importarContacto}>
           <Icon name="user" size={16} /> Importar del teléfono
         </button>
@@ -88,16 +108,9 @@ export function AlumnoNuevoScreen() {
         />
 
         <label className="field-label" htmlFor="cat">Categoría</label>
-        <select
-          id="cat"
-          className="input"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value as Categoria)}
-        >
+        <select id="cat" className="input" value={categoria} onChange={(e) => setCategoria(e.target.value as Categoria)}>
           {CATEGORIAS.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
+            <option key={c} value={c}>{c}</option>
           ))}
         </select>
 
@@ -137,13 +150,21 @@ export function AlumnoNuevoScreen() {
         <button className="btn btn-accent btn-block" style={{ marginTop: 16 }} onClick={guardar} disabled={guardando || !nombre.trim()}>
           <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Guardar alumno'}
         </button>
-      </div>
 
-      {!soportaContactos && (
-        <p style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 14, textAlign: 'center' }}>
-          El botón "Importar del teléfono" aparece en el celular, para traer el contacto de tu agenda.
-        </p>
-      )}
+        {editando && (
+          <button
+            className="btn btn-block"
+            style={{ marginTop: 10, color: 'var(--danger)' }}
+            onClick={() => {
+              if (confirm('¿Eliminar este alumno? También se borran sus inscripciones y cuotas.')) {
+                eliminarAlumno(id as string).then(() => navigate(-1))
+              }
+            }}
+          >
+            <Icon name="trash" size={16} /> Eliminar alumno
+          </button>
+        )}
+      </div>
     </>
   )
 }

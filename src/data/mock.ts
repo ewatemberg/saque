@@ -4,6 +4,7 @@ import type {
   Categoria,
   Deporte,
   EstadoCobranza,
+  Franja,
   ItemCobranza,
   MetodoPago,
   ResumenBalance,
@@ -37,6 +38,13 @@ export interface NuevoTurno {
   precio: number
   cupos: number
   costoCancha: number
+}
+
+export type NuevaFranja = Omit<Franja, 'id'>
+
+export interface ResultadoGeneracion {
+  creados: number
+  conflictos: number
 }
 
 // Implementacion con datos de ejemplo. Se usa cuando no hay credenciales de
@@ -126,6 +134,22 @@ const cobranzas: ItemCobranza[] = [
 const canchas: Cancha[] = [
   { id: 'k1', nombre: 'Cancha 1', direccion: 'Club Norte, Av. Siempreviva 123', contacto: '+5491100000100', costoPorHora: 12000, deporte: 'padel' },
   { id: 'k2', nombre: 'Cancha 2', direccion: 'Club Norte, Av. Siempreviva 123', contacto: '+5491100000100', costoPorHora: 14000, deporte: 'padel' },
+]
+
+const franjas: Franja[] = [
+  {
+    id: 'f1',
+    diaSemana: 2, // martes
+    hora: '19:00',
+    duracionMin: 60,
+    canchaNombre: 'Cancha 1',
+    categoria: '5ta',
+    precio: 6000,
+    cupos: 4,
+    costoCancha: 12000,
+    permanente: true,
+    alumnoIds: ['a1', 'a2', 'a3'],
+  },
 ]
 
 const alumnos: Alumno[] = [
@@ -257,6 +281,30 @@ export async function crearAlumno(data: NuevoAlumno): Promise<void> {
   })
 }
 
+export async function getAlumno(id: string): Promise<Alumno | null> {
+  const a = alumnos.find((x) => x.id === id)
+  return a ? { ...a } : null
+}
+
+export async function actualizarAlumno(id: string, data: NuevoAlumno): Promise<void> {
+  const a = alumnos.find((x) => x.id === id)
+  if (a) {
+    Object.assign(a, {
+      nombre: data.nombre,
+      iniciales: iniciales(data.nombre),
+      categoria: data.categoria,
+      telefono: data.telefono,
+      tipo: data.tipo,
+      montoAbono: data.montoAbono,
+    })
+  }
+}
+
+export async function eliminarAlumno(id: string): Promise<void> {
+  const i = alumnos.findIndex((x) => x.id === id)
+  if (i >= 0) alumnos.splice(i, 1)
+}
+
 export async function generarAbonosDelMes(montoDefault: number): Promise<number> {
   let creadas = 0
   for (const a of alumnos.filter((x) => x.tipo === 'fijo')) {
@@ -299,4 +347,97 @@ export async function crearCancha(data: NuevaCancha, deporte: Deporte): Promise<
 export async function actualizarCancha(id: string, data: NuevaCancha): Promise<void> {
   const c = canchas.find((x) => x.id === id)
   if (c) Object.assign(c, data)
+}
+
+// --- Franjas recurrentes ---
+
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+
+function fechaISO(d: Date): string {
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const dia = String(d.getDate()).padStart(2, '0')
+  return `${d.getFullYear()}-${m}-${dia}`
+}
+
+export function proximoMes(): { anio: number; mes: number; etiqueta: string } {
+  const n = new Date()
+  let mes = n.getMonth() + 1
+  let anio = n.getFullYear()
+  if (mes > 11) {
+    mes = 0
+    anio += 1
+  }
+  return { anio, mes, etiqueta: `${MESES[mes]} ${anio}` }
+}
+
+function fechasDelMes(anio: number, mes: number, diaSemana: number): string[] {
+  const res: string[] = []
+  const d = new Date(anio, mes, 1)
+  while (d.getMonth() === mes) {
+    if (d.getDay() === diaSemana) res.push(fechaISO(d))
+    d.setDate(d.getDate() + 1)
+  }
+  return res
+}
+
+export async function getFranjas(): Promise<Franja[]> {
+  return franjas.map((f) => ({ ...f, alumnoIds: [...f.alumnoIds] }))
+}
+
+export async function getFranja(id: string): Promise<Franja | null> {
+  const f = franjas.find((x) => x.id === id)
+  return f ? { ...f, alumnoIds: [...f.alumnoIds] } : null
+}
+
+export async function crearFranja(data: NuevaFranja): Promise<void> {
+  const id = `f_${franjas.length + 1}_${Math.random().toString(36).slice(2, 7)}`
+  franjas.push({ id, ...data })
+}
+
+export async function actualizarFranja(id: string, data: NuevaFranja): Promise<void> {
+  const f = franjas.find((x) => x.id === id)
+  if (f) Object.assign(f, data)
+}
+
+export async function eliminarFranja(id: string): Promise<void> {
+  const i = franjas.findIndex((x) => x.id === id)
+  if (i >= 0) franjas.splice(i, 1)
+}
+
+export async function generarTurnosDelMes(sobrescribir: boolean): Promise<ResultadoGeneracion> {
+  const { anio, mes } = proximoMes()
+  let creados = 0
+  let conflictos = 0
+  for (const f of franjas) {
+    for (const fecha of fechasDelMes(anio, mes, f.diaSemana)) {
+      const idx = turnos.findIndex(
+        (t) => t.fecha === fecha && t.hora === f.hora && t.canchaNombre === f.canchaNombre,
+      )
+      if (idx >= 0) {
+        if (!sobrescribir) {
+          conflictos++
+          continue
+        }
+        turnos.splice(idx, 1)
+      }
+      turnos.push({
+        id: `t_${turnos.length + 1}_${Math.random().toString(36).slice(2, 7)}`,
+        fecha,
+        hora: f.hora,
+        duracionMin: f.duracionMin,
+        canchaNombre: f.canchaNombre,
+        categoria: f.categoria,
+        precio: f.precio,
+        cupos: f.cupos,
+        costoCancha: f.costoCancha,
+        estado: 'activo',
+        inscriptos: f.alumnoIds.map((aid) => {
+          const a = alumnos.find((x) => x.id === aid)
+          return { alumnoId: aid, iniciales: a?.iniciales ?? '', nombre: a?.nombre ?? '', asistio: false }
+        }),
+      })
+      creados++
+    }
+  }
+  return { creados, conflictos }
 }

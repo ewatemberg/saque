@@ -21,7 +21,7 @@ export function AlumnosScreen() {
       </div>
 
       {alumnos?.map((a) => (
-        <div className="row" key={a.id}>
+        <div className="row clickable" key={a.id} onClick={() => navigate(`/alumno/${a.id}`)}>
           <span className={`avatar ${a.tipo === 'ocasional' ? 'neutral' : ''}`}>{a.iniciales}</span>
           <div className="row-main">
             <div className="row-name">{a.nombre}</div>
@@ -33,7 +33,10 @@ export function AlumnosScreen() {
             <button
               className="btn btn-sm"
               aria-label={`Escribir a ${a.nombre}`}
-              onClick={() => abrirWhatsApp('Hola! ', a.telefono)}
+              onClick={(e) => {
+                e.stopPropagation()
+                abrirWhatsApp('Hola! ', a.telefono)
+              }}
             >
               <Icon name="whatsapp" size={16} />
             </button>

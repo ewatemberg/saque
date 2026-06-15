@@ -4,6 +4,7 @@ import type {
   Cancha,
   Categoria,
   Deporte,
+  Franja,
   EstadoCobranza,
   EstadoTurno,
   ItemCobranza,
@@ -18,9 +19,12 @@ import {
   calcularResumenHoy,
   calcularResumenMes,
   estadoCuota,
+  proximoMes,
   type NuevaCancha,
+  type NuevaFranja,
   type NuevoAlumno,
   type NuevoTurno,
+  type ResultadoGeneracion,
 } from './mock'
 
 // Implementacion real contra Supabase. Solo se usa cuando hay credenciales en
@@ -267,6 +271,171 @@ export async function actualizarCancha(id: string, data: NuevaCancha): Promise<v
   if (error) throw error
 }
 
+// --- Franjas recurrentes ---
+
+function mapFranja(r: Record<string, unknown>): Franja {
+  const ids = r.alumno_ids
+  return {
+    id: r.id as string,
+    diaSemana: r.dia_semana as number,
+    hora: r.hora as string,
+    duracionMin: r.duracion_min as number,
+    canchaNombre: r.cancha_nombre as string,
+    categoria: r.categoria as Categoria,
+    precio: r.precio as number,
+    cupos: r.cupos as number,
+    costoCancha: r.costo_cancha as number,
+    permanente: r.permanente as boolean,
+    alumnoIds: Array.isArray(ids) ? (ids as string[]) : [],
+  }
+}
+
+function franjaRow(data: NuevaFranja) {
+  return {
+    dia_semana: data.diaSemana,
+    hora: data.hora,
+    duracion_min: data.duracionMin,
+    cancha_nombre: data.canchaNombre,
+    categoria: data.categoria,
+    precio: data.precio,
+    cupos: data.cupos,
+    costo_cancha: data.costoCancha,
+    permanente: data.permanente,
+    alumno_ids: data.alumnoIds,
+  }
+}
+
+export async function getFranjas(): Promise<Franja[]> {
+  const { data, error } = await db().from('franjas').select('*').order('dia_semana').order('hora')
+  if (error) throw error
+  return (data ?? []).map((r) => mapFranja(r as Record<string, unknown>))
+}
+
+export async function getFranja(id: string): Promise<Franja | null> {
+  const { data, error } = await db().from('franjas').select('*').eq('id', id).maybeSingle()
+  if (error) throw error
+  return data ? mapFranja(data as Record<string, unknown>) : null
+}
+
+export async function crearFranja(data: NuevaFranja): Promise<void> {
+  const { data: u } = await db().auth.getUser()
+  const { error } = await db()
+    .from('franjas')
+    .insert({ ...franjaRow(data), profe_id: u.user?.id ?? null })
+  if (error) throw error
+}
+
+export async function actualizarFranja(id: string, data: NuevaFranja): Promise<void> {
+  const { error } = await db().from('franjas').update(franjaRow(data)).eq('id', id)
+  if (error) throw error
+}
+
+export async function eliminarFranja(id: string): Promise<void> {
+  const { error } = await db().from('franjas').delete().eq('id', id)
+  if (error) throw error
+}
+
+function fechasDelMes(anio: number, mes: number, diaSemana: number): string[] {
+  const res: string[] = []
+  const d = new Date(anio, mes, 1)
+  while (d.getMonth() === mes) {
+    if (d.getDay() === diaSemana) {
+      const m = String(d.getMonth() + 1).padStart(2, '0')
+      const dia = String(d.getDate()).padStart(2, '0')
+      res.push(`${d.getFullYear()}-${m}-${dia}`)
+    }
+    d.setDate(d.getDate() + 1)
+  }
+  return res
+}
+
+export async function generarTurnosDelMes(sobrescribir: boolean): Promise<ResultadoGeneracion> {
+  const { anio, mes } = proximoMes()
+  const fin = new Date(anio, mes + 1, 0).getDate()
+  const mm = String(mes + 1).padStart(2, '0')
+  const desde = `${anio}-${mm}-01`
+  const hasta = `${anio}-${mm}-${String(fin).padStart(2, '0')}`
+
+  const { data: u } = await db().auth.getUser()
+  const profeId = u.user?.id ?? null
+
+  const [{ data: franjas, error: e1 }, { data: alumnos, error: e2 }, { data: existentes, error: e3 }] =
+    await Promise.all([
+      db().from('franjas').select('*'),
+      db().from('alumnos').select('id,iniciales'),
+      db().from('turnos').select('id,fecha,hora,cancha_nombre').gte('fecha', desde).lte('fecha', hasta),
+    ])
+  if (e1) throw e1
+  if (e2) throw e2
+  if (e3) throw e3
+
+  const inicialesPorId = new Map((alumnos ?? []).map((a) => [a.id as string, a.iniciales as string]))
+  const idPorClave = new Map<string, string>()
+  for (const t of existentes ?? []) {
+    idPorClave.set(`${t.fecha}|${t.hora}|${t.cancha_nombre}`, t.id as string)
+  }
+
+  let conflictos = 0
+  const aBorrar: string[] = []
+  const aInsertar: { row: Record<string, unknown>; clave: string; alumnoIds: string[] }[] = []
+
+  for (const fr of (franjas ?? []).map((r) => mapFranja(r as Record<string, unknown>))) {
+    for (const fecha of fechasDelMes(anio, mes, fr.diaSemana)) {
+      const clave = `${fecha}|${fr.hora}|${fr.canchaNombre}`
+      if (idPorClave.has(clave)) {
+        if (!sobrescribir) {
+          conflictos++
+          continue
+        }
+        aBorrar.push(idPorClave.get(clave) as string)
+      }
+      aInsertar.push({
+        clave,
+        alumnoIds: fr.alumnoIds,
+        row: {
+          profe_id: profeId,
+          fecha,
+          hora: fr.hora,
+          duracion_min: fr.duracionMin,
+          cancha_nombre: fr.canchaNombre,
+          categoria: fr.categoria,
+          precio: fr.precio,
+          cupos: fr.cupos,
+          estado: 'activo',
+          costo_cancha: fr.costoCancha,
+        },
+      })
+    }
+  }
+
+  if (aBorrar.length > 0) {
+    const { error } = await db().from('turnos').delete().in('id', aBorrar)
+    if (error) throw error
+  }
+  if (aInsertar.length === 0) return { creados: 0, conflictos }
+
+  const { data: insertados, error: eIns } = await db()
+    .from('turnos')
+    .insert(aInsertar.map((x) => x.row))
+    .select('id,fecha,hora,cancha_nombre')
+  if (eIns) throw eIns
+
+  const rosterPorClave = new Map(aInsertar.map((x) => [x.clave, x.alumnoIds]))
+  const inscripciones: Record<string, unknown>[] = []
+  for (const t of insertados ?? []) {
+    const clave = `${t.fecha}|${t.hora}|${t.cancha_nombre}`
+    for (const aid of rosterPorClave.get(clave) ?? []) {
+      inscripciones.push({ turno_id: t.id, alumno_id: aid, iniciales: inicialesPorId.get(aid) ?? '' })
+    }
+  }
+  if (inscripciones.length > 0) {
+    const { error } = await db().from('inscripciones').insert(inscripciones)
+    if (error) throw error
+  }
+
+  return { creados: aInsertar.length, conflictos }
+}
+
 export async function crearAlumno(data: NuevoAlumno): Promise<void> {
   const { data: userData } = await db().auth.getUser()
   const profeId = userData.user?.id
@@ -280,6 +449,41 @@ export async function crearAlumno(data: NuevoAlumno): Promise<void> {
     tipo: data.tipo,
     monto_abono: data.montoAbono,
   })
+  if (error) throw error
+}
+
+export async function getAlumno(id: string): Promise<Alumno | null> {
+  const { data: r, error } = await db().from('alumnos').select('*').eq('id', id).maybeSingle()
+  if (error) throw error
+  if (!r) return null
+  return {
+    id: r.id,
+    nombre: r.nombre,
+    iniciales: r.iniciales,
+    categoria: r.categoria as Categoria,
+    telefono: r.telefono,
+    tipo: r.tipo as TipoAlumno,
+    montoAbono: (r.monto_abono as number) ?? 0,
+  }
+}
+
+export async function actualizarAlumno(id: string, data: NuevoAlumno): Promise<void> {
+  const { error } = await db()
+    .from('alumnos')
+    .update({
+      nombre: data.nombre,
+      iniciales: iniciales(data.nombre),
+      categoria: data.categoria,
+      telefono: data.telefono,
+      tipo: data.tipo,
+      monto_abono: data.montoAbono,
+    })
+    .eq('id', id)
+  if (error) throw error
+}
+
+export async function eliminarAlumno(id: string): Promise<void> {
+  const { error } = await db().from('alumnos').delete().eq('id', id)
   if (error) throw error
 }
 

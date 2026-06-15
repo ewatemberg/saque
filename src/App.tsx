@@ -8,9 +8,11 @@ import { TurnoFormScreen } from './screens/TurnoFormScreen'
 import { CobranzasScreen } from './screens/CobranzasScreen'
 import { CobranzaDetalleScreen } from './screens/CobranzaDetalleScreen'
 import { AlumnosScreen } from './screens/AlumnosScreen'
-import { AlumnoNuevoScreen } from './screens/AlumnoNuevoScreen'
+import { AlumnoFormScreen } from './screens/AlumnoFormScreen'
 import { CanchasScreen } from './screens/CanchasScreen'
 import { CanchaFormScreen } from './screens/CanchaFormScreen'
+import { FranjasScreen } from './screens/FranjasScreen'
+import { FranjaFormScreen } from './screens/FranjaFormScreen'
 import { BalanceScreen } from './screens/BalanceScreen'
 import { AboutScreen } from './screens/AboutScreen'
 import { TerminosScreen } from './screens/TerminosScreen'
@@ -46,10 +48,14 @@ export default function App() {
           <Route path="cobranzas" element={<CobranzasScreen />} />
           <Route path="cobranza/:id" element={<CobranzaDetalleScreen />} />
           <Route path="alumnos" element={<AlumnosScreen />} />
-          <Route path="alumno/nuevo" element={<AlumnoNuevoScreen />} />
+          <Route path="alumno/nuevo" element={<AlumnoFormScreen />} />
+          <Route path="alumno/:id" element={<AlumnoFormScreen />} />
           <Route path="canchas" element={<CanchasScreen />} />
           <Route path="cancha/nueva" element={<CanchaFormScreen />} />
           <Route path="cancha/:id" element={<CanchaFormScreen />} />
+          <Route path="franjas" element={<FranjasScreen />} />
+          <Route path="franja/nueva" element={<FranjaFormScreen />} />
+          <Route path="franja/:id" element={<FranjaFormScreen />} />
           <Route path="balance" element={<BalanceScreen />} />
           <Route path="acerca" element={<AboutScreen />} />
         </Route>

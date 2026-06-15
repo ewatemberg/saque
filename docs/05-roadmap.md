@@ -18,12 +18,13 @@
 - [x] Detalle de turno: marcar asistencia, dar de baja, anotar alumno, suspender/reactivar
 - [x] Registrar pagos (monto + método) con recálculo de estado y totales
 - [x] Alta de alumno (con importar contacto del teléfono en móvil)
+- [x] Editar y eliminar alumno
 - [x] El profe elige su deporte (pádel/tenis) al entrar; las canchas se filtran por deporte
 - [x] ABM de canchas (compartidas entre profes: dirección, contacto, costo de referencia)
 - [x] ABM de turnos: crear (con selector de cancha), editar y eliminar desde la app
 - [x] Términos y Política de Privacidad (pantallas públicas + aceptación en el login)
 - [x] Generar los abonos del mes con un botón (cuota mensual por alumno fijo)
-- [ ] Franjas recurrentes (generar turnos de toda la semana de una vez)
+- [x] Franjas recurrentes (plantilla con roster + generar turnos del mes con manejo de choques)
 - [ ] Importar contacto en iOS y en la app nativa (plugin de Capacitor)
 - [ ] Deploy de la web (Vercel/Netlify) para probar desde el celular
 - [ ] ABM de canchas, franjas, turnos y alumnos
