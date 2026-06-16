@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { getCuota, registrarPago } from '../data/repo'
+import { SesionContext, linkCobroDeSesion } from '../lib/auth'
 import { formatPesos, mesActual, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp, mensajeRecordatorioCuota } from '../lib/whatsapp'
@@ -13,6 +14,7 @@ const METODOS: MetodoPago[] = ['mercadopago', 'transferencia', 'efectivo']
 export function CobranzaDetalleScreen() {
   const { id = '' } = useParams()
   const navigate = useNavigate()
+  const linkCobro = linkCobroDeSesion(useContext(SesionContext))
   const [cuota, setCuota] = useState<ItemCobranza | null>(null)
   const [cargando, setCargando] = useState(true)
   const [monto, setMonto] = useState('')
@@ -138,7 +140,7 @@ export function CobranzaDetalleScreen() {
               style={{ marginTop: 10 }}
               onClick={() =>
                 abrirWhatsApp(
-                  mensajeRecordatorioCuota(cuota.nombre, mesActual(), formatPesos(saldo)),
+                  mensajeRecordatorioCuota(cuota.nombre, mesActual(), formatPesos(saldo), linkCobro),
                   cuota.telefono,
                 )
               }

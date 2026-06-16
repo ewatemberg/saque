@@ -22,12 +22,18 @@ function primerNombre(nombre: string): string {
  * Mensaje de recordatorio de cuota, personalizado con el nombre del alumno, el
  * monto adeudado y el mes. Si no hay monto (<= 0) lo omite.
  */
-export function mensajeRecordatorioCuota(nombre: string, mes: string, montoTexto?: string): string {
+export function mensajeRecordatorioCuota(
+  nombre: string,
+  mes: string,
+  montoTexto?: string,
+  linkPago?: string,
+): string {
   const saludo = `Hola ${primerNombre(nombre)}!`
   const detalle = montoTexto
     ? `Te recuerdo que quedó pendiente la cuota de ${mes} (${montoTexto}).`
     : `Te recuerdo que quedó pendiente la cuota de ${mes}.`
-  return `${saludo} ${detalle} Cualquier cosa me avisás. ¡Gracias!`
+  const pago = linkPago?.trim() ? ` Podés pagarla por acá: ${linkPago.trim()}` : ''
+  return `${saludo} ${detalle}${pago} Cualquier cosa me avisás. ¡Gracias!`
 }
 
 /** Mensaje para coordinar el recupero de un turno suspendido. */

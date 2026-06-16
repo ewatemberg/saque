@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas, registrarPago } from '../data/repo'
+import { SesionContext, linkCobroDeSesion } from '../lib/auth'
 import { descargarCSV } from '../lib/csv'
 import { formatPesos, mesActual, mesYAnioActual, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
@@ -12,6 +13,8 @@ import type { ItemCobranza, MetodoPago, ResumenMes } from '../types'
 const METODOS: MetodoPago[] = ['efectivo', 'transferencia', 'mercadopago']
 
 export function CobranzasScreen() {
+  const session = useContext(SesionContext)
+  const linkCobro = linkCobroDeSesion(session)
   const [data, setData] = useState<{ resumen: ResumenMes; items: ItemCobranza[] } | null>(null)
   const reload = useCallback(() => {
     getCobranzas().then(setData)
@@ -48,8 +51,9 @@ export function CobranzasScreen() {
   const pct = resumen.esperado > 0 ? Math.round((resumen.cobrado / resumen.esperado) * 100) : 0
 
   const recordarMasivo = () => {
+    const pago = linkCobro.trim() ? ` Podés pagarla por acá: ${linkCobro.trim()}` : ''
     abrirWhatsApp(
-      `Hola! Te recuerdo que está pendiente la cuota de ${mesActual()}. Cualquier cosa me avisás. ¡Gracias!`,
+      `Hola! Te recuerdo que está pendiente la cuota de ${mesActual()}.${pago} Cualquier cosa me avisás. ¡Gracias!`,
     )
   }
 
@@ -125,7 +129,7 @@ export function CobranzasScreen() {
       )}
 
       {items.map((item) => (
-        <CobranzaRow key={item.alumnoId} item={item} onReload={reload} />
+        <CobranzaRow key={item.alumnoId} item={item} onReload={reload} linkCobro={linkCobro} />
       ))}
     </>
   )
@@ -142,7 +146,7 @@ function Header() {
   )
 }
 
-function CobranzaRow({ item, onReload }: { item: ItemCobranza; onReload: () => void }) {
+function CobranzaRow({ item, onReload, linkCobro }: { item: ItemCobranza; onReload: () => void; linkCobro: string }) {
   const navigate = useNavigate()
   const [cobrando, setCobrando] = useState(false)
   const saldo = item.montoEsperado - item.montoPagado
@@ -171,7 +175,7 @@ function CobranzaRow({ item, onReload }: { item: ItemCobranza; onReload: () => v
           </div>
         </div>
         <div className="row-right">
-          {estadoNode(item)}
+          {estadoNode(item, linkCobro)}
           {puedeCobrar && (
             <button
               className={cobrando ? 'btn btn-sm btn-accent' : 'btn btn-sm'}
@@ -209,7 +213,7 @@ function avatarVariant(item: ItemCobranza): string {
   return ''
 }
 
-function RecordarBtn({ item }: { item: ItemCobranza }) {
+function RecordarBtn({ item, linkCobro }: { item: ItemCobranza; linkCobro: string }) {
   const saldo = item.montoEsperado - item.montoPagado
   return (
     <button
@@ -219,7 +223,7 @@ function RecordarBtn({ item }: { item: ItemCobranza }) {
       onClick={(e) => {
         e.stopPropagation()
         abrirWhatsApp(
-          mensajeRecordatorioCuota(item.nombre, mesActual(), saldo > 0 ? formatPesos(saldo) : undefined),
+          mensajeRecordatorioCuota(item.nombre, mesActual(), saldo > 0 ? formatPesos(saldo) : undefined, linkCobro),
           item.telefono,
         )
       }}
@@ -229,7 +233,7 @@ function RecordarBtn({ item }: { item: ItemCobranza }) {
   )
 }
 
-function estadoNode(item: ItemCobranza) {
+function estadoNode(item: ItemCobranza, linkCobro: string) {
   switch (item.estado) {
     case 'pagado':
       return <span className="pill pill-success">pagó {formatPesos(item.montoPagado)}</span>
@@ -239,7 +243,7 @@ function estadoNode(item: ItemCobranza) {
           <span className="pill-warning" style={{ fontSize: 11, color: 'var(--danger)' }}>
             debe {formatPesos(item.montoEsperado)}
           </span>
-          <RecordarBtn item={item} />
+          <RecordarBtn item={item} linkCobro={linkCobro} />
         </>
       )
     case 'parcial':
@@ -248,7 +252,7 @@ function estadoNode(item: ItemCobranza) {
           <span className="pill-warning" style={{ fontSize: 11 }}>
             parcial {formatPesos(item.montoPagado)}/{formatPesos(item.montoEsperado)}
           </span>
-          <RecordarBtn item={item} />
+          <RecordarBtn item={item} linkCobro={linkCobro} />
         </>
       )
     case 'paquete':

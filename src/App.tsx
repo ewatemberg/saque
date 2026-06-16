@@ -30,6 +30,7 @@ import { DeporteScreen } from './screens/DeporteScreen'
 import { ConocerScreen } from './screens/ConocerScreen'
 import { CalendarioPublicoScreen } from './screens/CalendarioPublicoScreen'
 import { MiPaginaScreen } from './screens/MiPaginaScreen'
+import { CobroScreen } from './screens/CobroScreen'
 
 // Guard: decide si mostrar login / selección de deporte / la app.
 // Renderiza AppLayout (con su <Outlet/>) cuando el acceso está habilitado.
@@ -80,6 +81,7 @@ export default function App() {
           <Route path="franja/:id" element={<FranjaFormScreen />} />
           <Route path="balance" element={<BalanceScreen />} />
           <Route path="mi-pagina" element={<MiPaginaScreen />} />
+          <Route path="cobro" element={<CobroScreen />} />
           <Route path="menu" element={<MenuScreen />} />
           <Route path="apariencia" element={<AparienciaScreen />} />
           <Route path="ayuda" element={<AyudaScreen />} />

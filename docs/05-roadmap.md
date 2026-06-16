@@ -71,6 +71,7 @@
 - [x] Bot de WhatsApp REACTIVO (gratis): Edge Function `whatsapp` para "baja" — falta setup de Meta + deploy
 - [ ] Bot proactivo / recordatorios automáticos (plantillas pagas — no se hará por ahora)
 - [x] Soporte para tenis (el profe elige pádel/tenis; canchas y estética se adaptan)
-- [ ] Cobro integrado (API de MercadoPago — congelado: requiere cuenta MP + Edge Function)
+- [x] Cobro con MercadoPago (versión simple): el profe carga su link de pago y se suma a los recordatorios por WhatsApp
+- [ ] Cobro integrado con conciliación automática (OAuth + webhook — requiere registrar la app en MP Developers)
 - [ ] Detección de alumnos en riesgo de dejar (retención)
 - [ ] Streaming de partidos / clases

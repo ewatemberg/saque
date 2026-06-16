@@ -96,3 +96,15 @@ export async function setPerfilPublico(nombre: string, whatsapp: string): Promis
   const { error } = await supabase.auth.updateUser({ data: { nombre_publico: nombre, whatsapp } })
   if (error) throw error
 }
+
+/** Link de cobro de MercadoPago del profe (guardado en user_metadata). '' si no cargó. */
+export function linkCobroDeSesion(session: Session | null): string {
+  return session?.user?.user_metadata?.mp_link ?? ''
+}
+
+/** Guarda el link de cobro de MercadoPago del profe en user_metadata. */
+export async function setLinkCobro(link: string): Promise<void> {
+  if (!supabase) return
+  const { error } = await supabase.auth.updateUser({ data: { mp_link: link } })
+  if (error) throw error
+}
