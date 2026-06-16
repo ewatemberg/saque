@@ -90,6 +90,21 @@ export interface HistoricoMes {
   neto: number
 }
 
+export interface TurnoPublico {
+  fecha: string
+  hora: string
+  canchaNombre: string
+  categoria: Categoria
+  cupos: number
+  ocupados: number
+}
+
+export interface PerfilPublico {
+  nombre: string
+  whatsapp: string
+  deporte: Deporte | null
+}
+
 export interface ResumenBalance {
   ingresoBruto: number
   costoCanchas: number

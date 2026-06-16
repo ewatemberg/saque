@@ -10,10 +10,12 @@ import type {
   EstadoTurno,
   ItemCobranza,
   MetodoPago,
+  PerfilPublico,
   ResumenBalance,
   ResumenMes,
   TipoAlumno,
   Turno,
+  TurnoPublico,
 } from '../types'
 import { iniciales } from '../lib/format'
 import {
@@ -121,6 +123,32 @@ export async function getTurno(id: string): Promise<Turno | null> {
   const { data, error } = await db().from('turnos').select(SELECT_TURNO).eq('id', id).maybeSingle()
   if (error) throw error
   return data ? mapTurno(data as Record<string, unknown>) : null
+}
+
+export async function getTurnosPublicos(profeId: string, desde: string, hasta: string): Promise<TurnoPublico[]> {
+  const { data, error } = await db().rpc('turnos_publicos', { p_profe: profeId, p_desde: desde, p_hasta: hasta })
+  if (error) throw error
+  return ((data ?? []) as Record<string, unknown>[]).map((r) => ({
+    fecha: r.fecha as string,
+    hora: r.hora as string,
+    canchaNombre: r.cancha_nombre as string,
+    categoria: r.categoria as Categoria,
+    cupos: r.cupos as number,
+    ocupados: r.ocupados as number,
+  }))
+}
+
+export async function getPerfilPublico(profeId: string): Promise<PerfilPublico | null> {
+  const { data, error } = await db().rpc('perfil_publico', { p_profe: profeId })
+  if (error) throw error
+  const r = (Array.isArray(data) ? data[0] : data) as Record<string, unknown> | undefined
+  if (!r) return null
+  const dep = r.deporte as string | null
+  return {
+    nombre: (r.nombre as string) ?? '',
+    whatsapp: (r.whatsapp as string) ?? '',
+    deporte: dep === 'padel' || dep === 'tenis' ? dep : null,
+  }
 }
 
 export async function crearTurno(data: NuevoTurno): Promise<void> {

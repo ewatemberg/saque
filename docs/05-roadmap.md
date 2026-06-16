@@ -28,6 +28,7 @@
 - [x] Landing público /conocer (marketing) accesible desde el login
 - [x] Demos animados por feature en el landing (mini-maquetas en modal, "simil video")
 - [x] Recordatorio de cobro por WhatsApp (mensaje prearmado al chat del alumno, mes dinámico)
+- [x] Página pública compartible (/c/:id): calendario semanal con cupos libres y categoría, sin datos sensibles, con CTA "Reservar por WhatsApp"
 - [x] Toasts de éxito/error en guardados y acciones (antes fallaban en silencio)
 - [x] Búsqueda de alumnos y de canchas
 - [x] Filtro por categoría en Alumnos

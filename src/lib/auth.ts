@@ -73,3 +73,26 @@ export async function setDeporte(deporte: Deporte): Promise<void> {
   const { error } = await supabase.auth.updateUser({ data: { deporte } })
   if (error) throw error
 }
+
+/** Id del profe (para armar el link de su página pública). null en modo mock. */
+export function idDeSesion(session: Session | null): string | null {
+  return session?.user?.id ?? null
+}
+
+export interface PerfilPublicoEditable {
+  nombre: string
+  whatsapp: string
+}
+
+/** Datos públicos del profe (nombre y WhatsApp), guardados en user_metadata. */
+export function perfilPublicoDeSesion(session: Session | null): PerfilPublicoEditable {
+  const m = session?.user?.user_metadata
+  return { nombre: m?.nombre_publico ?? '', whatsapp: m?.whatsapp ?? '' }
+}
+
+/** Guarda nombre público y WhatsApp del profe en user_metadata. */
+export async function setPerfilPublico(nombre: string, whatsapp: string): Promise<void> {
+  if (!supabase) return
+  const { error } = await supabase.auth.updateUser({ data: { nombre_publico: nombre, whatsapp } })
+  if (error) throw error
+}

@@ -28,6 +28,8 @@ import { PrivacidadScreen } from './screens/PrivacidadScreen'
 import { LoginScreen } from './screens/LoginScreen'
 import { DeporteScreen } from './screens/DeporteScreen'
 import { ConocerScreen } from './screens/ConocerScreen'
+import { CalendarioPublicoScreen } from './screens/CalendarioPublicoScreen'
+import { MiPaginaScreen } from './screens/MiPaginaScreen'
 
 // Guard: decide si mostrar login / selección de deporte / la app.
 // Renderiza AppLayout (con su <Outlet/>) cuando el acceso está habilitado.
@@ -56,6 +58,7 @@ export default function App() {
         <Route path="/conocer" element={<ConocerScreen />} />
         <Route path="/terminos" element={<TerminosScreen />} />
         <Route path="/privacidad" element={<PrivacidadScreen />} />
+        <Route path="/c/:profeId" element={<CalendarioPublicoScreen />} />
 
         {/* App (requiere login) */}
         <Route element={<RequireAuth />}>
@@ -76,6 +79,7 @@ export default function App() {
           <Route path="franja/nueva" element={<FranjaFormScreen />} />
           <Route path="franja/:id" element={<FranjaFormScreen />} />
           <Route path="balance" element={<BalanceScreen />} />
+          <Route path="mi-pagina" element={<MiPaginaScreen />} />
           <Route path="menu" element={<MenuScreen />} />
           <Route path="apariencia" element={<AparienciaScreen />} />
           <Route path="ayuda" element={<AyudaScreen />} />

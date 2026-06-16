@@ -4,6 +4,7 @@ import { signOut } from '../lib/auth'
 import { APP_VERSION } from '../version'
 
 const OPCIONES = [
+  { label: 'Mi página pública', to: '/mi-pagina' },
   { label: 'Franjas', to: '/franjas' },
   { label: 'Canchas', to: '/canchas' },
   { label: 'Apariencia', to: '/apariencia' },

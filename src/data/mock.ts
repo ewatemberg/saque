@@ -8,10 +8,12 @@ import type {
   HistoricoMes,
   ItemCobranza,
   MetodoPago,
+  PerfilPublico,
   ResumenBalance,
   ResumenMes,
   TipoAlumno,
   Turno,
+  TurnoPublico,
 } from '../types'
 import { iniciales } from '../lib/format'
 
@@ -213,6 +215,24 @@ export async function getTurnosRango(desde: string, hasta: string): Promise<Turn
     .filter((t) => t.fecha >= desde && t.fecha <= hasta)
     .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora))
     .map(clonar)
+}
+
+export async function getTurnosPublicos(_profeId: string, desde: string, hasta: string): Promise<TurnoPublico[]> {
+  return turnos
+    .filter((t) => t.fecha >= desde && t.fecha <= hasta && t.estado !== 'suspendido')
+    .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora))
+    .map((t) => ({
+      fecha: t.fecha,
+      hora: t.hora,
+      canchaNombre: t.canchaNombre,
+      categoria: t.categoria,
+      cupos: t.cupos,
+      ocupados: t.inscriptos.length,
+    }))
+}
+
+export async function getPerfilPublico(_profeId: string): Promise<PerfilPublico | null> {
+  return { nombre: 'Profe de ejemplo', whatsapp: '+5491100000000', deporte: 'padel' }
 }
 
 export async function crearTurno(data: NuevoTurno): Promise<void> {
