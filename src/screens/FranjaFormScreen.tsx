@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import {
   actualizarFranja,
@@ -77,7 +78,7 @@ export function FranjaFormScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  if (cargando) return <div className="empty">Cargando…</div>
+  if (cargando) return <Cargando />
 
   const elegirCancha = (cid: string) => {
     setCanchaId(cid)

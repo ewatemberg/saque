@@ -1,6 +1,7 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
 import { ToastHost } from './components/ToastHost'
+import { Cargando } from './components/Cargando'
 import { deporteDeSesion, useSession } from './lib/auth'
 import { usandoMock } from './lib/supabase'
 import { HoyScreen } from './screens/HoyScreen'
@@ -30,7 +31,7 @@ import { DeporteScreen } from './screens/DeporteScreen'
 function RequireAuth() {
   const { session, loading } = useSession()
   if (usandoMock) return <AppLayout />
-  if (loading) return <div className="login">Cargando…</div>
+  if (loading) return <div className="login"><Cargando /></div>
   if (!session) return <LoginScreen />
   if (!deporteDeSesion(session)) return <DeporteScreen />
   return <AppLayout />

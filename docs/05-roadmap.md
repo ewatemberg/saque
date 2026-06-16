@@ -33,6 +33,7 @@
 - [x] Menú (5ª pestaña): mueve Franjas/Canchas/Apariencia/Ayuda/Acerca/Términos/Cerrar sesión a un lugar visible
 - [x] Calendario semanal más prolijo (resalta hoy, contador por día, vacíos sutiles)
 - [x] Tooltips (title) + hover en los íconos del header
+- [x] Animación de carga temática (pelota que gira y rebota) en todos los "Cargando"
 - [x] El profe elige su deporte (pádel/tenis) al entrar; las canchas se filtran por deporte
 - [x] ABM de canchas (compartidas entre profes: dirección, contacto, costo de referencia)
 - [x] ABM de turnos: crear (con selector de cancha), editar y eliminar desde la app

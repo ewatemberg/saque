@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas } from '../data/repo'
 import { descargarCSV } from '../lib/csv'
@@ -36,7 +37,7 @@ export function CobranzasScreen() {
     return (
       <>
         <Header />
-        <div className="empty">Cargando…</div>
+        <Cargando />
       </>
     )
   }

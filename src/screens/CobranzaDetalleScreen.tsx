@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { getCuota, registrarPago } from '../data/repo'
 import { formatPesos, nombreMetodo } from '../lib/format'
@@ -25,7 +26,7 @@ export function CobranzaDetalleScreen() {
     })
   }, [id])
 
-  if (cargando) return <div className="empty">Cargando…</div>
+  if (cargando) return <Cargando />
   if (!cuota) return <div className="empty">No se encontró la cuota.</div>
 
   const saldo = cuota.montoEsperado - cuota.montoPagado

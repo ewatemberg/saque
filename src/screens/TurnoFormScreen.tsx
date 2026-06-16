@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { actualizarTurno, crearTurno, getCanchas, getTurno } from '../data/repo'
 import { deporteDeSesion, useSession } from '../lib/auth'
@@ -71,7 +72,7 @@ export function TurnoFormScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  if (cargando) return <div className="empty">Cargando…</div>
+  if (cargando) return <Cargando />
 
   const elegirCancha = (cid: string) => {
     setCanchaId(cid)

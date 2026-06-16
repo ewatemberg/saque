@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import {
   anotarAlumno,
@@ -33,7 +34,7 @@ export function TurnoDetalleScreen() {
     getAlumnos().then(setAlumnos)
   }, [reload])
 
-  if (cargando) return <div className="empty">Cargando…</div>
+  if (cargando) return <Cargando />
   if (!turno) return <div className="empty">No se encontró el turno.</div>
 
   const ocupados = turno.inscriptos.length

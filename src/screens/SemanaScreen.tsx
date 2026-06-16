@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { getTurnosRango } from '../data/repo'
 import type { Turno } from '../types'
@@ -62,7 +63,7 @@ export function SemanaScreen() {
         </span>
       </div>
 
-      {!turnos && <div className="empty">Cargando…</div>}
+      {!turnos && <Cargando />}
 
       {turnos &&
         dias.map((d) => {

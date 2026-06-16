@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { actualizarAlumno, crearAlumno, eliminarAlumno, getAlumno } from '../data/repo'
 import { toast } from '../lib/toast'
@@ -37,7 +38,7 @@ export function AlumnoFormScreen() {
     })
   }, [id])
 
-  if (cargando) return <div className="empty">Cargando…</div>
+  if (cargando) return <Cargando />
 
   const importarContacto = async () => {
     try {

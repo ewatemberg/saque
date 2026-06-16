@@ -406,6 +406,47 @@ a {
   padding: 40px 0;
 }
 
+/* ---------- Cargando (pelota que rebota y gira) ---------- */
+.cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 0;
+  color: var(--text-2);
+}
+.cargando-txt {
+  font-size: 13px;
+}
+.cargando-ball {
+  display: inline-flex;
+  animation: ball-bob 0.9s ease-in-out infinite;
+}
+.ball-spin {
+  animation: ball-spin 1.1s linear infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes ball-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ball-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cargando-ball,
+  .ball-spin {
+    animation: none;
+  }
+}
+
 .icon-btn {
   background: none;
   border: none;
