@@ -43,6 +43,7 @@ La carpeta [`docs/`](docs/) contiene las decisiones de producto y técnicas:
 | [06 · Configuración de Supabase](docs/06-supabase-setup.md) | Cómo conectar el backend real |
 | [07 · Build Android](docs/07-build-android.md) | Empaquetar la app nativa con Capacitor |
 | [08 · Bot de WhatsApp](docs/08-bot-whatsapp.md) | Bot reactivo y gratis (Edge Function) |
+| [09 · Guía de arranque](docs/09-guia-de-arranque.md) | Guía de 1 página para el profe (primer uso) |
 | [Términos y Condiciones](docs/legal/terminos-y-condiciones.md) | Borrador legal (revisar con abogado) |
 | [Política de Privacidad](docs/legal/politica-de-privacidad.md) | Borrador legal (revisar con abogado) |
 
