@@ -89,7 +89,8 @@ export function SemanaScreen() {
               {delDia.map((t) => {
                 const ocupados = t.inscriptos.length
                 const completo = ocupados >= t.cupos
-                const suspendido = t.estado !== 'activo'
+                const suspendido = t.estado === 'suspendido'
+                const recupero = t.estado === 'recupero'
                 return (
                   <div
                     className="card clickable"
@@ -108,7 +109,7 @@ export function SemanaScreen() {
                         <span className="card-meta">· {t.canchaNombre} · {t.categoria}</span>
                       </div>
                       <span className={`pill ${suspendido ? 'pill-neutral' : completo ? 'pill-success' : 'pill-warning'}`}>
-                        {suspendido ? 'suspendido' : `${ocupados}/${t.cupos}`}
+                        {suspendido ? 'suspendido' : recupero ? `recupero ${ocupados}/${t.cupos}` : `${ocupados}/${t.cupos}`}
                       </span>
                     </div>
                   </div>

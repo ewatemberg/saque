@@ -61,7 +61,7 @@
 ## Fase 2 — Mejoras
 
 - [ ] Lista de espera inteligente para tapar huecos
-- [ ] Reprogramación de turnos suspendidos (recupero) completa
+- [x] Reprogramación de turnos suspendidos (recupero): nueva fecha/hora + aviso por WhatsApp
 - [ ] Paquetes de clases para alumnos ocasionales
 - [ ] Dashboard de balance derivado de datos reales
 - [ ] Builds nativas y publicación en stores

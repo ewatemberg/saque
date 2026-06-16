@@ -39,6 +39,15 @@ export function mesYAnioActual(): string {
   return `${MESES[d.getMonth()]} ${d.getFullYear()}`
 }
 
+const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
+
+/** Fecha ISO "2026-06-22" -> "lunes 22/6". Parsea por partes para evitar el corrimiento por UTC. */
+export function formatFechaCorta(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  if (!y || !m || !d) return iso
+  return `${DIAS[new Date(y, m - 1, d).getDay()]} ${d}/${m}`
+}
+
 /** Iniciales a partir del nombre: "Juan Díaz" -> "JD". */
 export function iniciales(nombre: string): string {
   const palabras = nombre.trim().split(/\s+/).filter(Boolean)

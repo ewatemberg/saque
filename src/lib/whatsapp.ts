@@ -29,3 +29,8 @@ export function mensajeRecordatorioCuota(nombre: string, mes: string, montoTexto
     : `Te recuerdo que quedó pendiente la cuota de ${mes}.`
   return `${saludo} ${detalle} Cualquier cosa me avisás. ¡Gracias!`
 }
+
+/** Mensaje para coordinar el recupero de un turno suspendido. */
+export function mensajeRecupero(fechaTexto: string, hora: string, categoria: string, cancha: string): string {
+  return `Hola! La clase suspendida la recuperamos el ${fechaTexto} a las ${hora} (${categoria}, ${cancha}). ¿Te queda bien? ¡Avisame!`
+}

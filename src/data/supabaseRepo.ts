@@ -193,6 +193,14 @@ export async function cambiarEstadoTurno(turnoId: string, estado: EstadoTurno): 
   if (error) throw error
 }
 
+export async function reprogramarTurno(turnoId: string, fecha: string, hora: string): Promise<void> {
+  const { error } = await db()
+    .from('turnos')
+    .update({ fecha, hora, estado: 'recupero' })
+    .eq('id', turnoId)
+  if (error) throw error
+}
+
 export async function getAlumnos(): Promise<Alumno[]> {
   const { data, error } = await db().from('alumnos').select('*').order('nombre')
   if (error) throw error
@@ -608,7 +616,7 @@ export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
   }
   const costoPorMes = new Map<string, number>()
   for (const t of turnos ?? []) {
-    if (t.estado !== 'activo') continue
+    if (t.estado === 'suspendido') continue
     const per = (t.fecha as string).slice(0, 7)
     costoPorMes.set(per, (costoPorMes.get(per) ?? 0) + (t.costo_cancha as number))
   }
@@ -638,7 +646,7 @@ export async function getBalance(): Promise<ResumenBalance> {
   if (e1) throw e1
   if (e2) throw e2
 
-  const activos = (turnos ?? []).filter((t) => t.estado === 'activo')
+  const activos = (turnos ?? []).filter((t) => t.estado !== 'suspendido')
   const ingresoBruto = (cuotas ?? []).reduce((s, c) => s + (c.monto_pagado as number), 0)
   const costoCanchas = activos.reduce((s, t) => s + (t.costo_cancha as number), 0)
   const horas = activos.reduce((s, t) => s + (t.duracion_min as number), 0) / 60

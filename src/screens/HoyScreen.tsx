@@ -79,6 +79,7 @@ function CardMeta({ turno }: { turno: Turno }) {
   return (
     <span className="card-meta">
       · {turno.canchaNombre} · {turno.categoria}
+      {turno.estado === 'recupero' && ' · recupero'}
     </span>
   )
 }

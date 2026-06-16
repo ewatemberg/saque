@@ -176,7 +176,7 @@ export function calcularResumenMes(items: ItemCobranza[]): ResumenMes {
 }
 
 export function calcularResumenHoy(lista: Turno[]) {
-  const activos = lista.filter((t) => t.estado === 'activo')
+  const activos = lista.filter((t) => t.estado !== 'suspendido')
   const alumnosHoy = activos.reduce((s, t) => s + t.inscriptos.length, 0)
   const ingreso = activos.reduce((s, t) => s + t.precio * t.inscriptos.length, 0)
   const costo = activos.reduce((s, t) => s + t.costoCancha, 0)
@@ -252,6 +252,15 @@ export async function anotarAlumno(turnoId: string, alumnoId: string): Promise<v
 export async function cambiarEstadoTurno(turnoId: string, estado: Turno['estado']): Promise<void> {
   const t = turnos.find((x) => x.id === turnoId)
   if (t) t.estado = estado
+}
+
+export async function reprogramarTurno(turnoId: string, fecha: string, hora: string): Promise<void> {
+  const t = turnos.find((x) => x.id === turnoId)
+  if (t) {
+    t.fecha = fecha
+    t.hora = hora
+    t.estado = 'recupero'
+  }
 }
 
 export function estadoCuota(esperado: number, pagado: number): EstadoCobranza {

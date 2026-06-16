@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { type CSSProperties, useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
@@ -10,9 +10,11 @@ import {
   getAlumnos,
   getTurno,
   marcarAsistencia,
+  reprogramarTurno,
 } from '../data/repo'
+import { formatFechaCorta } from '../lib/format'
 import { toast } from '../lib/toast'
-import { abrirWhatsApp } from '../lib/whatsapp'
+import { abrirWhatsApp, mensajeRecupero } from '../lib/whatsapp'
 import type { Alumno, Turno } from '../types'
 
 export function TurnoDetalleScreen() {
@@ -22,6 +24,9 @@ export function TurnoDetalleScreen() {
   const [alumnos, setAlumnos] = useState<Alumno[]>([])
   const [cargando, setCargando] = useState(true)
   const [mostrarPicker, setMostrarPicker] = useState(false)
+  const [reprog, setReprog] = useState(false)
+  const [nuevaFecha, setNuevaFecha] = useState('')
+  const [nuevaHora, setNuevaHora] = useState('')
 
   const reload = useCallback(async () => {
     const t = await getTurno(id)
@@ -40,7 +45,8 @@ export function TurnoDetalleScreen() {
   const ocupados = turno.inscriptos.length
   const lugares = turno.cupos - ocupados
   const cubreCosto = turno.precio * ocupados >= turno.costoCancha
-  const suspendido = turno.estado !== 'activo'
+  const suspendido = turno.estado === 'suspendido'
+  const enRecupero = turno.estado === 'recupero'
   const disponibles = alumnos.filter((a) => !turno.inscriptos.some((i) => i.alumnoId === a.id))
 
   const accion = async (fn: () => Promise<void>) => {
@@ -50,6 +56,36 @@ export function TurnoDetalleScreen() {
     } catch {
       toast('No se pudo completar la acción. Intentá de nuevo.', 'error')
     }
+  }
+
+  const abrirReprogramar = () => {
+    setNuevaFecha(turno.fecha)
+    setNuevaHora(turno.hora)
+    setReprog(true)
+  }
+
+  const confirmarRecupero = () => {
+    if (!nuevaFecha || !nuevaHora) {
+      toast('Elegí la fecha y la hora del recupero.', 'error')
+      return
+    }
+    accion(async () => {
+      await reprogramarTurno(turno.id, nuevaFecha, nuevaHora)
+      setReprog(false)
+      toast('Recupero coordinado.', 'success')
+    })
+  }
+
+  const inputRecupero: CSSProperties = {
+    flex: 1,
+    height: 40,
+    padding: '0 10px',
+    border: '0.5px solid var(--border-strong)',
+    borderRadius: 'var(--radius)',
+    background: 'var(--bg)',
+    color: 'var(--text)',
+    fontFamily: 'inherit',
+    fontSize: 15,
   }
 
   return (
@@ -87,10 +123,57 @@ export function TurnoDetalleScreen() {
       </div>
 
       {suspendido && (
-        <div className="card muted">
-          <span className="card-meta">
-            <Icon name="rain" size={14} /> Turno suspendido · recupero pendiente
-          </span>
+        <div className="card warning">
+          <div className="card-meta" style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <Icon name="rain" size={14} /> Turno suspendido · coordiná el recupero
+          </div>
+          {!reprog ? (
+            <button className="btn btn-block" onClick={abrirReprogramar}>
+              <Icon name="calendar" size={16} /> Coordinar recupero
+            </button>
+          ) : (
+            <>
+              <div className="row-sub" style={{ marginBottom: 6 }}>Nueva fecha y hora</div>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+                <input
+                  type="date"
+                  aria-label="Fecha del recupero"
+                  value={nuevaFecha}
+                  onChange={(e) => setNuevaFecha(e.target.value)}
+                  style={inputRecupero}
+                />
+                <input
+                  type="time"
+                  aria-label="Hora del recupero"
+                  value={nuevaHora}
+                  onChange={(e) => setNuevaHora(e.target.value)}
+                  style={inputRecupero}
+                />
+              </div>
+              <button className="btn btn-accent btn-block" onClick={confirmarRecupero}>
+                <Icon name="check" size={16} /> Confirmar recupero
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {enRecupero && (
+        <div className="card warning">
+          <div className="card-meta" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Icon name="calendar" size={14} /> Recupero · {formatFechaCorta(turno.fecha)} {turno.hora}
+          </div>
+          <button
+            className="btn btn-block"
+            style={{ marginTop: 10 }}
+            onClick={() =>
+              abrirWhatsApp(
+                mensajeRecupero(formatFechaCorta(turno.fecha), turno.hora, turno.categoria, turno.canchaNombre),
+              )
+            }
+          >
+            <Icon name="whatsapp" size={16} /> Avisar el recupero a los alumnos
+          </button>
         </div>
       )}
 

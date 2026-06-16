@@ -18,6 +18,7 @@ export const marcarAsistencia = impl.marcarAsistencia
 export const darDeBaja = impl.darDeBaja
 export const anotarAlumno = impl.anotarAlumno
 export const cambiarEstadoTurno = impl.cambiarEstadoTurno
+export const reprogramarTurno = impl.reprogramarTurno
 export const getCobranzas = impl.getCobranzas
 export const getCuota = impl.getCuota
 export const registrarPago = impl.registrarPago
