@@ -11,10 +11,27 @@ export function LoginScreen() {
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(false)
   const [acepto, setAcepto] = useState(false)
+  const [intento, setIntento] = useState(false)
+
+  const faltaAceptar = intento && !acepto
+
+  const requiereAceptar = (): boolean => {
+    if (!acepto) {
+      setIntento(true)
+      return true
+    }
+    return false
+  }
+
+  const entrarGoogle = () => {
+    if (requiereAceptar()) return
+    signInGoogle()
+  }
 
   const enviarLink = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !acepto) return
+    if (requiereAceptar()) return
+    if (!email) return
     setCargando(true)
     setError(null)
     try {
@@ -47,13 +64,26 @@ export function LoginScreen() {
           </p>
         ) : (
           <>
-            <label className="login-acepto">
-              <input type="checkbox" checked={acepto} onChange={(e) => setAcepto(e.target.checked)} />
+            <label className={`login-acepto${faltaAceptar ? ' alerta' : ''}`}>
+              <input
+                type="checkbox"
+                checked={acepto}
+                onChange={(e) => {
+                  setAcepto(e.target.checked)
+                  if (e.target.checked) setIntento(false)
+                }}
+              />
               <span>
                 Acepto los <Link to="/terminos">Términos y Condiciones</Link> y la{' '}
                 <Link to="/privacidad">Política de Privacidad</Link>.
               </span>
             </label>
+
+            {faltaAceptar && (
+              <p className="login-error" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 0, marginBottom: 12 }}>
+                <Icon name="alert" size={15} /> Tenés que aceptar los términos para entrar.
+              </p>
+            )}
 
             <form onSubmit={enviarLink}>
               <input
@@ -63,22 +93,17 @@ export function LoginScreen() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <button className="btn btn-accent btn-block" type="submit" disabled={cargando || !acepto}>
+              <button className="btn btn-accent btn-block" type="submit" disabled={cargando}>
                 {cargando ? 'Enviando…' : 'Entrar con email'}
               </button>
             </form>
 
             <div className="login-divider">o</div>
 
-            <button className="btn btn-block" onClick={() => acepto && signInGoogle()} disabled={!acepto}>
+            <button className="btn btn-block" onClick={entrarGoogle}>
               <Icon name="user" size={16} /> Entrar con Google
             </button>
 
-            {!acepto && (
-              <p style={{ fontSize: 11.5, color: 'var(--text-3)', marginTop: 10 }}>
-                Aceptá los términos para continuar.
-              </p>
-            )}
             {error && <p className="login-error">{error}</p>}
           </>
         )}

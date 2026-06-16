@@ -564,6 +564,25 @@ a {
 .login-acepto a {
   color: var(--accent);
 }
+.login-acepto.alerta {
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  padding: 10px;
+  margin: 4px 0 14px;
+  animation: shake 0.4s;
+}
+.login-acepto.alerta input {
+  accent-color: var(--danger);
+  outline: 2px solid var(--danger);
+  outline-offset: 1px;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
 
 /* ---------- Legal ---------- */
 .legal h2 {
