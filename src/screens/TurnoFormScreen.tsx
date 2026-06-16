@@ -4,6 +4,7 @@ import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { actualizarTurno, crearTurno, getCanchas, getTurno } from '../data/repo'
 import { useDeporte } from '../lib/auth'
+import { normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
 import type { Cancha, Categoria } from '../types'
 
@@ -31,6 +32,7 @@ export function TurnoFormScreen() {
   const [cupos, setCupos] = useState('4')
   const [duracion, setDuracion] = useState('60')
   const [costo, setCosto] = useState('')
+  const [buscaCancha, setBuscaCancha] = useState('')
   const [cargando, setCargando] = useState(true)
   const [guardando, setGuardando] = useState(false)
 
@@ -79,6 +81,12 @@ export function TurnoFormScreen() {
     if (c) setCosto(String(c.costoPorHora))
   }
 
+  const qc = normalizar(buscaCancha)
+  const canchasFiltradas = qc
+    ? canchas.filter((c) => normalizar(c.nombre + ' ' + c.direccion).includes(qc))
+    : canchas
+  const hayMuchasCanchas = canchas.length > 5
+
   const guardar = async () => {
     const cancha = canchas.find((x) => x.id === canchaId)
     if (!hora.trim() || !cancha) return
@@ -123,14 +131,55 @@ export function TurnoFormScreen() {
         </div>
       ) : (
         <div className="card">
-          <label className="field-label" htmlFor="cancha">Cancha</label>
-          <select id="cancha" className="input" value={canchaId} onChange={(e) => elegirCancha(e.target.value)}>
-            {canchas.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.nombre}
-              </option>
+          <label className="field-label">Cancha</label>
+          {hayMuchasCanchas && (
+            <div style={{ position: 'relative', margin: '4px 0 8px' }}>
+              <span style={{ position: 'absolute', left: 11, top: 11, color: 'var(--text-3)' }}>
+                <Icon name="search" size={18} />
+              </span>
+              <input
+                className="input"
+                style={{ paddingLeft: 38 }}
+                placeholder="Buscar cancha…"
+                value={buscaCancha}
+                onChange={(e) => setBuscaCancha(e.target.value)}
+              />
+            </div>
+          )}
+          <div
+            style={{
+              maxHeight: 180,
+              overflowY: 'auto',
+              border: '0.5px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              padding: '4px 6px',
+              marginBottom: 12,
+            }}
+          >
+            {canchasFiltradas.length === 0 && (
+              <p className="card-meta" style={{ padding: '8px 4px', margin: 0 }}>
+                Ninguna cancha coincide con “{buscaCancha}”.
+              </p>
+            )}
+            {canchasFiltradas.map((c) => (
+              <label
+                key={c.id}
+                className="login-acepto"
+                style={{
+                  margin: 0,
+                  padding: '8px 8px',
+                  borderRadius: 'var(--radius)',
+                  background: canchaId === c.id ? 'var(--accent-weak)' : undefined,
+                }}
+              >
+                <input type="radio" name="cancha" checked={canchaId === c.id} onChange={() => elegirCancha(c.id)} />
+                <span>
+                  {c.nombre}
+                  {c.direccion && <span className="card-meta"> · {c.direccion}</span>}
+                </span>
+              </label>
             ))}
-          </select>
+          </div>
 
           <div style={{ display: 'flex', gap: 10 }}>
             <div style={{ flex: 1 }}>

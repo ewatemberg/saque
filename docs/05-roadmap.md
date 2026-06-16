@@ -39,6 +39,7 @@
 - [x] Balance: variación mes vs mes y atajo "por cobrar" (deudores) que lleva a Cobranzas
 - [x] Cobro rápido desde la lista de Cobranzas (un toque → elegir método → registra el saldo)
 - [x] Buscador de alumnos en Cobranzas (filtrar y marcar el pago rápido con muchos alumnos)
+- [x] Selector de cancha con buscador por subcadena en franjas y turnos (el combo nativo no encontraba "Padel Centenario" al tipear "cent")
 - [x] Selector de color libre en Apariencia (además de los 5 presets)
 - [x] Pantalla de Ayuda (guía de uso) accesible desde el pie
 - [x] Menú (5ª pestaña): mueve Franjas/Canchas/Apariencia/Ayuda/Acerca/Términos/Cerrar sesión a un lugar visible
