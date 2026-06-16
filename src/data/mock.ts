@@ -54,7 +54,12 @@ export interface ResultadoGeneracion {
 
 const COSTO_CANCHA = 12000
 const PRECIO_TURNO = 6000
-const HOY = new Date().toISOString().slice(0, 10)
+const HOY = (() => {
+  const d = new Date()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const dia = String(d.getDate()).padStart(2, '0')
+  return `${d.getFullYear()}-${m}-${dia}`
+})()
 
 const turnos: Turno[] = [
   {

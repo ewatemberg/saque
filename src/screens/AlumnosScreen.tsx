@@ -32,7 +32,7 @@ export function AlumnosScreen() {
           <div className="sub">{alumnos ? `${alumnos.length} en total` : ''}</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-sm" aria-label="Exportar CSV" onClick={exportar} disabled={!alumnos?.length}>
+          <button className="btn btn-sm" aria-label="Exportar CSV" title="Exportar a CSV" onClick={exportar} disabled={!alumnos?.length}>
             <Icon name="download" size={16} />
           </button>
           <button className="btn btn-sm" onClick={() => navigate('/alumno/nuevo')}>

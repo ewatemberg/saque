@@ -24,13 +24,13 @@ export function HoyScreen() {
           <div className="sub">jueves 15 jun · Profe Emilio</div>
         </div>
         <div className="header-actions">
-          <button className="icon-btn" aria-label="Ver semana" onClick={() => navigate('/semana')}>
+          <button className="icon-btn" aria-label="Ver semana" title="Ver semana" onClick={() => navigate('/semana')}>
             <Icon name="calendar" />
           </button>
-          <button className="icon-btn" aria-label="Nuevo turno" onClick={() => navigate('/turno/nuevo')}>
+          <button className="icon-btn" aria-label="Nuevo turno" title="Nuevo turno" onClick={() => navigate('/turno/nuevo')}>
             <Icon name="plus" />
           </button>
-          <button className="icon-btn" aria-label="Menú" onClick={() => navigate('/menu')}>
+          <button className="icon-btn" aria-label="Menú" title="Menú" onClick={() => navigate('/menu')}>
             <Icon name="user" />
           </button>
         </div>

@@ -25,6 +25,7 @@ export function SemanaScreen() {
   const [offset, setOffset] = useState(0)
   const [turnos, setTurnos] = useState<Turno[] | null>(null)
 
+  const hoy = iso(new Date())
   const lunes = lunesDeSemana(offset)
   const dias = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(lunes)
@@ -45,17 +46,17 @@ export function SemanaScreen() {
     <>
       <div className="screen-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button className="icon-btn" aria-label="Volver" onClick={() => navigate(-1)}>
+          <button className="icon-btn" aria-label="Volver" title="Volver" onClick={() => navigate(-1)}>
             <Icon name="chevron-left" size={22} />
           </button>
           <h1>Semana</h1>
         </div>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-2)' }}>
-          <button className="icon-btn" aria-label="Semana anterior" onClick={() => setOffset(offset - 1)}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--text-2)' }}>
+          <button className="icon-btn" aria-label="Semana anterior" title="Semana anterior" onClick={() => setOffset(offset - 1)}>
             <Icon name="chevron-left" size={18} />
           </button>
           {etiqueta}
-          <button className="icon-btn" aria-label="Semana siguiente" onClick={() => setOffset(offset + 1)}>
+          <button className="icon-btn" aria-label="Semana siguiente" title="Semana siguiente" onClick={() => setOffset(offset + 1)}>
             <Icon name="chevron-right" size={18} />
           </button>
         </span>
@@ -67,23 +68,40 @@ export function SemanaScreen() {
         dias.map((d) => {
           const fecha = iso(d)
           const delDia = turnos.filter((t) => t.fecha === fecha)
+          const esHoy = fecha === hoy
           return (
-            <div key={fecha} style={{ marginBottom: 12 }}>
-              <div className="section-title" style={{ margin: '8px 0 6px' }}>
-                {DIAS[(d.getDay() + 6) % 7]} {d.getDate()}/{d.getMonth() + 1}
+            <div key={fecha}>
+              <div className={`dia-header${esHoy ? ' hoy' : ''}`}>
+                <span>
+                  {DIAS[(d.getDay() + 6) % 7]} {d.getDate()}/{d.getMonth() + 1}
+                  {esHoy ? ' · hoy' : ''}
+                </span>
+                {delDia.length > 0 && (
+                  <span className="dia-count">
+                    {delDia.length} {delDia.length === 1 ? 'turno' : 'turnos'}
+                  </span>
+                )}
               </div>
-              {delDia.length === 0 && (
-                <div className="card-meta" style={{ paddingLeft: 2 }}>—</div>
-              )}
+
+              {delDia.length === 0 && <div className="dia-vacio">Sin turnos</div>}
+
               {delDia.map((t) => {
                 const ocupados = t.inscriptos.length
                 const completo = ocupados >= t.cupos
                 const suspendido = t.estado !== 'activo'
                 return (
-                  <div className="card clickable" key={t.id} onClick={() => navigate(`/turno/${t.id}`)} style={{ marginBottom: 8 }}>
+                  <div
+                    className="card clickable"
+                    key={t.id}
+                    onClick={() => navigate(`/turno/${t.id}`)}
+                    style={{ marginTop: 8, marginBottom: 0 }}
+                  >
                     <div className="card-top">
                       <div>
-                        <span className="card-time" style={suspendido ? { textDecoration: 'line-through', color: 'var(--text-2)' } : undefined}>
+                        <span
+                          className="card-time"
+                          style={suspendido ? { textDecoration: 'line-through', color: 'var(--text-2)' } : undefined}
+                        >
                           {t.hora}
                         </span>{' '}
                         <span className="card-meta">· {t.canchaNombre} · {t.categoria}</span>
