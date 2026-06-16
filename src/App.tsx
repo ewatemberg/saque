@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import { aplicarTema } from './lib/tema'
 import { AppLayout } from './components/AppLayout'
 import { ToastHost } from './components/ToastHost'
 import { Cargando } from './components/Cargando'
@@ -30,6 +32,10 @@ import { DeporteScreen } from './screens/DeporteScreen'
 // Renderiza AppLayout (con su <Outlet/>) cuando el acceso está habilitado.
 function RequireAuth() {
   const { session, loading } = useSession()
+  const deporte = deporteDeSesion(session) ?? undefined
+  useEffect(() => {
+    aplicarTema(deporte)
+  }, [deporte])
   if (usandoMock) return <AppLayout />
   if (loading) return <div className="login"><Cargando /></div>
   if (!session) return <LoginScreen />

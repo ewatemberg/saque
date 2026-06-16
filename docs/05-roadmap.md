@@ -21,6 +21,7 @@
 - [x] Editar y eliminar alumno
 - [x] Vista de calendario semanal (con navegación entre semanas)
 - [x] Apariencia: modo claro/oscuro/auto y color de acento (guardado en el dispositivo)
+- [x] Color por defecto según deporte (pádel=azul, tenis=naranja); editable por el profe
 - [x] PWA: manifest + íconos para instalar con "Agregar a inicio" (standalone, ícono propio)
 - [x] Onboarding (checklist de 4 pasos para profe nuevo) y estados vacíos
 - [x] Toasts de éxito/error en guardados y acciones (antes fallaban en silencio)

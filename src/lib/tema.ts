@@ -1,7 +1,16 @@
 // Tema de la app: modo (claro/oscuro/auto) y color de acento. Se guarda en el
 // dispositivo (localStorage), no necesita backend, y se aplica al instante.
 
+import type { Deporte } from '../types'
+
 export type Tema = 'auto' | 'claro' | 'oscuro'
+
+/** Color por defecto según el deporte (si el profe no eligió uno propio). */
+export function colorPorDeporte(deporte?: Deporte): string | undefined {
+  if (deporte === 'tenis') return '#d85a30' // naranja
+  if (deporte === 'padel') return '#185fa5' // azul
+  return undefined
+}
 
 export interface Acento {
   nombre: string
@@ -29,14 +38,21 @@ export function getAcento(): string {
   return localStorage.getItem(K_ACENTO) ?? ''
 }
 
-export function aplicarTema(): void {
+// Recordamos el último deporte aplicado para que setTema/setAcento (que llaman
+// a aplicarTema sin argumento) no pierdan el color por defecto del deporte.
+let deporteActual: Deporte | undefined
+
+export function aplicarTema(deporte?: Deporte): void {
+  if (deporte !== undefined) deporteActual = deporte
   const root = document.documentElement
   const tema = getTema()
   if (tema === 'auto') root.removeAttribute('data-theme')
   else root.setAttribute('data-theme', tema === 'oscuro' ? 'dark' : 'light')
 
-  const acento = getAcento()
+  const acento = getAcento() // elección explícita del profe
+  const porDeporte = colorPorDeporte(deporteActual)
   if (acento) root.style.setProperty('--accent', acento)
+  else if (porDeporte) root.style.setProperty('--accent', porDeporte)
   else root.style.removeProperty('--accent')
 }
 

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { ACENTOS, getAcento, getTema, setAcento, setTema, type Tema } from '../lib/tema'
+import { useDeporte } from '../lib/auth'
+import { ACENTOS, colorPorDeporte, getAcento, getTema, setAcento, setTema, type Tema } from '../lib/tema'
 
 const MODOS: { valor: Tema; label: string }[] = [
   { valor: 'claro', label: 'Claro' },
@@ -11,8 +12,11 @@ const MODOS: { valor: Tema; label: string }[] = [
 
 export function AparienciaScreen() {
   const navigate = useNavigate()
+  const deporte = useDeporte()
   const [tema, setTemaState] = useState<Tema>(getTema())
-  const [acento, setAcentoState] = useState<string>(getAcento() || ACENTOS[0].color)
+  const [acento, setAcentoState] = useState<string>(
+    getAcento() || colorPorDeporte(deporte) || ACENTOS[0].color,
+  )
 
   const elegirModo = (t: Tema) => {
     setTema(t)
