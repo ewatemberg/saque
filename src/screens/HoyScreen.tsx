@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { Onboarding } from '../components/Onboarding'
 import { getConteos, getResumenHoy, getTurnosHoy } from '../data/repo'
-import { deporteDeSesion, signOut, useSession } from '../lib/auth'
+import { deporteDeSesion, useSession } from '../lib/auth'
 import { formatCompacto } from '../lib/format'
 import { useData } from '../lib/useData'
 import { abrirWhatsApp } from '../lib/whatsapp'
@@ -30,7 +30,7 @@ export function HoyScreen() {
           <button className="icon-btn" aria-label="Nuevo turno" onClick={() => navigate('/turno/nuevo')}>
             <Icon name="plus" />
           </button>
-          <button className="icon-btn" aria-label="Cerrar sesión" onClick={() => signOut()}>
+          <button className="icon-btn" aria-label="Menú" onClick={() => navigate('/menu')}>
             <Icon name="user" />
           </button>
         </div>
