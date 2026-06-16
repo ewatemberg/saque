@@ -55,6 +55,22 @@ export function ConocerScreen() {
         ))}
       </div>
 
+      <div className="landing-feature fade-up" style={{ marginTop: 12, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+        <span className="ico" style={{ marginBottom: 0 }}>
+          <Icon name="cash" size={24} />
+        </span>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <h3 style={{ margin: 0 }}>Cobrá online con MercadoPago</h3>
+            <span className="pill pill-neutral" style={{ fontSize: 11 }}>Próximamente</span>
+          </div>
+          <p style={{ marginTop: 4 }}>
+            Vas a poder mandar el link de pago y que la cuota se marque sola al cobrar. Hoy ya registrás
+            tus pagos por MercadoPago, transferencia o efectivo con un toque.
+          </p>
+        </div>
+      </div>
+
       <div style={{ textAlign: 'center', marginTop: 28 }}>
         <button className="btn btn-accent" onClick={() => navigate('/')}>
           Empezar ahora
