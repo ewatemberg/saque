@@ -89,9 +89,18 @@ export function CobranzasScreen() {
         </button>
       )}
 
-      <button className="btn btn-block" style={{ marginBottom: 10 }} onClick={generar}>
+      <button
+        className="btn btn-block"
+        style={{ marginBottom: 6 }}
+        onClick={generar}
+        title="Crea la cuota mensual de cada alumno fijo que aún no la tenga este mes. No duplica ni cobra nada."
+      >
         <Icon name="plus" size={16} /> Generar cuotas del mes
       </button>
+      <p style={{ fontSize: 11.5, color: 'var(--text-2)', margin: '0 0 14px', lineHeight: 1.45 }}>
+        Crea la cuota del mes de cada alumno fijo que todavía no la tenga. No duplica ni cobra nada: solo
+        arma lo que esperás cobrar. El cobro lo registrás después con el botón de cobro de cada alumno.
+      </p>
 
       {items.length > 0 && (
         <button
