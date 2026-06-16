@@ -11,6 +11,7 @@ import {
   getFranja,
 } from '../data/repo'
 import { useDeporte } from '../lib/auth'
+import { normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
 import type { Alumno, Cancha, Categoria } from '../types'
 
@@ -35,6 +36,7 @@ export function FranjaFormScreen() {
   const [costo, setCosto] = useState('')
   const [permanente, setPermanente] = useState(true)
   const [alumnoIds, setAlumnoIds] = useState<string[]>([])
+  const [buscaAlumno, setBuscaAlumno] = useState('')
   const [cargando, setCargando] = useState(true)
   const [guardando, setGuardando] = useState(false)
 
@@ -88,6 +90,12 @@ export function FranjaFormScreen() {
   const toggleAlumno = (aid: string) => {
     setAlumnoIds((prev) => (prev.includes(aid) ? prev.filter((x) => x !== aid) : [...prev, aid]))
   }
+
+  const q = normalizar(buscaAlumno)
+  const alumnosFiltrados = q
+    ? alumnos.filter((a) => normalizar(a.nombre).includes(q) || normalizar(a.categoria).includes(q))
+    : alumnos
+  const hayMuchos = alumnos.length > 3
 
   const guardar = async () => {
     const cancha = canchas.find((x) => x.id === canchaId)
@@ -191,9 +199,31 @@ export function FranjaFormScreen() {
             <span>Permanente (se renueva todos los meses)</span>
           </label>
 
-          <div className="field-label">Alumnos fijos del turno</div>
+          <div className="field-label">
+            Alumnos fijos del turno
+            {alumnoIds.length > 0 && <span className="card-meta"> · {alumnoIds.length} seleccionado{alumnoIds.length === 1 ? '' : 's'}</span>}
+          </div>
           {alumnos.length === 0 && <p className="card-meta">Todavía no hay alumnos para asignar.</p>}
-          {alumnos.map((a) => (
+
+          {hayMuchos && (
+            <div style={{ position: 'relative', margin: '4px 0 8px' }}>
+              <span style={{ position: 'absolute', left: 11, top: 11, color: 'var(--text-3)' }}>
+                <Icon name="search" size={18} />
+              </span>
+              <input
+                className="input"
+                style={{ paddingLeft: 38 }}
+                placeholder="Buscar alumno…"
+                value={buscaAlumno}
+                onChange={(e) => setBuscaAlumno(e.target.value)}
+              />
+            </div>
+          )}
+
+          {alumnos.length > 0 && alumnosFiltrados.length === 0 && (
+            <p className="card-meta">Ningún alumno coincide con “{buscaAlumno}”.</p>
+          )}
+          {alumnosFiltrados.map((a) => (
             <label key={a.id} className="login-acepto" style={{ margin: '4px 0' }}>
               <input type="checkbox" checked={alumnoIds.includes(a.id)} onChange={() => toggleAlumno(a.id)} />
               <span>{a.nombre} <span className="card-meta">· {a.categoria}</span></span>
