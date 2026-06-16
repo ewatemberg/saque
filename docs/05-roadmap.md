@@ -35,6 +35,7 @@
 - [x] Aviso de cancha duplicada al crear (sugiere usar la existente)
 - [x] Exportar a CSV (alumnos y cobranzas)
 - [x] Reportes: gráfico de ganancia neta de los últimos 6 meses en Balance
+- [x] Balance: variación mes vs mes y atajo "por cobrar" (deudores) que lleva a Cobranzas
 - [x] Selector de color libre en Apariencia (además de los 5 presets)
 - [x] Pantalla de Ayuda (guía de uso) accesible desde el pie
 - [x] Menú (5ª pestaña): mueve Franjas/Canchas/Apariencia/Ayuda/Acerca/Términos/Cerrar sesión a un lugar visible

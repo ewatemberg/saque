@@ -1,19 +1,30 @@
-import { getBalance, getHistorico } from '../data/repo'
-import { formatPesos } from '../lib/format'
+import { useNavigate } from 'react-router-dom'
+import { Icon } from '../components/Icon'
+import { getBalance, getCobranzas, getHistorico } from '../data/repo'
+import { formatPesos, mesYAnioActual } from '../lib/format'
 import { useData } from '../lib/useData'
 
 export function BalanceScreen() {
+  const navigate = useNavigate()
   const balance = useData(getBalance)
   const historico = useData(() => getHistorico(6))
+  const cobranzas = useData(getCobranzas)
 
   const maxNeto = historico ? Math.max(1, ...historico.map((h) => h.neto)) : 1
+
+  const actual = historico?.[historico.length - 1]
+  const previo = historico && historico.length > 1 ? historico[historico.length - 2] : null
+  const variacion =
+    actual && previo
+      ? { diff: actual.neto - previo.neto, pct: Math.round(((actual.neto - previo.neto) / (Math.abs(previo.neto) || 1)) * 100), etiqueta: previo.etiqueta }
+      : null
 
   return (
     <>
       <div className="screen-header">
         <div>
           <h1>Balance</h1>
-          <div className="sub">junio 2026</div>
+          <div className="sub">{mesYAnioActual()}</div>
         </div>
       </div>
 
@@ -50,9 +61,40 @@ export function BalanceScreen() {
         </>
       )}
 
+      {cobranzas && cobranzas.resumen.falta > 0 && (
+        <div
+          className="card warning clickable"
+          style={{ marginTop: 14 }}
+          onClick={() => navigate('/cobranzas')}
+        >
+          <div className="card-top">
+            <div>
+              <div className="row-name" style={{ color: 'var(--danger)' }}>
+                {formatPesos(cobranzas.resumen.falta)} por cobrar
+              </div>
+              <div className="card-meta">
+                {cobranzas.resumen.deudores} {cobranzas.resumen.deudores === 1 ? 'alumno debe' : 'alumnos deben'} este mes
+              </div>
+            </div>
+            <Icon name="chevron-right" size={18} />
+          </div>
+        </div>
+      )}
+
       {historico && historico.length > 0 && (
         <>
           <div className="section-title">Ganancia neta · últimos 6 meses</div>
+          {variacion && (
+            <div style={{ fontSize: 12, color: 'var(--text-2)', margin: '-4px 0 10px' }}>
+              {variacion.diff === 0 ? (
+                <>Igual que {variacion.etiqueta}</>
+              ) : (
+                <span style={{ color: variacion.diff > 0 ? 'var(--success)' : 'var(--danger)' }}>
+                  {variacion.diff > 0 ? '▲' : '▼'} {Math.abs(variacion.pct)}% vs {variacion.etiqueta}
+                </span>
+              )}
+            </div>
+          )}
           <div className="chart">
             {historico.map((h) => (
               <div className="chart-col" key={h.periodo}>
