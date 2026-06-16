@@ -54,7 +54,8 @@
 
 ## Fase 3 — A futuro
 
-- [ ] Bot de WhatsApp para altas/bajas (API oficial)
+- [x] Bot de WhatsApp REACTIVO (gratis): Edge Function `whatsapp` para "baja" — falta setup de Meta + deploy
+- [ ] Bot proactivo / recordatorios automáticos (plantillas pagas — no se hará por ahora)
 - [ ] Soporte para tenis y otros deportes de raqueta
 - [ ] Cobro integrado (API de MercadoPago)
 - [ ] Detección de alumnos en riesgo de dejar (retención)

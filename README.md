@@ -42,6 +42,7 @@ La carpeta [`docs/`](docs/) contiene las decisiones de producto y técnicas:
 | [05 · Roadmap](docs/05-roadmap.md) | Fases del proyecto, qué entra en cada una |
 | [06 · Configuración de Supabase](docs/06-supabase-setup.md) | Cómo conectar el backend real |
 | [07 · Build Android](docs/07-build-android.md) | Empaquetar la app nativa con Capacitor |
+| [08 · Bot de WhatsApp](docs/08-bot-whatsapp.md) | Bot reactivo y gratis (Edge Function) |
 | [Términos y Condiciones](docs/legal/terminos-y-condiciones.md) | Borrador legal (revisar con abogado) |
 | [Política de Privacidad](docs/legal/politica-de-privacidad.md) | Borrador legal (revisar con abogado) |
 
