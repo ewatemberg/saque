@@ -44,6 +44,7 @@ export function AppLayout() {
             <NavLink to="/franjas">Franjas</NavLink>
             <NavLink to="/canchas">Canchas</NavLink>
             <NavLink to="/apariencia">Apariencia</NavLink>
+            <NavLink to="/ayuda">Ayuda</NavLink>
             <NavLink to="/acerca">Acerca de</NavLink>
             <NavLink to="/terminos">Términos</NavLink>
           </span>

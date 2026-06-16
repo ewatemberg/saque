@@ -23,6 +23,8 @@ export function AparienciaScreen() {
     setAcentoState(color)
   }
 
+  const esPreset = ACENTOS.some((a) => a.color.toLowerCase() === acento.toLowerCase())
+
   return (
     <>
       <div className="screen-header">
@@ -50,9 +52,9 @@ export function AparienciaScreen() {
       <p className="card-meta">"Automático" sigue el modo claro/oscuro del teléfono.</p>
 
       <div className="section-title">Color de acento</div>
-      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', padding: '4px 0' }}>
+      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', padding: '4px 0', alignItems: 'center' }}>
         {ACENTOS.map((a) => {
-          const activo = acento === a.color
+          const activo = acento.toLowerCase() === a.color.toLowerCase()
           return (
             <button
               key={a.color}
@@ -70,7 +72,32 @@ export function AparienciaScreen() {
             />
           )
         })}
+
+        <label
+          aria-label="Color personalizado"
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            border: esPreset ? '0.5px solid var(--border)' : '3px solid var(--text)',
+            background: `conic-gradient(red, orange, yellow, green, cyan, blue, magenta, red)`,
+            cursor: 'pointer',
+            display: 'flex',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <input
+            type="color"
+            value={acento}
+            onChange={(e) => elegirAcento(e.target.value)}
+            style={{ opacity: 0, width: '100%', height: '100%', cursor: 'pointer' }}
+          />
+        </label>
       </div>
+      <p className="card-meta" style={{ marginTop: 4 }}>
+        Tocá el círculo de colores para elegir cualquiera.
+      </p>
     </>
   )
 }

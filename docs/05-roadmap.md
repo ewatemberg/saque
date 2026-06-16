@@ -28,6 +28,8 @@
 - [x] Aviso de cancha duplicada al crear (sugiere usar la existente)
 - [x] Exportar a CSV (alumnos y cobranzas)
 - [x] Reportes: gráfico de ganancia neta de los últimos 6 meses en Balance
+- [x] Selector de color libre en Apariencia (además de los 5 presets)
+- [x] Pantalla de Ayuda (guía de uso) accesible desde el pie
 - [x] El profe elige su deporte (pádel/tenis) al entrar; las canchas se filtran por deporte
 - [x] ABM de canchas (compartidas entre profes: dirección, contacto, costo de referencia)
 - [x] ABM de turnos: crear (con selector de cancha), editar y eliminar desde la app

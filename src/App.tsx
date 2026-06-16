@@ -18,6 +18,7 @@ import { FranjaFormScreen } from './screens/FranjaFormScreen'
 import { BalanceScreen } from './screens/BalanceScreen'
 import { AboutScreen } from './screens/AboutScreen'
 import { AparienciaScreen } from './screens/AparienciaScreen'
+import { AyudaScreen } from './screens/AyudaScreen'
 import { TerminosScreen } from './screens/TerminosScreen'
 import { PrivacidadScreen } from './screens/PrivacidadScreen'
 import { LoginScreen } from './screens/LoginScreen'
@@ -62,6 +63,7 @@ export default function App() {
           <Route path="franja/:id" element={<FranjaFormScreen />} />
           <Route path="balance" element={<BalanceScreen />} />
           <Route path="apariencia" element={<AparienciaScreen />} />
+          <Route path="ayuda" element={<AyudaScreen />} />
           <Route path="acerca" element={<AboutScreen />} />
         </Route>
       </Routes>
