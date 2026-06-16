@@ -50,29 +50,26 @@
 - [x] Generar los abonos del mes con un botón (cuota mensual por alumno fijo)
 - [x] Franjas recurrentes (plantilla con roster + generar turnos del mes con manejo de choques)
 - [x] Setup de build Android (Capacitor como WebView del sitio + íconos)
-- [ ] Login con Google (código listo; falta activar el provider en Supabase)
-- [ ] Importar contacto en iOS y en la app nativa (plugin de Capacitor)
-- [ ] Deploy de la web (Vercel/Netlify) para probar desde el celular
-- [ ] ABM de canchas, franjas, turnos y alumnos
-- [ ] Cargar asistencia y dar de baja en el detalle del turno
-- [ ] Generación de abonos a principio de mes
-- [ ] Registrar pagos (método + fecha)
-- [ ] Avisos por WhatsApp (lugar libre, suspensión, cambio de precio)
+- [x] Deploy de la web en Vercel (saque.vercel.app) con auto-deploy en cada push
+- [x] Página pública "Mi página": el profe carga nombre/WhatsApp y comparte el link
+- [x] Avisos por WhatsApp: lugar libre, recordatorio de cobro y recupero de turno
+- [ ] Importar contacto en la app nativa de iOS (en Android y web ya funciona)
+- [ ] Aviso de cambio de precio por WhatsApp
 - [ ] Pruebas con el primer profe (testeo real)
 
 ## Fase 2 — Mejoras
 
-- [ ] Lista de espera inteligente para tapar huecos
 - [x] Reprogramación de turnos suspendidos (recupero): nueva fecha/hora + aviso por WhatsApp
+- [x] Dashboard de balance derivado de datos reales (ingreso, costo, neto, ocupación, mes vs mes)
 - [ ] Paquetes de clases para alumnos ocasionales
-- [ ] Dashboard de balance derivado de datos reales
 - [ ] Builds nativas y publicación en stores
+- ~~Lista de espera inteligente para tapar huecos~~ (descartada: si un alumno no consigue lugar, suele irse a otro lado)
 
 ## Fase 3 — A futuro
 
 - [x] Bot de WhatsApp REACTIVO (gratis): Edge Function `whatsapp` para "baja" — falta setup de Meta + deploy
 - [ ] Bot proactivo / recordatorios automáticos (plantillas pagas — no se hará por ahora)
-- [ ] Soporte para tenis y otros deportes de raqueta
-- [ ] Cobro integrado (API de MercadoPago)
+- [x] Soporte para tenis (el profe elige pádel/tenis; canchas y estética se adaptan)
+- [ ] Cobro integrado (API de MercadoPago — congelado: requiere cuenta MP + Edge Function)
 - [ ] Detección de alumnos en riesgo de dejar (retención)
 - [ ] Streaming de partidos / clases
