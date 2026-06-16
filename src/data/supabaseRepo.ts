@@ -5,6 +5,7 @@ import type {
   Categoria,
   Deporte,
   Franja,
+  HistoricoMes,
   EstadoCobranza,
   EstadoTurno,
   ItemCobranza,
@@ -578,6 +579,43 @@ export async function registrarPago(cuotaId: string, monto: number, metodo: Meto
     .update({ monto_pagado: nuevoPagado, metodo, estado })
     .eq('id', cuotaId)
   if (e2) throw e2
+}
+
+const MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
+
+export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
+  const now = new Date()
+  const inicio = new Date(now.getFullYear(), now.getMonth() - (meses - 1), 1)
+  const desde = `${inicio.getFullYear()}-${String(inicio.getMonth() + 1).padStart(2, '0')}-01`
+  const periodoDesde = desde.slice(0, 7)
+
+  const [{ data: cuotas, error: e1 }, { data: turnos, error: e2 }] = await Promise.all([
+    db().from('cuotas').select('periodo,monto_pagado').gte('periodo', periodoDesde),
+    db().from('turnos').select('fecha,costo_cancha,estado').gte('fecha', desde),
+  ])
+  if (e1) throw e1
+  if (e2) throw e2
+
+  const cobradoPorMes = new Map<string, number>()
+  for (const c of cuotas ?? []) {
+    cobradoPorMes.set(c.periodo, (cobradoPorMes.get(c.periodo) ?? 0) + (c.monto_pagado as number))
+  }
+  const costoPorMes = new Map<string, number>()
+  for (const t of turnos ?? []) {
+    if (t.estado !== 'activo') continue
+    const per = (t.fecha as string).slice(0, 7)
+    costoPorMes.set(per, (costoPorMes.get(per) ?? 0) + (t.costo_cancha as number))
+  }
+
+  const res: HistoricoMes[] = []
+  for (let i = meses - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const periodo = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const cobrado = cobradoPorMes.get(periodo) ?? 0
+    const costo = costoPorMes.get(periodo) ?? 0
+    res.push({ periodo, etiqueta: MESES_CORTOS[d.getMonth()], cobrado, costo, neto: cobrado - costo })
+  }
+  return res
 }
 
 export async function getBalance(): Promise<ResumenBalance> {

@@ -28,6 +28,7 @@ export const actualizarAlumno = impl.actualizarAlumno
 export const eliminarAlumno = impl.eliminarAlumno
 export const generarAbonosDelMes = impl.generarAbonosDelMes
 export const getBalance = impl.getBalance
+export const getHistorico = impl.getHistorico
 export const getConteos = impl.getConteos
 export const getCanchas = impl.getCanchas
 export const getCancha = impl.getCancha

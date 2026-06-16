@@ -5,6 +5,7 @@ import type {
   Deporte,
   EstadoCobranza,
   Franja,
+  HistoricoMes,
   ItemCobranza,
   MetodoPago,
   ResumenBalance,
@@ -334,6 +335,19 @@ export async function generarAbonosDelMes(montoDefault: number): Promise<number>
 
 export async function getBalance(): Promise<ResumenBalance> {
   return balanceMes
+}
+
+export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
+  const now = new Date()
+  const ejemploNeto = [88000, 96000, 105000, 99000, 124000, 144000]
+  const res: HistoricoMes[] = []
+  for (let i = meses - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const periodo = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const neto = ejemploNeto[(meses - 1 - i) % ejemploNeto.length]
+    res.push({ periodo, etiqueta: MESES[d.getMonth()].slice(0, 3), cobrado: neto + 96000, costo: 96000, neto })
+  }
+  return res
 }
 
 export async function getConteos(deporte?: Deporte): Promise<{ canchas: number; alumnos: number; franjas: number }> {

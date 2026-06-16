@@ -1,9 +1,12 @@
-import { getBalance } from '../data/repo'
-import { formatPesos } from '../lib/format'
+import { getBalance, getHistorico } from '../data/repo'
+import { formatCompacto, formatPesos } from '../lib/format'
 import { useData } from '../lib/useData'
 
 export function BalanceScreen() {
   const balance = useData(getBalance)
+  const historico = useData(() => getHistorico(6))
+
+  const maxNeto = historico ? Math.max(1, ...historico.map((h) => h.neto)) : 1
 
   return (
     <>
@@ -43,6 +46,23 @@ export function BalanceScreen() {
           </div>
           <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 5 }}>
             {balance.ocupacionPct}% de los cupos ocupados este mes
+          </div>
+        </>
+      )}
+
+      {historico && historico.length > 0 && (
+        <>
+          <div className="section-title">Ganancia neta · últimos 6 meses</div>
+          <div className="chart">
+            {historico.map((h) => (
+              <div className="chart-col" key={h.periodo}>
+                <div className="chart-val">{formatCompacto(h.neto)}</div>
+                <div className="chart-track">
+                  <div className="chart-bar" style={{ height: `${Math.round((h.neto / maxNeto) * 100)}%` }} />
+                </div>
+                <div className="chart-label">{h.etiqueta}</div>
+              </div>
+            ))}
           </div>
         </>
       )}

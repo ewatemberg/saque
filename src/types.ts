@@ -81,6 +81,14 @@ export interface ResumenMes {
   deudores: number
 }
 
+export interface HistoricoMes {
+  periodo: string
+  etiqueta: string
+  cobrado: number
+  costo: number
+  neto: number
+}
+
 export interface ResumenBalance {
   ingresoBruto: number
   costoCanchas: number

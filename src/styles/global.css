@@ -343,6 +343,44 @@ a {
   margin: 18px 0 8px;
 }
 
+/* ---------- Gráfico de barras ---------- */
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 170px;
+}
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+.chart-val {
+  font-size: 10.5px;
+  color: var(--text-2);
+  margin-bottom: 4px;
+}
+.chart-track {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.chart-bar {
+  width: 62%;
+  background: var(--accent);
+  border-radius: 5px 5px 0 0;
+  min-height: 3px;
+}
+.chart-label {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 6px;
+}
+
 .field-label {
   display: block;
   font-size: 12px;
