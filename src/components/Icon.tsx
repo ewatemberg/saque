@@ -19,6 +19,7 @@ export type IconName =
   | 'download'
   | 'search'
   | 'menu'
+  | 'x'
 
 const paths: Record<IconName, ReactNode> = {
   calendar: (
@@ -83,6 +84,7 @@ const paths: Record<IconName, ReactNode> = {
   edit: <path d="M4 20h4L18 10l-4-4L4 16zM13 7l4 4" />,
   download: <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  x: <path d="M6 6l12 12M18 6L6 18" />,
   search: (
     <>
       <circle cx="11" cy="11" r="7" />

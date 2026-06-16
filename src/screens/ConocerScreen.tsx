@@ -1,18 +1,22 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { DemoFeature, type DemoKey } from '../components/DemoFeature'
 import { Icon, type IconName } from '../components/Icon'
 import { Logo } from '../components/Logo'
 
-const FEATURES: { icon: IconName; titulo: string; texto: string }[] = [
-  { icon: 'calendar', titulo: 'Tu día de un vistazo', texto: 'Todos tus turnos, con cupos y estado, apenas abrís la app.' },
-  { icon: 'check', titulo: 'Turnos que se arman solos', texto: 'Cargás tu franja una vez (ej. martes 19hs) y generás los turnos de todo el mes.' },
-  { icon: 'cash', titulo: 'Cobranzas sin vueltas', texto: 'Quién pagó y quién debe, generás las cuotas del mes y recordás por WhatsApp.' },
-  { icon: 'chart', titulo: 'Tu ganancia real', texto: 'Balance neto descontando el alquiler de la cancha, con la evolución mes a mes.' },
-  { icon: 'users', titulo: 'Tus alumnos ordenados', texto: 'Categoría, contacto y asistencia, todo junto y a un toque de WhatsApp.' },
-  { icon: 'download', titulo: 'En el celu y la compu', texto: 'Instalala como app en el teléfono o usala desde el navegador. Gratis.' },
+const FEATURES: { key: DemoKey; icon: IconName; titulo: string; texto: string }[] = [
+  { key: 'agenda', icon: 'calendar', titulo: 'Tu día de un vistazo', texto: 'Todos tus turnos, con cupos y estado, apenas abrís la app.' },
+  { key: 'franjas', icon: 'check', titulo: 'Turnos que se arman solos', texto: 'Cargás tu franja una vez (ej. martes 19hs) y generás los turnos de todo el mes.' },
+  { key: 'cobranzas', icon: 'cash', titulo: 'Cobranzas sin vueltas', texto: 'Quién pagó y quién debe, generás las cuotas del mes y recordás por WhatsApp.' },
+  { key: 'balance', icon: 'chart', titulo: 'Tu ganancia real', texto: 'Balance neto descontando el alquiler de la cancha, con la evolución mes a mes.' },
+  { key: 'alumnos', icon: 'users', titulo: 'Tus alumnos ordenados', texto: 'Categoría, contacto y asistencia, todo junto y a un toque de WhatsApp.' },
+  { key: 'multi', icon: 'download', titulo: 'En el celu y la compu', texto: 'Instalala como app en el teléfono o usala desde el navegador. Gratis.' },
 ]
 
 export function ConocerScreen() {
   const navigate = useNavigate()
+  const [demo, setDemo] = useState<(typeof FEATURES)[number] | null>(null)
+
   return (
     <div className="landing">
       <div className="landing-hero fade-up">
@@ -32,13 +36,22 @@ export function ConocerScreen() {
 
       <div className="landing-features">
         {FEATURES.map((f, i) => (
-          <div className="landing-feature fade-up" key={f.titulo} style={{ animationDelay: `${0.06 * (i + 1)}s` }}>
+          <button
+            type="button"
+            className="landing-feature fade-up"
+            key={f.key}
+            style={{ animationDelay: `${0.06 * (i + 1)}s`, cursor: 'pointer', textAlign: 'left' }}
+            onClick={() => setDemo(f)}
+          >
             <span className="ico">
               <Icon name={f.icon} size={24} />
             </span>
             <h3>{f.titulo}</h3>
             <p>{f.texto}</p>
-          </div>
+            <span style={{ display: 'inline-block', marginTop: 8, fontSize: 12.5, color: 'var(--accent)' }}>
+              Ver ejemplo →
+            </span>
+          </button>
         ))}
       </div>
 
@@ -50,6 +63,10 @@ export function ConocerScreen() {
           Es gratis. Entrás con tu email o con Google.
         </p>
       </div>
+
+      {demo && (
+        <DemoFeature featureKey={demo.key} titulo={demo.titulo} texto={demo.texto} onClose={() => setDemo(null)} />
+      )}
     </div>
   )
 }

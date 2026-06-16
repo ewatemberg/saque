@@ -622,10 +622,19 @@ a {
   margin-top: 26px;
 }
 .landing-feature {
+  width: 100%;
+  font-family: inherit;
   background: var(--surface);
   border: 0.5px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 16px 16px 18px;
+  transition: border-color 0.12s ease, transform 0.05s ease;
+}
+.landing-feature:hover {
+  border-color: var(--border-strong);
+}
+.landing-feature:active {
+  transform: scale(0.99);
 }
 .landing-feature .ico {
   color: var(--accent);
@@ -660,6 +669,72 @@ a {
   .landing-hero .float,
   .fade-up {
     animation: none;
+  }
+}
+
+/* ---------- Demo de features (landing) ---------- */
+.demo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 20px;
+}
+.demo-modal {
+  width: 100%;
+  max-width: 340px;
+  max-height: 88vh;
+  overflow: auto;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+}
+.demo-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.demo-head h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+.demo-head p {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin: 2px 0 0;
+}
+.demo-screen {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+}
+@keyframes demo-fill {
+  from {
+    width: 0;
+  }
+}
+@keyframes demo-grow {
+  from {
+    height: 0;
+  }
+}
+@keyframes demo-appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes demo-pulse {
+  50% {
+    opacity: 0.5;
   }
 }
 
