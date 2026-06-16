@@ -23,6 +23,22 @@ export function normalizar(s: string): string {
     .replace(/[^a-z0-9]/g, '')
 }
 
+const MESES = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+]
+
+/** Nombre del mes en curso, en minúsculas: "junio". */
+export function mesActual(): string {
+  return MESES[new Date().getMonth()]
+}
+
+/** Mes y año en curso: "junio 2026". */
+export function mesYAnioActual(): string {
+  const d = new Date()
+  return `${MESES[d.getMonth()]} ${d.getFullYear()}`
+}
+
 /** Iniciales a partir del nombre: "Juan Díaz" -> "JD". */
 export function iniciales(nombre: string): string {
   const palabras = nombre.trim().split(/\s+/).filter(Boolean)

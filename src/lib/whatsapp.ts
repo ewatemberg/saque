@@ -12,3 +12,20 @@ export function abrirWhatsApp(texto: string, telefono?: string): void {
   const url = `${base}?text=${encodeURIComponent(texto)}`
   window.open(url, '_blank', 'noopener,noreferrer')
 }
+
+/** Primer nombre de pila: "Juan Díaz" -> "Juan". */
+function primerNombre(nombre: string): string {
+  return nombre.trim().split(/\s+/)[0] || nombre
+}
+
+/**
+ * Mensaje de recordatorio de cuota, personalizado con el nombre del alumno, el
+ * monto adeudado y el mes. Si no hay monto (<= 0) lo omite.
+ */
+export function mensajeRecordatorioCuota(nombre: string, mes: string, montoTexto?: string): string {
+  const saludo = `Hola ${primerNombre(nombre)}!`
+  const detalle = montoTexto
+    ? `Te recuerdo que quedó pendiente la cuota de ${mes} (${montoTexto}).`
+    : `Te recuerdo que quedó pendiente la cuota de ${mes}.`
+  return `${saludo} ${detalle} Cualquier cosa me avisás. ¡Gracias!`
+}

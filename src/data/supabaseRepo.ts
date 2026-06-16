@@ -210,7 +210,7 @@ export async function getAlumnos(): Promise<Alumno[]> {
 export async function getCobranzas(): Promise<{ resumen: ResumenMes; items: ItemCobranza[] }> {
   const { data, error } = await db()
     .from('cuotas')
-    .select('*')
+    .select('*, alumnos(telefono)')
     .eq('periodo', periodoActual())
     .order('nombre')
   if (error) throw error
@@ -225,6 +225,7 @@ export async function getCobranzas(): Promise<{ resumen: ResumenMes; items: Item
     montoPagado: r.monto_pagado,
     metodo: (r.metodo as MetodoPago | null) ?? undefined,
     clasesRestantes: (r.clases_restantes as number | null) ?? undefined,
+    telefono: (r.alumnos as { telefono?: string } | null)?.telefono ?? undefined,
   }))
   return { resumen: calcularResumenMes(items), items }
 }
@@ -546,7 +547,11 @@ export async function generarAbonosDelMes(montoDefault: number): Promise<number>
 }
 
 export async function getCuota(id: string): Promise<ItemCobranza | null> {
-  const { data: r, error } = await db().from('cuotas').select('*').eq('id', id).maybeSingle()
+  const { data: r, error } = await db()
+    .from('cuotas')
+    .select('*, alumnos(telefono)')
+    .eq('id', id)
+    .maybeSingle()
   if (error) throw error
   if (!r) return null
   return {
@@ -560,6 +565,7 @@ export async function getCuota(id: string): Promise<ItemCobranza | null> {
     montoPagado: r.monto_pagado,
     metodo: (r.metodo as MetodoPago | null) ?? undefined,
     clasesRestantes: (r.clases_restantes as number | null) ?? undefined,
+    telefono: (r.alumnos as { telefono?: string } | null)?.telefono ?? undefined,
   }
 }
 

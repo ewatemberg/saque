@@ -4,9 +4,9 @@ import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas } from '../data/repo'
 import { descargarCSV } from '../lib/csv'
-import { formatPesos, nombreMetodo } from '../lib/format'
+import { formatPesos, mesActual, mesYAnioActual, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
-import { abrirWhatsApp } from '../lib/whatsapp'
+import { abrirWhatsApp, mensajeRecordatorioCuota } from '../lib/whatsapp'
 import type { ItemCobranza, ResumenMes } from '../types'
 
 export function CobranzasScreen() {
@@ -47,7 +47,7 @@ export function CobranzasScreen() {
 
   const recordarMasivo = () => {
     abrirWhatsApp(
-      'Hola! Te recuerdo que está pendiente la cuota de junio. Cualquier cosa me avisás. ¡Gracias!',
+      `Hola! Te recuerdo que está pendiente la cuota de ${mesActual()}. Cualquier cosa me avisás. ¡Gracias!`,
     )
   }
 
@@ -125,7 +125,7 @@ function Header() {
     <div className="screen-header">
       <h1>Cobranzas</h1>
       <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-2)' }}>
-        <Icon name="chevron-left" size={16} /> junio 2026 <Icon name="chevron-right" size={16} />
+        <Icon name="chevron-left" size={16} /> {mesYAnioActual()} <Icon name="chevron-right" size={16} />
       </span>
     </div>
   )
@@ -155,6 +155,26 @@ function avatarVariant(item: ItemCobranza): string {
   return ''
 }
 
+function RecordarBtn({ item }: { item: ItemCobranza }) {
+  const saldo = item.montoEsperado - item.montoPagado
+  return (
+    <button
+      className="btn btn-sm"
+      aria-label={`Recordar a ${item.nombre} por WhatsApp`}
+      title="Recordar por WhatsApp"
+      onClick={(e) => {
+        e.stopPropagation()
+        abrirWhatsApp(
+          mensajeRecordatorioCuota(item.nombre, mesActual(), saldo > 0 ? formatPesos(saldo) : undefined),
+          item.telefono,
+        )
+      }}
+    >
+      <Icon name="whatsapp" size={16} />
+    </button>
+  )
+}
+
 function estadoNode(item: ItemCobranza) {
   switch (item.estado) {
     case 'pagado':
@@ -165,25 +185,17 @@ function estadoNode(item: ItemCobranza) {
           <span className="pill-warning" style={{ fontSize: 11, color: 'var(--danger)' }}>
             debe {formatPesos(item.montoEsperado)}
           </span>
-          <button
-            className="btn btn-sm"
-            aria-label={`Recordar a ${item.nombre}`}
-            onClick={(e) => {
-              e.stopPropagation()
-              abrirWhatsApp(
-                `Hola ${item.nombre.split(' ')[0]}! Te recuerdo la cuota de junio (${formatPesos(item.montoEsperado)}). ¡Gracias!`,
-              )
-            }}
-          >
-            <Icon name="whatsapp" size={16} />
-          </button>
+          <RecordarBtn item={item} />
         </>
       )
     case 'parcial':
       return (
-        <span className="pill-warning" style={{ fontSize: 11 }}>
-          parcial {formatPesos(item.montoPagado)}/{formatPesos(item.montoEsperado)}
-        </span>
+        <>
+          <span className="pill-warning" style={{ fontSize: 11 }}>
+            parcial {formatPesos(item.montoPagado)}/{formatPesos(item.montoEsperado)}
+          </span>
+          <RecordarBtn item={item} />
+        </>
       )
     case 'paquete':
       return <span className="pill pill-neutral">{item.clasesRestantes} clases rest.</span>

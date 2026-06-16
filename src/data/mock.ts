@@ -260,13 +260,17 @@ export function estadoCuota(esperado: number, pagado: number): EstadoCobranza {
   return 'debe'
 }
 
+function conTelefono(c: ItemCobranza): ItemCobranza {
+  return { ...c, telefono: alumnos.find((a) => a.id === c.alumnoId)?.telefono }
+}
+
 export async function getCobranzas(): Promise<{ resumen: ResumenMes; items: ItemCobranza[] }> {
-  return { resumen: calcularResumenMes(cobranzas), items: cobranzas.map((c) => ({ ...c })) }
+  return { resumen: calcularResumenMes(cobranzas), items: cobranzas.map(conTelefono) }
 }
 
 export async function getCuota(id: string): Promise<ItemCobranza | null> {
   const c = cobranzas.find((x) => x.id === id)
-  return c ? { ...c } : null
+  return c ? conTelefono(c) : null
 }
 
 export async function registrarPago(cuotaId: string, monto: number, metodo: MetodoPago): Promise<void> {

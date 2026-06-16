@@ -3,8 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { getCuota, registrarPago } from '../data/repo'
-import { formatPesos, nombreMetodo } from '../lib/format'
+import { formatPesos, mesActual, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
+import { abrirWhatsApp, mensajeRecordatorioCuota } from '../lib/whatsapp'
 import type { ItemCobranza, MetodoPago } from '../types'
 
 const METODOS: MetodoPago[] = ['mercadopago', 'transferencia', 'efectivo']
@@ -130,6 +131,21 @@ export function CobranzaDetalleScreen() {
               <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Registrar pago'}
             </button>
           </div>
+
+          {saldo > 0 && (
+            <button
+              className="btn btn-block"
+              style={{ marginTop: 10 }}
+              onClick={() =>
+                abrirWhatsApp(
+                  mensajeRecordatorioCuota(cuota.nombre, mesActual(), formatPesos(saldo)),
+                  cuota.telefono,
+                )
+              }
+            >
+              <Icon name="whatsapp" size={16} /> Recordar por WhatsApp
+            </button>
+          )}
         </>
       )}
     </>

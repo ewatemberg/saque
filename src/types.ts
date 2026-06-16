@@ -72,6 +72,7 @@ export interface ItemCobranza {
   montoPagado: number
   metodo?: MetodoPago
   clasesRestantes?: number
+  telefono?: string
 }
 
 export interface ResumenMes {
