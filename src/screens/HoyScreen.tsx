@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { Onboarding } from '../components/Onboarding'
 import { getConteos, getResumenHoy, getTurnosHoy } from '../data/repo'
-import { deporteDeSesion, useSession } from '../lib/auth'
+import { useDeporte } from '../lib/auth'
 import { formatCompacto } from '../lib/format'
 import { useData } from '../lib/useData'
 import { abrirWhatsApp } from '../lib/whatsapp'
@@ -10,8 +10,7 @@ import type { Turno } from '../types'
 
 export function HoyScreen() {
   const navigate = useNavigate()
-  const { session } = useSession()
-  const deporte = deporteDeSesion(session) ?? undefined
+  const deporte = useDeporte()
   const turnos = useData(getTurnosHoy)
   const resumen = useData(getResumenHoy)
   const conteos = useData(() => getConteos(deporte))

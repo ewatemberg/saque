@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { actualizarTurno, crearTurno, getCanchas, getTurno } from '../data/repo'
-import { deporteDeSesion, useSession } from '../lib/auth'
+import { useDeporte } from '../lib/auth'
 import { toast } from '../lib/toast'
 import type { Cancha, Categoria } from '../types'
 
@@ -19,8 +19,7 @@ function hoyISO() {
 export function TurnoFormScreen() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { session } = useSession()
-  const deporte = deporteDeSesion(session) ?? undefined
+  const deporte = useDeporte()
   const editando = Boolean(id)
 
   const [canchas, setCanchas] = useState<Cancha[]>([])

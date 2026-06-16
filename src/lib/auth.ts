@@ -1,7 +1,17 @@
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import type { Deporte } from '../types'
+
+// Contexto de sesión: lo provee App una vez resuelta la sesión, así cualquier
+// pantalla lee el deporte de forma SÍNCRONA (sin la condición de carrera de
+// cargar la sesión por separado en cada pantalla).
+export const SesionContext = createContext<Session | null>(null)
+
+/** Deporte del profe leído del contexto (disponible en el primer render). */
+export function useDeporte(): Deporte | undefined {
+  return deporteDeSesion(useContext(SesionContext)) ?? undefined
+}
 
 /** Estado de sesion. En modo mock (sin Supabase) devuelve sesion nula sin cargar. */
 export function useSession(): { session: Session | null; loading: boolean } {

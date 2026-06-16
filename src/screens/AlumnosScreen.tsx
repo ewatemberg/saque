@@ -6,14 +6,21 @@ import { descargarCSV } from '../lib/csv'
 import { normalizar } from '../lib/format'
 import { useData } from '../lib/useData'
 import { abrirWhatsApp } from '../lib/whatsapp'
+import type { Categoria } from '../types'
+
+const CATEGORIAS: Categoria[] = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma']
 
 export function AlumnosScreen() {
   const navigate = useNavigate()
   const alumnos = useData(getAlumnos)
   const [query, setQuery] = useState('')
+  const [cat, setCat] = useState<Categoria | 'todas'>('todas')
 
   const q = normalizar(query)
-  const filtrados = alumnos?.filter((a) => normalizar(a.nombre).includes(q)) ?? []
+  const filtrados =
+    alumnos?.filter(
+      (a) => normalizar(a.nombre).includes(q) && (cat === 'todas' || a.categoria === cat),
+    ) ?? []
 
   const exportar = () => {
     if (!alumnos) return
@@ -23,6 +30,8 @@ export function AlumnosScreen() {
       alumnos.map((a) => [a.nombre, a.categoria, a.tipo, a.telefono, a.montoAbono]),
     )
   }
+
+  const hayMuchos = (alumnos?.length ?? 0) > 3
 
   return (
     <>
@@ -41,7 +50,7 @@ export function AlumnosScreen() {
         </div>
       </div>
 
-      {alumnos && alumnos.length > 3 && (
+      {hayMuchos && (
         <div style={{ position: 'relative', marginBottom: 10 }}>
           <span style={{ position: 'absolute', left: 11, top: 11, color: 'var(--text-3)' }}>
             <Icon name="search" size={18} />
@@ -56,11 +65,31 @@ export function AlumnosScreen() {
         </div>
       )}
 
+      {hayMuchos && (
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
+          <button
+            className={cat === 'todas' ? 'btn btn-sm btn-accent' : 'btn btn-sm'}
+            onClick={() => setCat('todas')}
+          >
+            Todas
+          </button>
+          {CATEGORIAS.map((c) => (
+            <button
+              key={c}
+              className={cat === c ? 'btn btn-sm btn-accent' : 'btn btn-sm'}
+              onClick={() => setCat(c)}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      )}
+
       {alumnos && alumnos.length === 0 && (
         <div className="empty">Todavía no cargaste alumnos. Tocá "Nuevo" para agregar el primero.</div>
       )}
       {alumnos && alumnos.length > 0 && filtrados.length === 0 && (
-        <div className="empty">No hay alumnos que coincidan con "{query}".</div>
+        <div className="empty">No hay alumnos para ese filtro.</div>
       )}
 
       {filtrados.map((a) => (

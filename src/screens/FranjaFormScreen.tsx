@@ -10,7 +10,7 @@ import {
   getCanchas,
   getFranja,
 } from '../data/repo'
-import { deporteDeSesion, useSession } from '../lib/auth'
+import { useDeporte } from '../lib/auth'
 import { toast } from '../lib/toast'
 import type { Alumno, Cancha, Categoria } from '../types'
 
@@ -20,8 +20,7 @@ const CATEGORIAS: Categoria[] = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma'
 export function FranjaFormScreen() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { session } = useSession()
-  const deporte = deporteDeSesion(session) ?? undefined
+  const deporte = useDeporte()
   const editando = Boolean(id)
 
   const [canchas, setCanchas] = useState<Cancha[]>([])

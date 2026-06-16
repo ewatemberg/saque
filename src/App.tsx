@@ -2,7 +2,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
 import { ToastHost } from './components/ToastHost'
 import { Cargando } from './components/Cargando'
-import { deporteDeSesion, useSession } from './lib/auth'
+import { deporteDeSesion, SesionContext, useSession } from './lib/auth'
 import { usandoMock } from './lib/supabase'
 import { HoyScreen } from './screens/HoyScreen'
 import { SemanaScreen } from './screens/SemanaScreen'
@@ -34,7 +34,11 @@ function RequireAuth() {
   if (loading) return <div className="login"><Cargando /></div>
   if (!session) return <LoginScreen />
   if (!deporteDeSesion(session)) return <DeporteScreen />
-  return <AppLayout />
+  return (
+    <SesionContext.Provider value={session}>
+      <AppLayout />
+    </SesionContext.Provider>
+  )
 }
 
 export default function App() {

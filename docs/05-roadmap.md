@@ -25,6 +25,8 @@
 - [x] Onboarding (checklist de 4 pasos para profe nuevo) y estados vacíos
 - [x] Toasts de éxito/error en guardados y acciones (antes fallaban en silencio)
 - [x] Búsqueda de alumnos y de canchas
+- [x] Filtro por categoría en Alumnos
+- [x] Fix: canchas filtradas por deporte de forma confiable (contexto de sesión, sin race)
 - [x] Aviso de cancha duplicada al crear (sugiere usar la existente)
 - [x] Exportar a CSV (alumnos y cobranzas)
 - [x] Reportes: gráfico de ganancia neta de los últimos 6 meses en Balance

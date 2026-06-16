@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { getCanchas } from '../data/repo'
-import { deporteDeSesion, useSession } from '../lib/auth'
+import { useDeporte } from '../lib/auth'
 import { formatPesos, normalizar } from '../lib/format'
 import { useData } from '../lib/useData'
 
 export function CanchasScreen() {
   const navigate = useNavigate()
-  const { session } = useSession()
-  const deporte = deporteDeSesion(session) ?? undefined
+  const deporte = useDeporte()
   const canchas = useData(() => getCanchas(deporte))
   const [query, setQuery] = useState('')
 

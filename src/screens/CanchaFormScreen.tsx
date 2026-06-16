@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { actualizarCancha, crearCancha, getCancha, getCanchas } from '../data/repo'
-import { deporteDeSesion, useSession } from '../lib/auth'
+import { useDeporte } from '../lib/auth'
 import { normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
 import type { Cancha } from '../types'
@@ -18,8 +18,7 @@ function pareceMismo(a: string, b: string): boolean {
 export function CanchaFormScreen() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { session } = useSession()
-  const deporte = deporteDeSesion(session) ?? undefined
+  const deporte = useDeporte()
   const editando = Boolean(id)
 
   const [nombre, setNombre] = useState('')
@@ -70,7 +69,7 @@ export function CanchaFormScreen() {
     }
     try {
       if (id) await actualizarCancha(id, data)
-      else await crearCancha(data, deporteDeSesion(session) ?? 'padel')
+      else await crearCancha(data, deporte ?? 'padel')
       toast('Cancha guardada', 'success')
       navigate(-1)
     } catch {
