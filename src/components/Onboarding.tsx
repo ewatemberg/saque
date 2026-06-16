@@ -9,10 +9,15 @@ export function Onboarding({ conteos }: Props) {
   const navigate = useNavigate()
 
   const pasos = [
-    { label: 'Creá tu primera cancha', to: '/cancha/nueva', done: conteos.canchas > 0 },
-    { label: 'Cargá tus alumnos', to: '/alumno/nuevo', done: conteos.alumnos > 0 },
-    { label: 'Armá una franja recurrente', to: '/franja/nueva', done: conteos.franjas > 0 },
-    { label: 'Generá los turnos del mes', to: '/franjas', done: false },
+    {
+      label: 'Elegí tu cancha del listado',
+      sub: 'Ya hay un listado de canchas. Creá una solo si la tuya no está.',
+      to: '/canchas',
+      done: conteos.canchas > 0,
+    },
+    { label: 'Cargá tus alumnos', sub: '', to: '/alumno/nuevo', done: conteos.alumnos > 0 },
+    { label: 'Armá una franja recurrente', sub: '', to: '/franja/nueva', done: conteos.franjas > 0 },
+    { label: 'Generá los turnos del mes', sub: '', to: '/franjas', done: false },
   ]
 
   return (
@@ -43,6 +48,7 @@ export function Onboarding({ conteos }: Props) {
             <div className="row-name" style={p.done ? { color: 'var(--text-2)' } : undefined}>
               {p.label}
             </div>
+            {p.sub && <div className="row-sub">{p.sub}</div>}
           </div>
           <div className="row-right">
             <Icon name="chevron-right" size={18} />

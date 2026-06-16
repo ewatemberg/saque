@@ -35,7 +35,10 @@ export function LoginScreen() {
           <Logo size={52} />
         </div>
         <div className="login-brand">Saque</div>
-        <p className="login-sub">Gestión de clases para profes</p>
+        <p className="login-sub" style={{ marginBottom: 8 }}>Gestión de clases para profes</p>
+        <Link to="/conocer" style={{ display: 'inline-block', marginBottom: 18, fontSize: 13, color: 'var(--accent)' }}>
+          ¿Qué es Saque? Conocé más →
+        </Link>
 
         {enviado ? (
           <p className="login-ok">

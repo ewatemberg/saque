@@ -24,6 +24,8 @@
 - [x] Color por defecto según deporte (pádel=azul, tenis=naranja); editable por el profe
 - [x] PWA: manifest + íconos para instalar con "Agregar a inicio" (standalone, ícono propio)
 - [x] Onboarding (checklist de 4 pasos para profe nuevo) y estados vacíos
+- [x] Onboarding paso 1 reformulado: "elegí del listado" (canchas compartidas), no "creá"
+- [x] Landing público /conocer (marketing) accesible desde el login
 - [x] Toasts de éxito/error en guardados y acciones (antes fallaban en silencio)
 - [x] Búsqueda de alumnos y de canchas
 - [x] Filtro por categoría en Alumnos

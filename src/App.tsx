@@ -27,6 +27,7 @@ import { TerminosScreen } from './screens/TerminosScreen'
 import { PrivacidadScreen } from './screens/PrivacidadScreen'
 import { LoginScreen } from './screens/LoginScreen'
 import { DeporteScreen } from './screens/DeporteScreen'
+import { ConocerScreen } from './screens/ConocerScreen'
 
 // Guard: decide si mostrar login / selección de deporte / la app.
 // Renderiza AppLayout (con su <Outlet/>) cuando el acceso está habilitado.
@@ -52,6 +53,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         {/* Públicas (accesibles sin login) */}
+        <Route path="/conocer" element={<ConocerScreen />} />
         <Route path="/terminos" element={<TerminosScreen />} />
         <Route path="/privacidad" element={<PrivacidadScreen />} />
 
