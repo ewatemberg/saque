@@ -9,14 +9,13 @@ export function Onboarding({ conteos }: Props) {
   const navigate = useNavigate()
 
   const pasos = [
-    {
-      label: 'Elegí tu cancha del listado',
-      sub: 'Ya hay un listado de canchas. Creá una solo si la tuya no está.',
-      to: '/canchas',
-      done: conteos.canchas > 0,
-    },
     { label: 'Cargá tus alumnos', sub: '', to: '/alumno/nuevo', done: conteos.alumnos > 0 },
-    { label: 'Armá una franja recurrente', sub: '', to: '/franja/nueva', done: conteos.franjas > 0 },
+    {
+      label: 'Armá una franja recurrente',
+      sub: 'Elegís la cancha, el horario y los alumnos del grupo.',
+      to: '/franja/nueva',
+      done: conteos.franjas > 0,
+    },
     { label: 'Generá los turnos del mes', sub: '', to: '/franjas', done: false },
   ]
 
@@ -24,7 +23,7 @@ export function Onboarding({ conteos }: Props) {
     <div className="card" style={{ padding: '16px 16px 8px' }}>
       <div style={{ fontSize: 16, fontWeight: 500 }}>¡Bienvenido a Saque! 🎾</div>
       <p className="card-meta" style={{ marginTop: 4 }}>
-        Empezá en 4 pasos para tener tu agenda lista.
+        Empezá en 3 pasos para tener tu agenda lista.
       </p>
 
       {pasos.map((p, i) => (
@@ -55,6 +54,17 @@ export function Onboarding({ conteos }: Props) {
           </div>
         </div>
       ))}
+
+      <p className="card-meta" style={{ padding: '8px 2px 12px', lineHeight: 1.5 }}>
+        ¿No encontrás tu cancha en el listado?{' '}
+        <span
+          style={{ color: 'var(--accent)', cursor: 'pointer' }}
+          onClick={() => navigate('/canchas')}
+        >
+          Agregala
+        </span>
+        .
+      </p>
     </div>
   )
 }
