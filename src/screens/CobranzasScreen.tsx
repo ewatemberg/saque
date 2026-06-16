@@ -2,12 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
-import { generarAbonosDelMes, getCobranzas } from '../data/repo'
+import { generarAbonosDelMes, getCobranzas, registrarPago } from '../data/repo'
 import { descargarCSV } from '../lib/csv'
 import { formatPesos, mesActual, mesYAnioActual, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp, mensajeRecordatorioCuota } from '../lib/whatsapp'
-import type { ItemCobranza, ResumenMes } from '../types'
+import type { ItemCobranza, MetodoPago, ResumenMes } from '../types'
+
+const METODOS: MetodoPago[] = ['efectivo', 'transferencia', 'mercadopago']
 
 export function CobranzasScreen() {
   const [data, setData] = useState<{ resumen: ResumenMes; items: ItemCobranza[] } | null>(null)
@@ -114,7 +116,7 @@ export function CobranzasScreen() {
       )}
 
       {items.map((item) => (
-        <CobranzaRow key={item.alumnoId} item={item} />
+        <CobranzaRow key={item.alumnoId} item={item} onReload={reload} />
       ))}
     </>
   )
@@ -131,19 +133,62 @@ function Header() {
   )
 }
 
-function CobranzaRow({ item }: { item: ItemCobranza }) {
+function CobranzaRow({ item, onReload }: { item: ItemCobranza; onReload: () => void }) {
   const navigate = useNavigate()
+  const [cobrando, setCobrando] = useState(false)
+  const saldo = item.montoEsperado - item.montoPagado
+  const puedeCobrar = (item.estado === 'debe' || item.estado === 'parcial') && saldo > 0
+
+  const cobrar = async (metodo: MetodoPago) => {
+    try {
+      await registrarPago(item.id, saldo, metodo)
+      setCobrando(false)
+      onReload()
+      toast(`Cobro registrado: ${formatPesos(saldo)} (${nombreMetodo(metodo)})`, 'success')
+    } catch {
+      toast('No se pudo registrar el cobro. Intentá de nuevo.', 'error')
+    }
+  }
+
   return (
-    <div className="row clickable" onClick={() => navigate(`/cobranza/${item.id}`)}>
-      <span className={`avatar ${avatarVariant(item)}`}>{item.iniciales}</span>
-      <div className="row-main">
-        <div className="row-name">{item.nombre}</div>
-        <div className="row-sub">
-          {item.detalle}
-          {item.metodo ? ` · ${nombreMetodo(item.metodo)}` : ''}
+    <div>
+      <div className="row clickable" onClick={() => navigate(`/cobranza/${item.id}`)}>
+        <span className={`avatar ${avatarVariant(item)}`}>{item.iniciales}</span>
+        <div className="row-main">
+          <div className="row-name">{item.nombre}</div>
+          <div className="row-sub">
+            {item.detalle}
+            {item.metodo ? ` · ${nombreMetodo(item.metodo)}` : ''}
+          </div>
+        </div>
+        <div className="row-right">
+          {estadoNode(item)}
+          {puedeCobrar && (
+            <button
+              className={cobrando ? 'btn btn-sm btn-accent' : 'btn btn-sm'}
+              aria-label={`Cobrar a ${item.nombre}`}
+              title="Marcar como cobrado"
+              onClick={(e) => {
+                e.stopPropagation()
+                setCobrando((v) => !v)
+              }}
+            >
+              <Icon name="cash" size={16} />
+            </button>
+          )}
         </div>
       </div>
-      <div className="row-right">{estadoNode(item)}</div>
+
+      {cobrando && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', padding: '4px 0 12px' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-2)' }}>Cobrar {formatPesos(saldo)} en:</span>
+          {METODOS.map((m) => (
+            <button key={m} className="btn btn-sm" onClick={() => cobrar(m)}>
+              {nombreMetodo(m)}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
