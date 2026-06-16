@@ -21,7 +21,6 @@ export function AboutScreen() {
       <div className="card" style={{ padding: '4px 14px' }}>
         <Dato label="Versión" valor={`v${APP_VERSION}`} />
         <Dato label="Actualizado" valor={BUILD_DATE} />
-        <Dato label="Tecnología" valor="React + Capacitor + Supabase" />
         <Dato label="Contacto" valor="emilio.watemberg@gmail.com" ultimo />
       </div>
 
