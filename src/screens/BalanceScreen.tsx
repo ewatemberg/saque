@@ -1,5 +1,5 @@
 import { getBalance, getHistorico } from '../data/repo'
-import { formatCompacto, formatPesos } from '../lib/format'
+import { formatPesos } from '../lib/format'
 import { useData } from '../lib/useData'
 
 export function BalanceScreen() {
@@ -56,7 +56,7 @@ export function BalanceScreen() {
           <div className="chart">
             {historico.map((h) => (
               <div className="chart-col" key={h.periodo}>
-                <div className="chart-val">{formatCompacto(h.neto)}</div>
+                <div className="chart-val">{formatPesos(h.neto)}</div>
                 <div className="chart-track">
                   <div className="chart-bar" style={{ height: `${Math.round((h.neto / maxNeto) * 100)}%` }} />
                 </div>

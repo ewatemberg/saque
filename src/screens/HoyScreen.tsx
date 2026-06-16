@@ -3,7 +3,7 @@ import { Icon } from '../components/Icon'
 import { Onboarding } from '../components/Onboarding'
 import { getConteos, getResumenHoy, getTurnosHoy } from '../data/repo'
 import { useDeporte } from '../lib/auth'
-import { formatCompacto } from '../lib/format'
+import { formatPesos } from '../lib/format'
 import { useData } from '../lib/useData'
 import { abrirWhatsApp } from '../lib/whatsapp'
 import type { Turno } from '../types'
@@ -38,7 +38,7 @@ export function HoyScreen() {
       <div className="metrics">
         <Metric label="Turnos" value={resumen ? String(resumen.turnos) : '–'} />
         <Metric label="Alumnos" value={resumen ? String(resumen.alumnos) : '–'} />
-        <Metric label="Neto día" value={resumen ? formatCompacto(resumen.netoDia) : '–'} />
+        <Metric label="Neto día" value={resumen ? formatPesos(resumen.netoDia) : '–'} />
       </div>
 
       {turnos?.map((t) => (

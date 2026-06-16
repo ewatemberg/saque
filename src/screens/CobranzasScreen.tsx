@@ -4,7 +4,7 @@ import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas } from '../data/repo'
 import { descargarCSV } from '../lib/csv'
-import { formatCompacto, formatPesos, nombreMetodo } from '../lib/format'
+import { formatPesos, nombreMetodo } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp } from '../lib/whatsapp'
 import type { ItemCobranza, ResumenMes } from '../types'
@@ -58,18 +58,18 @@ export function CobranzasScreen() {
       <div className="metrics">
         <div className="metric">
           <div className="label">Esperado</div>
-          <div className="value">{formatCompacto(resumen.esperado)}</div>
+          <div className="value">{formatPesos(resumen.esperado)}</div>
         </div>
         <div className="metric">
           <div className="label">Cobrado</div>
           <div className="value" style={{ color: 'var(--success)' }}>
-            {formatCompacto(resumen.cobrado)}
+            {formatPesos(resumen.cobrado)}
           </div>
         </div>
         <div className="metric">
           <div className="label">Falta</div>
           <div className="value" style={{ color: 'var(--danger)' }}>
-            {formatCompacto(resumen.falta)}
+            {formatPesos(resumen.falta)}
           </div>
         </div>
       </div>
@@ -158,12 +158,12 @@ function avatarVariant(item: ItemCobranza): string {
 function estadoNode(item: ItemCobranza) {
   switch (item.estado) {
     case 'pagado':
-      return <span className="pill pill-success">pagó {formatCompacto(item.montoPagado)}</span>
+      return <span className="pill pill-success">pagó {formatPesos(item.montoPagado)}</span>
     case 'debe':
       return (
         <>
           <span className="pill-warning" style={{ fontSize: 11, color: 'var(--danger)' }}>
-            debe {formatCompacto(item.montoEsperado)}
+            debe {formatPesos(item.montoEsperado)}
           </span>
           <button
             className="btn btn-sm"
@@ -182,7 +182,7 @@ function estadoNode(item: ItemCobranza) {
     case 'parcial':
       return (
         <span className="pill-warning" style={{ fontSize: 11 }}>
-          parcial {formatCompacto(item.montoPagado)}/{formatCompacto(item.montoEsperado)}
+          parcial {formatPesos(item.montoPagado)}/{formatPesos(item.montoEsperado)}
         </span>
       )
     case 'paquete':

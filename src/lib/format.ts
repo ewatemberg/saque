@@ -1,21 +1,6 @@
-const pesos = new Intl.NumberFormat('es-AR', {
-  style: 'currency',
-  currency: 'ARS',
-  maximumFractionDigits: 0,
-})
-
-/** Formatea un monto en pesos: 25000 -> "$ 25.000" */
+/** Formatea un monto en pesos argentinos: 25000 -> "$25.000" */
 export function formatPesos(monto: number): string {
-  return pesos.format(Math.round(monto))
-}
-
-/** Version compacta para metricas: 28000 -> "$28k" */
-export function formatCompacto(monto: number): string {
-  const m = Math.round(monto)
-  if (Math.abs(m) >= 1000) {
-    return `$${Math.round(m / 1000)}k`
-  }
-  return `$${m}`
+  return '$' + Math.round(monto).toLocaleString('es-AR')
 }
 
 const metodos: Record<string, string> = {
