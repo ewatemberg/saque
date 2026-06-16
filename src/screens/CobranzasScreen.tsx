@@ -5,7 +5,7 @@ import { Icon } from '../components/Icon'
 import { generarAbonosDelMes, getCobranzas, registrarPago } from '../data/repo'
 import { SesionContext, linkCobroDeSesion } from '../lib/auth'
 import { descargarCSV } from '../lib/csv'
-import { formatPesos, mesActual, mesYAnioActual, nombreMetodo } from '../lib/format'
+import { formatPesos, mesActual, mesYAnioActual, nombreMetodo, normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp, mensajeRecordatorioCuota } from '../lib/whatsapp'
 import type { ItemCobranza, MetodoPago, ResumenMes } from '../types'
@@ -15,6 +15,7 @@ const METODOS: MetodoPago[] = ['efectivo', 'transferencia', 'mercadopago']
 export function CobranzasScreen() {
   const session = useContext(SesionContext)
   const linkCobro = linkCobroDeSesion(session)
+  const [busca, setBusca] = useState('')
   const [data, setData] = useState<{ resumen: ResumenMes; items: ItemCobranza[] } | null>(null)
   const reload = useCallback(() => {
     getCobranzas().then(setData)
@@ -49,6 +50,9 @@ export function CobranzasScreen() {
 
   const { resumen, items } = data
   const pct = resumen.esperado > 0 ? Math.round((resumen.cobrado / resumen.esperado) * 100) : 0
+  const q = normalizar(busca)
+  const itemsFiltrados = q ? items.filter((i) => normalizar(i.nombre).includes(q)) : items
+  const hayMuchos = items.length > 5
 
   const recordarMasivo = () => {
     const pago = linkCobro.trim() ? ` Podés pagarla por acá: ${linkCobro.trim()}` : ''
@@ -128,7 +132,26 @@ export function CobranzasScreen() {
         </div>
       )}
 
-      {items.map((item) => (
+      {hayMuchos && (
+        <div style={{ position: 'relative', marginBottom: 10 }}>
+          <span style={{ position: 'absolute', left: 11, top: 11, color: 'var(--text-3)' }}>
+            <Icon name="search" size={18} />
+          </span>
+          <input
+            className="input"
+            style={{ paddingLeft: 38 }}
+            placeholder="Buscar alumno…"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+      )}
+
+      {items.length > 0 && itemsFiltrados.length === 0 && (
+        <div className="empty">Ningún alumno coincide con “{busca}”.</div>
+      )}
+
+      {itemsFiltrados.map((item) => (
         <CobranzaRow key={item.alumnoId} item={item} onReload={reload} linkCobro={linkCobro} />
       ))}
     </>
