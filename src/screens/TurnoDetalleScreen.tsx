@@ -12,7 +12,7 @@ import {
   marcarAsistencia,
   reprogramarTurno,
 } from '../data/repo'
-import { formatFechaCorta } from '../lib/format'
+import { formatFechaCorta, normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp, mensajeRecupero } from '../lib/whatsapp'
 import type { Alumno, Turno } from '../types'
@@ -24,6 +24,7 @@ export function TurnoDetalleScreen() {
   const [alumnos, setAlumnos] = useState<Alumno[]>([])
   const [cargando, setCargando] = useState(true)
   const [mostrarPicker, setMostrarPicker] = useState(false)
+  const [buscaAnotar, setBuscaAnotar] = useState('')
   const [reprog, setReprog] = useState(false)
   const [nuevaFecha, setNuevaFecha] = useState('')
   const [nuevaHora, setNuevaHora] = useState('')
@@ -48,6 +49,10 @@ export function TurnoDetalleScreen() {
   const suspendido = turno.estado === 'suspendido'
   const enRecupero = turno.estado === 'recupero'
   const disponibles = alumnos.filter((a) => !turno.inscriptos.some((i) => i.alumnoId === a.id))
+  const qAnotar = normalizar(buscaAnotar)
+  const disponiblesFiltrados = qAnotar
+    ? disponibles.filter((a) => normalizar(a.nombre).includes(qAnotar) || normalizar(a.categoria).includes(qAnotar))
+    : disponibles
 
   const accion = async (fn: () => Promise<void>) => {
     try {
@@ -252,8 +257,25 @@ export function TurnoDetalleScreen() {
       {mostrarPicker && (
         <>
           <div className="section-title">Elegí un alumno</div>
+          {disponibles.length > 5 && (
+            <div style={{ position: 'relative', marginBottom: 10 }}>
+              <span style={{ position: 'absolute', left: 11, top: 11, color: 'var(--text-3)' }}>
+                <Icon name="search" size={18} />
+              </span>
+              <input
+                className="input"
+                style={{ paddingLeft: 38 }}
+                placeholder="Buscar alumno…"
+                value={buscaAnotar}
+                onChange={(e) => setBuscaAnotar(e.target.value)}
+              />
+            </div>
+          )}
           {disponibles.length === 0 && <div className="empty">No hay más alumnos para anotar.</div>}
-          {disponibles.map((a) => (
+          {disponibles.length > 0 && disponiblesFiltrados.length === 0 && (
+            <div className="empty">Ningún alumno coincide con “{buscaAnotar}”.</div>
+          )}
+          {disponiblesFiltrados.map((a) => (
             <div className="row" key={a.id}>
               <span className="avatar">{a.iniciales}</span>
               <div className="row-main">
