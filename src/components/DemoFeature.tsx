@@ -69,7 +69,29 @@ function Pantalla({ k }: { k: DemoKey }) {
         <div className="progress">
           <span style={{ width: '70%', animation: 'demo-fill 1.1s ease both' }} />
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 6 }}>70% cobrado · 2 alumnos deben</div>
+        <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 6, marginBottom: 10 }}>70% cobrado · 2 alumnos deben</div>
+
+        <div className="row" style={{ padding: '8px 2px' }}>
+          <span className="avatar danger">PL</span>
+          <div className="row-main">
+            <div className="row-name" style={{ fontSize: 14 }}>Pedro López</div>
+            <div className="row-sub" style={{ color: 'var(--danger)' }}>debe $25.000</div>
+          </div>
+          <span className="btn btn-sm btn-accent"><Icon name="cash" size={15} /></span>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: 6,
+            justifyContent: 'flex-end',
+            marginTop: 2,
+            animation: 'demo-appear .4s ease both',
+            animationDelay: '.6s',
+          }}
+        >
+          <span className="btn btn-sm">efectivo</span>
+          <span className="btn btn-sm">transferencia</span>
+        </div>
       </div>
     )
   }
