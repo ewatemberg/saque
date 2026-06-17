@@ -44,7 +44,7 @@
 - [x] Ayuda rediseñada como journey (pasos numerados navegables, actualizada) + botón "Cobrar" con texto (antes solo ícono)
 - [x] Dashboard de admin (/admin): métricas de población (profes, alumnos, turnos, deporte, altas por mes, por profe), sin datos de dinero, protegido por email del admin (RPC SECURITY DEFINER)
 - [x] Admin: alta/último acceso por profe, badge "sin actividad" y eliminar profe (con cascada), protegido por email del admin
-- [ ] Anti-bot en el signup: activar CAPTCHA (Turnstile/hCaptcha) en Supabase Auth + widget en el login
+- [x] Anti-bot en el signup: widget de CAPTCHA (Cloudflare Turnstile) en el login, se activa con VITE_TURNSTILE_SITE_KEY (falta que el admin habilite Captcha en Supabase + cargue keys)
 - [x] Selector de color libre en Apariencia (además de los 5 presets)
 - [x] Pantalla de Ayuda (guía de uso) accesible desde el pie
 - [x] Menú (5ª pestaña): mueve Franjas/Canchas/Apariencia/Ayuda/Acerca/Términos/Cerrar sesión a un lugar visible

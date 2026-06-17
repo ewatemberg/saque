@@ -36,12 +36,12 @@ export function useSession(): { session: Session | null; loading: boolean } {
   return { session, loading }
 }
 
-/** Envia un link magico al email (sin contrasena). */
-export async function signInEmail(email: string): Promise<void> {
+/** Envia un link magico al email (sin contrasena). captchaToken si el CAPTCHA está activo. */
+export async function signInEmail(email: string, captchaToken?: string): Promise<void> {
   if (!supabase) return
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: window.location.origin },
+    options: { emailRedirectTo: window.location.origin, captchaToken },
   })
   if (error) throw error
 }

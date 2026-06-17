@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Captcha, captchaActivo } from '../components/Captcha'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
 import { signInEmail, signInGoogle } from '../lib/auth'
@@ -12,6 +13,7 @@ export function LoginScreen() {
   const [cargando, setCargando] = useState(false)
   const [acepto, setAcepto] = useState(false)
   const [intento, setIntento] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
 
   const faltaAceptar = intento && !acepto
 
@@ -32,10 +34,14 @@ export function LoginScreen() {
     e.preventDefault()
     if (requiereAceptar()) return
     if (!email) return
+    if (captchaActivo && !captchaToken) {
+      setError('Completá la verificación de seguridad para continuar.')
+      return
+    }
     setCargando(true)
     setError(null)
     try {
-      await signInEmail(email)
+      await signInEmail(email, captchaToken || undefined)
       setEnviado(true)
     } catch (e) {
       const detalle = e instanceof Error ? e.message : String(e)
@@ -93,6 +99,7 @@ export function LoginScreen() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+              <Captcha onToken={setCaptchaToken} />
               <button className="btn btn-accent btn-block" type="submit" disabled={cargando}>
                 {cargando ? 'Enviando…' : 'Entrar con email'}
               </button>
