@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
 import { generarTurnosDelMes, getFranjas, proximoMes } from '../data/repo'
 import { formatPesos } from '../lib/format'
@@ -11,6 +12,8 @@ const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', '
 export function FranjasScreen() {
   const navigate = useNavigate()
   const [franjas, setFranjas] = useState<Franja[] | null>(null)
+  const [confirmarGenerar, setConfirmarGenerar] = useState(false)
+  const [conflicto, setConflicto] = useState<{ creados: number; conflictos: number } | null>(null)
   const prox = proximoMes()
 
   const reload = useCallback(() => {
@@ -20,22 +23,21 @@ export function FranjasScreen() {
     reload()
   }, [reload])
 
-  const generar = async () => {
-    if (!window.confirm(`Se van a generar los turnos de ${prox.etiqueta} a partir de tus franjas. ¿Continuar?`)) {
-      return
-    }
+  const toastResultado = (creados: number) => {
+    toast(
+      creados > 0 ? `Listo: ${creados} turno(s) de ${prox.etiqueta}.` : 'No se generaron turnos nuevos.',
+      creados > 0 ? 'success' : 'info',
+    )
+  }
+
+  const ejecutar = async (sobrescribir: boolean) => {
     try {
-      let r = await generarTurnosDelMes(false)
-      if (r.conflictos > 0) {
-        const ow = window.confirm(
-          `${r.conflictos} turno(s) ya existían en esas fechas y se saltearon. ¿Querés sobrescribirlos también?`,
-        )
-        if (ow) r = await generarTurnosDelMes(true)
+      const r = await generarTurnosDelMes(sobrescribir)
+      if (!sobrescribir && r.conflictos > 0) {
+        setConflicto(r)
+        return
       }
-      toast(
-        r.creados > 0 ? `Listo: ${r.creados} turno(s) de ${prox.etiqueta}.` : 'No se generaron turnos nuevos.',
-        r.creados > 0 ? 'success' : 'info',
-      )
+      toastResultado(r.creados)
     } catch {
       toast('No se pudieron generar los turnos. Intentá de nuevo.', 'error')
     }
@@ -54,7 +56,7 @@ export function FranjasScreen() {
       </div>
 
       {franjas && franjas.length > 0 && (
-        <button className="btn btn-accent btn-block" style={{ marginBottom: 14 }} onClick={generar}>
+        <button className="btn btn-accent btn-block" style={{ marginBottom: 14 }} onClick={() => setConfirmarGenerar(true)}>
           <Icon name="calendar" size={16} /> Generar turnos de {prox.etiqueta}
         </button>
       )}
@@ -79,6 +81,37 @@ export function FranjasScreen() {
           </div>
         </div>
       ))}
+
+      {confirmarGenerar && (
+        <ConfirmDialog
+          titulo={`Generar turnos de ${prox.etiqueta}`}
+          mensaje={`Se van a generar los turnos de ${prox.etiqueta} a partir de tus franjas, con sus alumnos fijos. ¿Continuar?`}
+          confirmLabel="Generar"
+          onConfirm={() => {
+            setConfirmarGenerar(false)
+            ejecutar(false)
+          }}
+          onCancel={() => setConfirmarGenerar(false)}
+        />
+      )}
+
+      {conflicto && (
+        <ConfirmDialog
+          titulo="Ya había turnos"
+          mensaje={`${conflicto.conflictos} turno(s) ya existían en esas fechas y se saltearon. ¿Querés sobrescribirlos también?`}
+          confirmLabel="Sobrescribir"
+          peligro
+          onConfirm={() => {
+            setConflicto(null)
+            ejecutar(true)
+          }}
+          onCancel={() => {
+            const creados = conflicto.creados
+            setConflicto(null)
+            toastResultado(creados)
+          }}
+        />
+      )}
     </>
   )
 }

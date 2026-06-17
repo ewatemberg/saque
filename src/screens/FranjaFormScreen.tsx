@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
 import {
   actualizarFranja,
@@ -38,6 +39,7 @@ export function FranjaFormScreen() {
   const [alumnoIds, setAlumnoIds] = useState<string[]>([])
   const [buscaCancha, setBuscaCancha] = useState('')
   const [buscaAlumno, setBuscaAlumno] = useState('')
+  const [confirmarEliminar, setConfirmarEliminar] = useState(false)
   const [cargando, setCargando] = useState(true)
   const [guardando, setGuardando] = useState(false)
 
@@ -293,16 +295,31 @@ export function FranjaFormScreen() {
             <button
               className="btn btn-block"
               style={{ marginTop: 10, color: 'var(--danger)' }}
-              onClick={() => {
-                if (confirm('¿Eliminar esta franja? No borra los turnos ya generados.')) {
-                  eliminarFranja(id as string).then(() => navigate(-1))
-                }
-              }}
+              onClick={() => setConfirmarEliminar(true)}
             >
               <Icon name="trash" size={16} /> Eliminar franja
             </button>
           )}
         </div>
+      )}
+
+      {confirmarEliminar && (
+        <ConfirmDialog
+          titulo="Eliminar franja"
+          mensaje="¿Eliminar esta franja? No borra los turnos ya generados. No se puede deshacer."
+          confirmLabel="Eliminar"
+          peligro
+          onConfirm={() => {
+            setConfirmarEliminar(false)
+            eliminarFranja(id as string)
+              .then(() => {
+                toast('Franja eliminada', 'success')
+                navigate(-1)
+              })
+              .catch(() => toast('No se pudo eliminar. Intentá de nuevo.', 'error'))
+          }}
+          onCancel={() => setConfirmarEliminar(false)}
+        />
       )}
     </>
   )

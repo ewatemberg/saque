@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
 import { actualizarCancha, crearCancha, getCancha, getCanchas } from '../data/repo'
 import { useDeporte } from '../lib/auth'
@@ -28,6 +29,7 @@ export function CanchaFormScreen() {
   const [existentes, setExistentes] = useState<Cancha[]>([])
   const [cargando, setCargando] = useState(editando)
   const [guardando, setGuardando] = useState(false)
+  const [confirmarDup, setConfirmarDup] = useState(false)
 
   useEffect(() => {
     if (!id) getCanchas(deporte).then(setExistentes)
@@ -52,14 +54,17 @@ export function CanchaFormScreen() {
   const posiblesDuplicados =
     !id && nombre.trim().length >= 3 ? existentes.filter((c) => pareceMismo(c.nombre, nombre)) : []
 
-  const guardar = async () => {
+  const guardar = () => {
     if (!nombre.trim()) return
-    if (
-      posiblesDuplicados.length > 0 &&
-      !window.confirm('Puede que esta cancha ya exista (mirá el aviso de arriba). ¿Crearla igual?')
-    ) {
+    if (posiblesDuplicados.length > 0) {
+      setConfirmarDup(true)
       return
     }
+    hacerGuardado()
+  }
+
+  const hacerGuardado = async () => {
+    setConfirmarDup(false)
     setGuardando(true)
     const data = {
       nombre: nombre.trim(),
@@ -166,6 +171,16 @@ export function CanchaFormScreen() {
       <p style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 14, textAlign: 'center' }}>
         Las canchas son compartidas: otros profes verán y podrán corregir estos datos.
       </p>
+
+      {confirmarDup && (
+        <ConfirmDialog
+          titulo="¿Crearla igual?"
+          mensaje="Puede que esta cancha ya exista (mirá el aviso de arriba). Si es una de esas, mejor usá la existente para no duplicar."
+          confirmLabel="Crear igual"
+          onConfirm={hacerGuardado}
+          onCancel={() => setConfirmarDup(false)}
+        />
+      )}
     </>
   )
 }

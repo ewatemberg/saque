@@ -1,7 +1,7 @@
 {
   "name": "saque",
   "private": true,
-  "version": "0.42.0",
+  "version": "0.43.0",
   "type": "module",
   "description": "Gestion de clases para profes de padel y tenis",
   "scripts": {

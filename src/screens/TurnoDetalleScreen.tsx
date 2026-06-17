@@ -1,6 +1,7 @@
 import { type CSSProperties, useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
 import {
   anotarAlumno,
@@ -15,7 +16,7 @@ import {
 import { formatFechaCorta, normalizar } from '../lib/format'
 import { toast } from '../lib/toast'
 import { abrirWhatsApp, mensajeRecupero } from '../lib/whatsapp'
-import type { Alumno, Turno } from '../types'
+import type { Alumno, Inscripto, Turno } from '../types'
 
 export function TurnoDetalleScreen() {
   const { id = '' } = useParams()
@@ -28,6 +29,8 @@ export function TurnoDetalleScreen() {
   const [reprog, setReprog] = useState(false)
   const [nuevaFecha, setNuevaFecha] = useState('')
   const [nuevaHora, setNuevaHora] = useState('')
+  const [bajaDe, setBajaDe] = useState<Inscripto | null>(null)
+  const [confirmarEliminar, setConfirmarEliminar] = useState(false)
 
   const reload = useCallback(async () => {
     const t = await getTurno(id)
@@ -234,11 +237,7 @@ export function TurnoDetalleScreen() {
             <button
               className="btn btn-sm"
               aria-label={`Dar de baja a ${i.nombre || i.iniciales}`}
-              onClick={() => {
-                if (confirm(`¿Dar de baja a ${i.nombre || i.iniciales} de este turno?`)) {
-                  accion(() => darDeBaja(turno.id, i.alumnoId))
-                }
-              }}
+              onClick={() => setBajaDe(i)}
             >
               <Icon name="trash" size={16} />
             </button>
@@ -305,16 +304,45 @@ export function TurnoDetalleScreen() {
       <button
         className="btn btn-block"
         style={{ marginTop: 24, color: 'var(--danger)' }}
-        onClick={() => {
-          if (confirm('¿Eliminar este turno? También se borran sus inscripciones.')) {
-            eliminarTurno(turno.id)
-              .then(() => navigate(-1))
-              .catch(() => toast('No se pudo eliminar. Intentá de nuevo.', 'error'))
-          }
-        }}
+        onClick={() => setConfirmarEliminar(true)}
       >
         <Icon name="trash" size={16} /> Eliminar turno
       </button>
+
+      {bajaDe && (
+        <ConfirmDialog
+          titulo="Dar de baja"
+          mensaje={
+            <>
+              ¿Dar de baja a <strong>{bajaDe.nombre || bajaDe.iniciales}</strong> de este turno?
+            </>
+          }
+          confirmLabel="Dar de baja"
+          peligro
+          onConfirm={() => {
+            const alumnoId = bajaDe.alumnoId
+            setBajaDe(null)
+            accion(() => darDeBaja(turno.id, alumnoId))
+          }}
+          onCancel={() => setBajaDe(null)}
+        />
+      )}
+
+      {confirmarEliminar && (
+        <ConfirmDialog
+          titulo="Eliminar turno"
+          mensaje="¿Eliminar este turno? También se borran sus inscripciones. No se puede deshacer."
+          confirmLabel="Eliminar"
+          peligro
+          onConfirm={() => {
+            setConfirmarEliminar(false)
+            eliminarTurno(turno.id)
+              .then(() => navigate(-1))
+              .catch(() => toast('No se pudo eliminar. Intentá de nuevo.', 'error'))
+          }}
+          onCancel={() => setConfirmarEliminar(false)}
+        />
+      )}
     </>
   )
 }
