@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
 import { actualizarAlumno, crearAlumno, eliminarAlumno, getAlumno } from '../data/repo'
 import { toast } from '../lib/toast'
@@ -23,6 +24,7 @@ export function AlumnoFormScreen() {
   const [montoAbono, setMontoAbono] = useState('')
   const [cargando, setCargando] = useState(editando)
   const [guardando, setGuardando] = useState(false)
+  const [confirmarBaja, setConfirmarBaja] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -159,16 +161,38 @@ export function AlumnoFormScreen() {
           <button
             className="btn btn-block"
             style={{ marginTop: 10, color: 'var(--danger)' }}
-            onClick={() => {
-              if (confirm('¿Eliminar este alumno? También se borran sus inscripciones y cuotas.')) {
-                eliminarAlumno(id as string).then(() => navigate(-1))
-              }
-            }}
+            onClick={() => setConfirmarBaja(true)}
           >
             <Icon name="trash" size={16} /> Eliminar alumno
           </button>
         )}
       </div>
+
+      {confirmarBaja && (
+        <ConfirmDialog
+          titulo="Eliminar alumno"
+          mensaje={
+            <>
+              ¿Eliminar a <strong>{nombre || 'este alumno'}</strong>? También se borran sus inscripciones y
+              cuotas. No se puede deshacer.
+            </>
+          }
+          confirmLabel="Eliminar"
+          peligro
+          onConfirm={() => {
+            eliminarAlumno(id as string)
+              .then(() => {
+                toast('Alumno eliminado', 'success')
+                navigate(-1)
+              })
+              .catch(() => {
+                setConfirmarBaja(false)
+                toast('No se pudo eliminar. Intentá de nuevo.', 'error')
+              })
+          }}
+          onCancel={() => setConfirmarBaja(false)}
+        />
+      )}
     </>
   )
 }
