@@ -203,13 +203,13 @@ function CobranzaRow({ item, onReload, linkCobro }: { item: ItemCobranza; onRelo
             <button
               className={cobrando ? 'btn btn-sm btn-accent' : 'btn btn-sm'}
               aria-label={`Cobrar a ${item.nombre}`}
-              title="Marcar como cobrado"
+              title="Registrar el pago"
               onClick={(e) => {
                 e.stopPropagation()
                 setCobrando((v) => !v)
               }}
             >
-              <Icon name="cash" size={16} />
+              <Icon name="cash" size={15} /> Cobrar
             </button>
           )}
         </div>
