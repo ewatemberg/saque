@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
-import { actualizarAlumno, crearAlumno, eliminarAlumno, getAlumno } from '../data/repo'
+import { actualizarAlumno, crearAlumno, eliminarAlumno, getAlumno, setActivoAlumno } from '../data/repo'
 import { toast } from '../lib/toast'
 import type { Categoria, TipoAlumno } from '../types'
 
@@ -25,6 +25,7 @@ export function AlumnoFormScreen() {
   const [cargando, setCargando] = useState(editando)
   const [guardando, setGuardando] = useState(false)
   const [confirmarBaja, setConfirmarBaja] = useState(false)
+  const [activo, setActivo] = useState(true)
 
   useEffect(() => {
     if (!id) return
@@ -35,10 +36,22 @@ export function AlumnoFormScreen() {
         setCategoria(a.categoria)
         setTipo(a.tipo)
         setMontoAbono(a.montoAbono ? String(a.montoAbono) : '')
+        setActivo(a.activo)
       }
       setCargando(false)
     })
   }, [id])
+
+  const cambiarActivo = async (nuevo: boolean) => {
+    try {
+      await setActivoAlumno(id as string, nuevo)
+      setActivo(nuevo)
+      toast(nuevo ? 'Alumno reactivado' : 'Alumno desactivado', 'success')
+      navigate(-1)
+    } catch {
+      toast('No se pudo actualizar. Intentá de nuevo.', 'error')
+    }
+  }
 
   if (cargando) return <Cargando />
 
@@ -153,17 +166,34 @@ export function AlumnoFormScreen() {
           </>
         )}
 
+        {editando && !activo && (
+          <div className="card muted" style={{ margin: '12px 0 0', padding: '10px 12px' }}>
+            <span className="card-meta">Este alumno está inactivo: no aparece en las listas ni se le generan cuotas.</span>
+          </div>
+        )}
+
         <button className="btn btn-accent btn-block" style={{ marginTop: 16 }} onClick={guardar} disabled={guardando || !nombre.trim()}>
           <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Guardar alumno'}
         </button>
 
         {editando && (
           <button
+            className={activo ? 'btn btn-block' : 'btn btn-accent btn-block'}
+            style={{ marginTop: 10 }}
+            onClick={() => cambiarActivo(!activo)}
+          >
+            <Icon name={activo ? 'alert' : 'check'} size={16} />{' '}
+            {activo ? 'Desactivar alumno' : 'Reactivar alumno'}
+          </button>
+        )}
+
+        {editando && (
+          <button
             className="btn btn-block"
-            style={{ marginTop: 10, color: 'var(--danger)' }}
+            style={{ marginTop: 10, fontSize: 13, color: 'var(--text-3)' }}
             onClick={() => setConfirmarBaja(true)}
           >
-            <Icon name="trash" size={16} /> Eliminar alumno
+            <Icon name="trash" size={14} /> Eliminar definitivamente
           </button>
         )}
       </div>

@@ -16,7 +16,9 @@ const PASOS: Paso[] = [
       <>
         Elegí tu cancha del listado (ya están casi todas; si falta la tuya, la agregás), cargá tus
         alumnos y armá tus <strong>franjas</strong> (tus horarios fijos, ej. "martes 19hs"). Después,
-        desde Franjas, <strong>generás todos los turnos del mes</strong> con un botón.
+        desde Franjas, <strong>generás todos los turnos del mes</strong> con un botón. Si un alumno deja
+        de venir, lo podés <strong>desactivar</strong> (no se pierde su historial) y reactivarlo cuando
+        vuelva.
       </>
     ),
     accion: { label: 'Ir a Franjas', to: '/franjas' },

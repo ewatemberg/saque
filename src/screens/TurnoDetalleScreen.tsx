@@ -51,7 +51,7 @@ export function TurnoDetalleScreen() {
   const cubreCosto = turno.precio * ocupados >= turno.costoCancha
   const suspendido = turno.estado === 'suspendido'
   const enRecupero = turno.estado === 'recupero'
-  const disponibles = alumnos.filter((a) => !turno.inscriptos.some((i) => i.alumnoId === a.id))
+  const disponibles = alumnos.filter((a) => a.activo && !turno.inscriptos.some((i) => i.alumnoId === a.id))
   const qAnotar = normalizar(buscaAnotar)
   const disponiblesFiltrados = qAnotar
     ? disponibles.filter((a) => normalizar(a.nombre).includes(qAnotar) || normalizar(a.categoria).includes(qAnotar))

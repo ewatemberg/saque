@@ -24,6 +24,7 @@ export interface Alumno {
   telefono: string
   tipo: TipoAlumno
   montoAbono: number
+  activo: boolean
 }
 
 export interface Inscripto {
@@ -120,6 +121,7 @@ export interface ProfeMetrica {
 export interface MetricasAdmin {
   profes: number
   alumnos: number
+  alumnosInactivos: number
   turnos: number
   franjas: number
   canchas: number

@@ -15,11 +15,17 @@ export function AlumnosScreen() {
   const alumnos = useData(getAlumnos)
   const [query, setQuery] = useState('')
   const [cat, setCat] = useState<Categoria | 'todas'>('todas')
+  const [verInactivos, setVerInactivos] = useState(false)
 
   const q = normalizar(query)
+  const activosCount = alumnos?.filter((a) => a.activo).length ?? 0
+  const inactivosCount = alumnos?.filter((a) => !a.activo).length ?? 0
   const filtrados =
     alumnos?.filter(
-      (a) => normalizar(a.nombre).includes(q) && (cat === 'todas' || a.categoria === cat),
+      (a) =>
+        a.activo !== verInactivos &&
+        normalizar(a.nombre).includes(q) &&
+        (cat === 'todas' || a.categoria === cat),
     ) ?? []
 
   const exportar = () => {
@@ -38,7 +44,9 @@ export function AlumnosScreen() {
       <div className="screen-header">
         <div>
           <h1>Alumnos</h1>
-          <div className="sub">{alumnos ? `${alumnos.length} en total` : ''}</div>
+          <div className="sub">
+            {alumnos ? `${activosCount} activos${inactivosCount ? ` · ${inactivosCount} inactivos` : ''}` : ''}
+          </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-sm" aria-label="Exportar CSV" title="Exportar a CSV" onClick={exportar} disabled={!alumnos?.length}>
@@ -63,6 +71,16 @@ export function AlumnosScreen() {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
+      )}
+
+      {inactivosCount > 0 && (
+        <button
+          className={verInactivos ? 'btn btn-sm btn-accent' : 'btn btn-sm'}
+          style={{ marginBottom: 12 }}
+          onClick={() => setVerInactivos((v) => !v)}
+        >
+          {verInactivos ? '← Ver activos' : `Ver inactivos (${inactivosCount})`}
+        </button>
       )}
 
       {hayMuchos && (
@@ -94,11 +112,14 @@ export function AlumnosScreen() {
 
       {filtrados.map((a) => (
         <div className="row clickable" key={a.id} onClick={() => navigate(`/alumno/${a.id}`)}>
-          <span className={`avatar ${a.tipo === 'ocasional' ? 'neutral' : ''}`}>{a.iniciales}</span>
+          <span className={`avatar ${a.activo ? (a.tipo === 'ocasional' ? 'neutral' : '') : 'neutral'}`}>
+            {a.iniciales}
+          </span>
           <div className="row-main">
-            <div className="row-name">{a.nombre}</div>
+            <div className="row-name" style={a.activo ? undefined : { color: 'var(--text-2)' }}>{a.nombre}</div>
             <div className="row-sub">
               {a.categoria} · {a.tipo}
+              {!a.activo && ' · inactivo'}
             </div>
           </div>
           <div className="row-right">

@@ -162,12 +162,12 @@ const franjas: Franja[] = [
 ]
 
 const alumnos: Alumno[] = [
-  { id: 'a1', nombre: 'Juan Díaz', iniciales: 'JD', categoria: '4ta', telefono: '+5491100000001', tipo: 'fijo', montoAbono: 25000 },
-  { id: 'a2', nombre: 'María Ruiz', iniciales: 'MR', categoria: '5ta', telefono: '+5491100000002', tipo: 'fijo', montoAbono: 25000 },
-  { id: 'a3', nombre: 'Pedro López', iniciales: 'PL', categoria: '4ta', telefono: '+5491100000003', tipo: 'fijo', montoAbono: 25000 },
-  { id: 'a4', nombre: 'Sofía Fernández', iniciales: 'SF', categoria: '6ta', telefono: '+5491100000004', tipo: 'fijo', montoAbono: 25000 },
-  { id: 'a10', nombre: 'Lucas Pérez', iniciales: 'LP', categoria: '3ra', telefono: '+5491100000010', tipo: 'fijo', montoAbono: 25000 },
-  { id: 'a11', nombre: 'Caro Méndez', iniciales: 'CM', categoria: '5ta', telefono: '+5491100000011', tipo: 'ocasional', montoAbono: 0 },
+  { id: 'a1', nombre: 'Juan Díaz', iniciales: 'JD', categoria: '4ta', telefono: '+5491100000001', tipo: 'fijo', montoAbono: 25000, activo: true },
+  { id: 'a2', nombre: 'María Ruiz', iniciales: 'MR', categoria: '5ta', telefono: '+5491100000002', tipo: 'fijo', montoAbono: 25000, activo: true },
+  { id: 'a3', nombre: 'Pedro López', iniciales: 'PL', categoria: '4ta', telefono: '+5491100000003', tipo: 'fijo', montoAbono: 25000, activo: true },
+  { id: 'a4', nombre: 'Sofía Fernández', iniciales: 'SF', categoria: '6ta', telefono: '+5491100000004', tipo: 'fijo', montoAbono: 25000, activo: true },
+  { id: 'a10', nombre: 'Lucas Pérez', iniciales: 'LP', categoria: '3ra', telefono: '+5491100000010', tipo: 'fijo', montoAbono: 25000, activo: true },
+  { id: 'a11', nombre: 'Caro Méndez', iniciales: 'CM', categoria: '5ta', telefono: '+5491100000011', tipo: 'ocasional', montoAbono: 0, activo: true },
 ]
 
 export function calcularResumenMes(items: ItemCobranza[]): ResumenMes {
@@ -251,6 +251,7 @@ export async function getMetricasAdmin(): Promise<MetricasAdmin> {
   return {
     profes: profesAdmin.length,
     alumnos: sum('alumnos'),
+    alumnosInactivos: 9,
     turnos: sum('turnos'),
     franjas: sum('franjas'),
     canchas: 29,
@@ -362,7 +363,13 @@ export async function crearAlumno(data: NuevoAlumno): Promise<void> {
     telefono: data.telefono,
     tipo: data.tipo,
     montoAbono: data.montoAbono,
+    activo: true,
   })
+}
+
+export async function setActivoAlumno(id: string, activo: boolean): Promise<void> {
+  const a = alumnos.find((x) => x.id === id)
+  if (a) a.activo = activo
 }
 
 export async function getAlumno(id: string): Promise<Alumno | null> {
@@ -391,7 +398,7 @@ export async function eliminarAlumno(id: string): Promise<void> {
 
 export async function generarAbonosDelMes(montoDefault: number): Promise<number> {
   let creadas = 0
-  for (const a of alumnos.filter((x) => x.tipo === 'fijo')) {
+  for (const a of alumnos.filter((x) => x.tipo === 'fijo' && x.activo)) {
     if (cobranzas.some((c) => c.alumnoId === a.id)) continue
     const monto = a.montoAbono > 0 ? a.montoAbono : montoDefault
     cobranzas.push({

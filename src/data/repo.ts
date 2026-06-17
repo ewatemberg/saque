@@ -31,6 +31,7 @@ export const getAlumno = impl.getAlumno
 export const crearAlumno = impl.crearAlumno
 export const actualizarAlumno = impl.actualizarAlumno
 export const eliminarAlumno = impl.eliminarAlumno
+export const setActivoAlumno = impl.setActivoAlumno
 export const generarAbonosDelMes = impl.generarAbonosDelMes
 export const getBalance = impl.getBalance
 export const getHistorico = impl.getHistorico

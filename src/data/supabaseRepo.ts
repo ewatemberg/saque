@@ -252,6 +252,7 @@ export async function getAlumnos(): Promise<Alumno[]> {
     telefono: r.telefono,
     tipo: r.tipo as TipoAlumno,
     montoAbono: (r.monto_abono as number) ?? 0,
+    activo: (r.activo as boolean | null) ?? true,
   }))
 }
 
@@ -539,7 +540,13 @@ export async function getAlumno(id: string): Promise<Alumno | null> {
     telefono: r.telefono,
     tipo: r.tipo as TipoAlumno,
     montoAbono: (r.monto_abono as number) ?? 0,
+    activo: (r.activo as boolean | null) ?? true,
   }
+}
+
+export async function setActivoAlumno(id: string, activo: boolean): Promise<void> {
+  const { error } = await db().from('alumnos').update({ activo }).eq('id', id)
+  if (error) throw error
 }
 
 export async function actualizarAlumno(id: string, data: NuevoAlumno): Promise<void> {
@@ -568,7 +575,7 @@ export async function generarAbonosDelMes(montoDefault: number): Promise<number>
   const profeId = userData.user?.id ?? null
 
   const [{ data: fijos, error: e1 }, { data: cuotas, error: e2 }] = await Promise.all([
-    db().from('alumnos').select('id,nombre,iniciales,monto_abono').eq('tipo', 'fijo'),
+    db().from('alumnos').select('id,nombre,iniciales,monto_abono').eq('tipo', 'fijo').eq('activo', true),
     db().from('cuotas').select('alumno_id').eq('periodo', periodo),
   ])
   if (e1) throw e1

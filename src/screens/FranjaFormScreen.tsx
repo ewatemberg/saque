@@ -95,10 +95,11 @@ export function FranjaFormScreen() {
   }
 
   const q = normalizar(buscaAlumno)
+  const alumnosRoster = alumnos.filter((a) => a.activo || alumnoIds.includes(a.id))
   const alumnosFiltrados = q
-    ? alumnos.filter((a) => normalizar(a.nombre).includes(q) || normalizar(a.categoria).includes(q))
-    : alumnos
-  const hayMuchos = alumnos.length > 3
+    ? alumnosRoster.filter((a) => normalizar(a.nombre).includes(q) || normalizar(a.categoria).includes(q))
+    : alumnosRoster
+  const hayMuchos = alumnosRoster.length > 3
 
   const qc = normalizar(buscaCancha)
   const canchasFiltradas = qc

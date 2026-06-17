@@ -80,13 +80,13 @@ export function AdminScreen() {
 
       <div className="metrics">
         <Metric label="Profes" value={m.profes} destacado />
-        <Metric label="Alumnos" value={m.alumnos} />
-        <Metric label="Turnos" value={m.turnos} />
+        <Metric label="Alumnos activos" value={m.alumnos} />
+        <Metric label="Inactivos" value={m.alumnosInactivos} />
       </div>
       <div className="metrics" style={{ marginTop: 4 }}>
+        <Metric label="Turnos" value={m.turnos} />
         <Metric label="Franjas" value={m.franjas} />
         <Metric label="Canchas" value={m.canchas} />
-        <Metric label="Prom. alumnos/profe" value={m.profes > 0 ? Math.round(m.alumnos / m.profes) : 0} />
       </div>
 
       <div className="section-title">Profes por deporte</div>
