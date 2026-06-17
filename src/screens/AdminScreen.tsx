@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { Icon } from '../components/Icon'
 import { eliminarProfe, getMetricasAdmin } from '../data/repo'
 import { SesionContext, esAdmin } from '../lib/auth'
@@ -20,6 +21,7 @@ export function AdminScreen() {
   const session = useContext(SesionContext)
   const permitido = usandoMock || esAdmin(session)
   const [m, setM] = useState<MetricasAdmin | null>(null)
+  const [aBorrar, setABorrar] = useState<ProfeMetrica | null>(null)
 
   const reload = useCallback(() => {
     if (permitido) getMetricasAdmin().then(setM)
@@ -28,15 +30,15 @@ export function AdminScreen() {
     reload()
   }, [reload])
 
-  const borrar = async (p: ProfeMetrica) => {
-    if (!window.confirm(`¿Eliminar a ${p.nombre} (${p.email})?\n\nSe borran TODOS sus datos (alumnos, turnos, cobranzas). No se puede deshacer.`)) {
-      return
-    }
+  const confirmarBorrado = async () => {
+    if (!aBorrar) return
     try {
-      await eliminarProfe(p.id)
+      await eliminarProfe(aBorrar.id)
       toast('Profe eliminado', 'success')
+      setABorrar(null)
       reload()
     } catch {
+      setABorrar(null)
       toast('No se pudo eliminar. Intentá de nuevo.', 'error')
     }
   }
@@ -136,7 +138,7 @@ export function AdminScreen() {
                 aria-label={`Eliminar a ${p.nombre}`}
                 title="Eliminar profe"
                 style={{ color: 'var(--danger)' }}
-                onClick={() => borrar(p)}
+                onClick={() => setABorrar(p)}
               >
                 <Icon name="trash" size={15} />
               </button>
@@ -144,6 +146,22 @@ export function AdminScreen() {
           </div>
         )
       })}
+
+      {aBorrar && (
+        <ConfirmDialog
+          titulo="Eliminar profe"
+          mensaje={
+            <>
+              ¿Eliminar a <strong>{aBorrar.nombre}</strong> ({aBorrar.email})? Se borran todos sus datos
+              (alumnos, turnos, cobranzas). No se puede deshacer.
+            </>
+          }
+          confirmLabel="Eliminar"
+          peligro
+          onConfirm={confirmarBorrado}
+          onCancel={() => setABorrar(null)}
+        />
+      )}
     </>
   )
 }
