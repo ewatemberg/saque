@@ -8,6 +8,7 @@ import type {
   HistoricoMes,
   ItemCobranza,
   MetodoPago,
+  MetricasAdmin,
   PerfilPublico,
   ResumenBalance,
   ResumenMes,
@@ -233,6 +234,33 @@ export async function getTurnosPublicos(_profeId: string, desde: string, hasta: 
 
 export async function getPerfilPublico(_profeId: string): Promise<PerfilPublico | null> {
   return { nombre: 'Profe de ejemplo', whatsapp: '+5491100000000', deporte: 'padel' }
+}
+
+export async function getMetricasAdmin(): Promise<MetricasAdmin> {
+  return {
+    profes: 7,
+    alumnos: 142,
+    turnos: 318,
+    franjas: 26,
+    canchas: 29,
+    porDeporte: { padel: 5, tenis: 2 },
+    altasPorMes: [
+      { periodo: '2026-02', profes: 1 },
+      { periodo: '2026-03', profes: 1 },
+      { periodo: '2026-04', profes: 2 },
+      { periodo: '2026-05', profes: 1 },
+      { periodo: '2026-06', profes: 2 },
+    ],
+    porProfe: [
+      { nombre: 'Profe Emilio', email: 'emilio.watemberg@gmail.com', deporte: 'padel', alumnos: 34, turnos: 92, franjas: 6 },
+      { nombre: 'Caro Méndez', email: 'caro.mendez@gmail.com', deporte: 'padel', alumnos: 29, turnos: 71, franjas: 5 },
+      { nombre: 'Lucho Tenis', email: 'lucho@gmail.com', deporte: 'tenis', alumnos: 26, turnos: 60, franjas: 5 },
+      { nombre: 'Sofi Padel', email: 'sofi.p@gmail.com', deporte: 'padel', alumnos: 21, turnos: 48, franjas: 4 },
+      { nombre: 'Marce', email: 'marce@gmail.com', deporte: 'padel', alumnos: 18, turnos: 32, franjas: 3 },
+      { nombre: 'Nico Raqueta', email: 'nico.r@gmail.com', deporte: 'tenis', alumnos: 11, turnos: 15, franjas: 2 },
+      { nombre: 'Pablo', email: 'pablo@gmail.com', deporte: 'padel', alumnos: 3, turnos: 0, franjas: 1 },
+    ],
+  }
 }
 
 export async function crearTurno(data: NuevoTurno): Promise<void> {

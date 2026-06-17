@@ -105,6 +105,26 @@ export interface PerfilPublico {
   deporte: Deporte | null
 }
 
+export interface ProfeMetrica {
+  nombre: string
+  email: string
+  deporte: string | null
+  alumnos: number
+  turnos: number
+  franjas: number
+}
+
+export interface MetricasAdmin {
+  profes: number
+  alumnos: number
+  turnos: number
+  franjas: number
+  canchas: number
+  porDeporte: { padel: number; tenis: number }
+  altasPorMes: { periodo: string; profes: number }[]
+  porProfe: ProfeMetrica[]
+}
+
 export interface ResumenBalance {
   ingresoBruto: number
   costoCanchas: number

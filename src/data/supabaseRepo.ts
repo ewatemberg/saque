@@ -10,6 +10,7 @@ import type {
   EstadoTurno,
   ItemCobranza,
   MetodoPago,
+  MetricasAdmin,
   PerfilPublico,
   ResumenBalance,
   ResumenMes,
@@ -136,6 +137,12 @@ export async function getTurnosPublicos(profeId: string, desde: string, hasta: s
     cupos: r.cupos as number,
     ocupados: r.ocupados as number,
   }))
+}
+
+export async function getMetricasAdmin(): Promise<MetricasAdmin> {
+  const { data, error } = await db().rpc('admin_metricas')
+  if (error) throw error
+  return data as MetricasAdmin
 }
 
 export async function getPerfilPublico(profeId: string): Promise<PerfilPublico | null> {

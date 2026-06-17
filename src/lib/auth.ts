@@ -79,6 +79,14 @@ export function idDeSesion(session: Session | null): string | null {
   return session?.user?.id ?? null
 }
 
+/** Email del administrador de la app (acceso al dashboard de métricas). */
+export const ADMIN_EMAIL = 'emilio.watemberg@gmail.com'
+
+/** true si la sesión es la del administrador (gating de UI; el backend lo revalida). */
+export function esAdmin(session: Session | null): boolean {
+  return (session?.user?.email ?? '').toLowerCase() === ADMIN_EMAIL
+}
+
 export interface PerfilPublicoEditable {
   nombre: string
   whatsapp: string

@@ -1,6 +1,8 @@
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { signOut } from '../lib/auth'
+import { SesionContext, esAdmin, signOut } from '../lib/auth'
+import { usandoMock } from '../lib/supabase'
 import { APP_VERSION } from '../version'
 
 const OPCIONES = [
@@ -16,13 +18,15 @@ const OPCIONES = [
 
 export function MenuScreen() {
   const navigate = useNavigate()
+  const session = useContext(SesionContext)
+  const opciones = usandoMock || esAdmin(session) ? [...OPCIONES, { label: 'Métricas (admin)', to: '/admin' }] : OPCIONES
   return (
     <>
       <div className="screen-header">
         <h1>Menú</h1>
       </div>
 
-      {OPCIONES.map((o) => (
+      {opciones.map((o) => (
         <div className="row clickable" key={o.to} onClick={() => navigate(o.to)}>
           <div className="row-main">
             <div className="row-name">{o.label}</div>
