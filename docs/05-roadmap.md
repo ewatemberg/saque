@@ -43,6 +43,8 @@
 - [x] Buscador en "Anotar alumno" (detalle de turno) para encontrar al alumno con muchos cargados
 - [x] Ayuda rediseñada como journey (pasos numerados navegables, actualizada) + botón "Cobrar" con texto (antes solo ícono)
 - [x] Dashboard de admin (/admin): métricas de población (profes, alumnos, turnos, deporte, altas por mes, por profe), sin datos de dinero, protegido por email del admin (RPC SECURITY DEFINER)
+- [x] Admin: alta/último acceso por profe, badge "sin actividad" y eliminar profe (con cascada), protegido por email del admin
+- [ ] Anti-bot en el signup: activar CAPTCHA (Turnstile/hCaptcha) en Supabase Auth + widget en el login
 - [x] Selector de color libre en Apariencia (además de los 5 presets)
 - [x] Pantalla de Ayuda (guía de uso) accesible desde el pie
 - [x] Menú (5ª pestaña): mueve Franjas/Canchas/Apariencia/Ayuda/Acerca/Términos/Cerrar sesión a un lugar visible

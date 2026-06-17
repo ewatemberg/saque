@@ -106,9 +106,12 @@ export interface PerfilPublico {
 }
 
 export interface ProfeMetrica {
+  id: string
   nombre: string
   email: string
   deporte: string | null
+  creado: string | null
+  ultimo_acceso: string | null
   alumnos: number
   turnos: number
   franjas: number

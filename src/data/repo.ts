@@ -14,6 +14,7 @@ export const getTurnosRango = impl.getTurnosRango
 export const getTurnosPublicos = impl.getTurnosPublicos
 export const getPerfilPublico = impl.getPerfilPublico
 export const getMetricasAdmin = impl.getMetricasAdmin
+export const eliminarProfe = impl.eliminarProfe
 export const crearTurno = impl.crearTurno
 export const actualizarTurno = impl.actualizarTurno
 export const eliminarTurno = impl.eliminarTurno

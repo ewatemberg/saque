@@ -236,14 +236,28 @@ export async function getPerfilPublico(_profeId: string): Promise<PerfilPublico 
   return { nombre: 'Profe de ejemplo', whatsapp: '+5491100000000', deporte: 'padel' }
 }
 
+let profesAdmin: MetricasAdmin['porProfe'] = [
+  { id: 'p1', nombre: 'Profe Emilio', email: 'emilio.watemberg@gmail.com', deporte: 'padel', creado: '2026-02-10', ultimo_acceso: '2026-06-16', alumnos: 34, turnos: 92, franjas: 6 },
+  { id: 'p2', nombre: 'Caro Méndez', email: 'caro.mendez@gmail.com', deporte: 'padel', creado: '2026-03-02', ultimo_acceso: '2026-06-15', alumnos: 29, turnos: 71, franjas: 5 },
+  { id: 'p3', nombre: 'Lucho Tenis', email: 'lucho@gmail.com', deporte: 'tenis', creado: '2026-04-08', ultimo_acceso: '2026-06-14', alumnos: 26, turnos: 60, franjas: 5 },
+  { id: 'p4', nombre: 'Sofi Padel', email: 'sofi.p@gmail.com', deporte: 'padel', creado: '2026-04-20', ultimo_acceso: '2026-06-10', alumnos: 21, turnos: 48, franjas: 4 },
+  { id: 'p5', nombre: 'Marce', email: 'marce@gmail.com', deporte: 'padel', creado: '2026-05-12', ultimo_acceso: '2026-06-01', alumnos: 18, turnos: 32, franjas: 3 },
+  { id: 'p6', nombre: 'Nico Raqueta', email: 'nico.r@gmail.com', deporte: 'tenis', creado: '2026-06-03', ultimo_acceso: '2026-06-09', alumnos: 11, turnos: 15, franjas: 2 },
+  { id: 'p7', nombre: 'gihosok734', email: 'gihosok734@dyleris.com', deporte: 'padel', creado: '2026-06-16', ultimo_acceso: '2026-06-16', alumnos: 0, turnos: 0, franjas: 0 },
+]
+
 export async function getMetricasAdmin(): Promise<MetricasAdmin> {
+  const sum = (k: 'alumnos' | 'turnos' | 'franjas') => profesAdmin.reduce((s, p) => s + p[k], 0)
   return {
-    profes: 7,
-    alumnos: 142,
-    turnos: 318,
-    franjas: 26,
+    profes: profesAdmin.length,
+    alumnos: sum('alumnos'),
+    turnos: sum('turnos'),
+    franjas: sum('franjas'),
     canchas: 29,
-    porDeporte: { padel: 5, tenis: 2 },
+    porDeporte: {
+      padel: profesAdmin.filter((p) => p.deporte === 'padel').length,
+      tenis: profesAdmin.filter((p) => p.deporte === 'tenis').length,
+    },
     altasPorMes: [
       { periodo: '2026-02', profes: 1 },
       { periodo: '2026-03', profes: 1 },
@@ -251,16 +265,12 @@ export async function getMetricasAdmin(): Promise<MetricasAdmin> {
       { periodo: '2026-05', profes: 1 },
       { periodo: '2026-06', profes: 2 },
     ],
-    porProfe: [
-      { nombre: 'Profe Emilio', email: 'emilio.watemberg@gmail.com', deporte: 'padel', alumnos: 34, turnos: 92, franjas: 6 },
-      { nombre: 'Caro Méndez', email: 'caro.mendez@gmail.com', deporte: 'padel', alumnos: 29, turnos: 71, franjas: 5 },
-      { nombre: 'Lucho Tenis', email: 'lucho@gmail.com', deporte: 'tenis', alumnos: 26, turnos: 60, franjas: 5 },
-      { nombre: 'Sofi Padel', email: 'sofi.p@gmail.com', deporte: 'padel', alumnos: 21, turnos: 48, franjas: 4 },
-      { nombre: 'Marce', email: 'marce@gmail.com', deporte: 'padel', alumnos: 18, turnos: 32, franjas: 3 },
-      { nombre: 'Nico Raqueta', email: 'nico.r@gmail.com', deporte: 'tenis', alumnos: 11, turnos: 15, franjas: 2 },
-      { nombre: 'Pablo', email: 'pablo@gmail.com', deporte: 'padel', alumnos: 3, turnos: 0, franjas: 1 },
-    ],
+    porProfe: profesAdmin.map((p) => ({ ...p })),
   }
+}
+
+export async function eliminarProfe(id: string): Promise<void> {
+  profesAdmin = profesAdmin.filter((p) => p.id !== id)
 }
 
 export async function crearTurno(data: NuevoTurno): Promise<void> {

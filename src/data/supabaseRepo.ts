@@ -145,6 +145,11 @@ export async function getMetricasAdmin(): Promise<MetricasAdmin> {
   return data as MetricasAdmin
 }
 
+export async function eliminarProfe(id: string): Promise<void> {
+  const { error } = await db().rpc('admin_eliminar_profe', { p_id: id })
+  if (error) throw error
+}
+
 export async function getPerfilPublico(profeId: string): Promise<PerfilPublico | null> {
   const { data, error } = await db().rpc('perfil_publico', { p_profe: profeId })
   if (error) throw error

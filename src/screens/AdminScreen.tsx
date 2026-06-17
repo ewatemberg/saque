@@ -1,11 +1,12 @@
-import { useContext } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { Icon } from '../components/Icon'
-import { getMetricasAdmin } from '../data/repo'
+import { eliminarProfe, getMetricasAdmin } from '../data/repo'
 import { SesionContext, esAdmin } from '../lib/auth'
 import { usandoMock } from '../lib/supabase'
-import { useData } from '../lib/useData'
+import { toast } from '../lib/toast'
+import type { MetricasAdmin, ProfeMetrica } from '../types'
 
 const MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 
@@ -18,7 +19,27 @@ export function AdminScreen() {
   const navigate = useNavigate()
   const session = useContext(SesionContext)
   const permitido = usandoMock || esAdmin(session)
-  const m = useData(getMetricasAdmin)
+  const [m, setM] = useState<MetricasAdmin | null>(null)
+
+  const reload = useCallback(() => {
+    if (permitido) getMetricasAdmin().then(setM)
+  }, [permitido])
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  const borrar = async (p: ProfeMetrica) => {
+    if (!window.confirm(`¿Eliminar a ${p.nombre} (${p.email})?\n\nSe borran TODOS sus datos (alumnos, turnos, cobranzas). No se puede deshacer.`)) {
+      return
+    }
+    try {
+      await eliminarProfe(p.id)
+      toast('Profe eliminado', 'success')
+      reload()
+    } catch {
+      toast('No se pudo eliminar. Intentá de nuevo.', 'error')
+    }
+  }
 
   const header = (
     <div className="screen-header">
@@ -91,21 +112,38 @@ export function AdminScreen() {
       )}
 
       <div className="section-title">Por profe ({m.porProfe.length})</div>
-      {m.porProfe.map((p) => (
-        <div className="row" key={p.email}>
-          <div className="row-main">
-            <div className="row-name">
-              {p.nombre}
-              {p.deporte && <span className="card-meta"> · {p.deporte === 'tenis' ? 'tenis' : 'pádel'}</span>}
+      {m.porProfe.map((p) => {
+        const inactivo = p.alumnos === 0 && p.turnos === 0 && p.franjas === 0
+        return (
+          <div className="row" key={p.id}>
+            <div className="row-main">
+              <div className="row-name">
+                {p.nombre}
+                {p.deporte && <span className="card-meta"> · {p.deporte === 'tenis' ? 'tenis' : 'pádel'}</span>}
+                {inactivo && <span className="pill pill-neutral" style={{ marginLeft: 6, fontSize: 10 }}>sin actividad</span>}
+              </div>
+              <div className="row-sub">{p.email}</div>
+              <div className="row-sub" style={{ fontSize: 11 }}>
+                alta {p.creado ?? '—'} · último acceso {p.ultimo_acceso ?? '—'}
+              </div>
             </div>
-            <div className="row-sub">{p.email}</div>
+            <div className="row-right" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+              <span style={{ fontSize: 11.5, color: 'var(--text-2)', textAlign: 'right', lineHeight: 1.35 }}>
+                <strong style={{ color: 'var(--text)' }}>{p.alumnos}</strong> al. · {p.turnos} t. · {p.franjas} fr.
+              </span>
+              <button
+                className="btn btn-sm"
+                aria-label={`Eliminar a ${p.nombre}`}
+                title="Eliminar profe"
+                style={{ color: 'var(--danger)' }}
+                onClick={() => borrar(p)}
+              >
+                <Icon name="trash" size={15} />
+              </button>
+            </div>
           </div>
-          <div className="row-right" style={{ fontSize: 12, color: 'var(--text-2)', textAlign: 'right', lineHeight: 1.4 }}>
-            <div><strong style={{ color: 'var(--text)' }}>{p.alumnos}</strong> alumnos</div>
-            <div>{p.turnos} turnos · {p.franjas} franjas</div>
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </>
   )
 }
