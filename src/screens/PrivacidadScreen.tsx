@@ -212,7 +212,8 @@ export function PrivacidadScreen() {
       <p>
         Los usuarios podrán solicitar la eliminación de su cuenta en cualquier momento. La eliminación
         de la cuenta podrá implicar la eliminación o anonimización de los datos asociados, salvo
-        aquellos que deban conservarse por obligaciones legales o de seguridad.
+        aquellos que deban conservarse por obligaciones legales o de seguridad. Podés ver los pasos en{' '}
+        <Link to="/eliminar-cuenta" style={{ color: 'var(--accent)' }}>Eliminar tu cuenta</Link>.
       </p>
 
       <h2>17. Cambios en esta Política</h2>

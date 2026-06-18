@@ -28,6 +28,7 @@ import { PrivacidadScreen } from './screens/PrivacidadScreen'
 import { LoginScreen } from './screens/LoginScreen'
 import { DeporteScreen } from './screens/DeporteScreen'
 import { ConocerScreen } from './screens/ConocerScreen'
+import { EliminarCuentaScreen } from './screens/EliminarCuentaScreen'
 import { CalendarioPublicoScreen } from './screens/CalendarioPublicoScreen'
 import { MiPaginaScreen } from './screens/MiPaginaScreen'
 import { CobroScreen } from './screens/CobroScreen'
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/conocer" element={<ConocerScreen />} />
         <Route path="/terminos" element={<TerminosScreen />} />
         <Route path="/privacidad" element={<PrivacidadScreen />} />
+        <Route path="/eliminar-cuenta" element={<EliminarCuentaScreen />} />
         <Route path="/c/:profeId" element={<CalendarioPublicoScreen />} />
 
         {/* App (requiere login) */}
