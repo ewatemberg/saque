@@ -1,94 +1,183 @@
 # Términos y Condiciones de Uso de Saque
 
-> ⚠️ **BORRADOR — requiere revisión de un/a abogado/a antes de publicar.**
-> Este texto es una base informativa, no asesoramiento legal. Está pensado para
-> Argentina (Ley 24.240 de Defensa del Consumidor y Ley 25.326 de Protección de
-> Datos Personales). Completá los campos entre [corchetes].
+**Última actualización:** 17/06/2026
 
-**Última actualización:** 15/06/2026
+> Texto pensado para Argentina (Ley 24.240 de Defensa del Consumidor y Ley 25.326
+> de Protección de Datos Personales). Versión publicada en la app
+> (`/terminos`). No constituye asesoramiento legal.
 
-## 1. Qué es Saque (y qué no es)
+## 1. Introducción
 
-Saque es una **aplicación de gestión** que ayuda a profesores de pádel y tenis a
-organizar sus clases, turnos, alumnos y cobranzas, y a comunicarse con sus
-alumnos. Saque es una **herramienta**: no es un club, no emplea a los
-profesores, no organiza las clases ni participa de la relación entre el profesor
-y sus alumnos.
+Bienvenido a Saque.
 
-Al usar Saque aceptás estos Términos. Si no estás de acuerdo, no uses la app.
+Saque es una aplicación informática destinada a facilitar la gestión de clases,
+alumnos, turnos, asistencias, cobranzas y actividades relacionadas con la
+enseñanza de pádel y tenis.
 
-## 2. Registro y cuenta
+Al registrarse, acceder o utilizar la aplicación, el usuario acepta los presentes
+Términos y Condiciones y la Política de Privacidad asociada. Si no está de acuerdo
+con estos términos, deberá abstenerse de utilizar la aplicación.
 
-- Para usar Saque necesitás una cuenta asociada a un correo electrónico válido.
-- Sos responsable de la actividad de tu cuenta y de mantener seguro tu acceso.
-- Los datos que cargues deben ser verídicos. Está prohibido registrarse con
-  identidad falsa o haciéndote pasar por otra persona.
+## 2. Titularidad de la aplicación
 
-## 3. Sobre los profesores y la relación con los alumnos
+La aplicación Saque es operada y administrada por Emilio Watemberg (en adelante,
+"Saque", "nosotros" o "la Plataforma"). Saque proporciona exclusivamente una
+herramienta tecnológica de gestión.
 
-- Saque **no verifica la identidad, los títulos ni la idoneidad** de los
-  profesores que usan la app. La existencia de un perfil en Saque **no implica
-  ningún aval, certificación ni recomendación** por parte de Saque.
-- La contratación de clases, los precios, los pagos y cualquier acuerdo se pactan
-  **directamente entre el profesor y el alumno**. Saque **no es parte** de esa
-  relación ni de los pagos, y no los procesa.
-- Te recomendamos tomar recaudos razonables antes de pagar o contratar (conocer
-  al profesor, verificar la cancha, etc.).
-- Si detectás un uso fraudulento o una suplantación de identidad, podés
-  denunciarlo a [correo de contacto] y actuaremos según el punto 8.
+## 3. Usuarios
 
-## 4. Uso correcto
+Podrán utilizar la aplicación:
 
-Te comprometés a no:
+- Profesores de pádel y tenis.
+- Escuelas deportivas.
+- Alumnos o personas invitadas por profesores para interactuar con la plataforma.
 
-- Suplantar la identidad de otra persona o profesor.
-- Cargar información falsa, engañosa o de terceros sin su consentimiento.
-- Usar Saque para estafar, acosar o perjudicar a otros.
-- Intentar vulnerar la seguridad de la app o de los datos de otros usuarios.
+Cada usuario declara poseer capacidad legal suficiente para aceptar estos
+Términos. En caso de menores de edad, el uso deberá realizarse bajo la
+autorización y supervisión de sus representantes legales.
 
-## 5. Contenido que cargás
+## 4. Registro y cuenta
 
-- Sos responsable de la información que cargás (datos de alumnos, fotos, precios,
-  etc.) y de tener el consentimiento necesario para cargar datos de terceros
-  (ver Política de Privacidad).
-- Conservás la titularidad de tu contenido. Nos otorgás permiso para almacenarlo
-  y mostrarlo dentro de la app con el solo fin de prestarte el servicio.
+Para utilizar determinadas funcionalidades será necesario crear una cuenta. El
+usuario se compromete a:
 
-## 6. Disponibilidad del servicio
+- Proporcionar información verdadera, exacta y actualizada.
+- Mantener la confidencialidad de sus credenciales.
+- Notificar cualquier acceso no autorizado a su cuenta.
 
-Saque se ofrece "tal como está". Hacemos un esfuerzo razonable por mantener el
-servicio disponible, pero puede haber interrupciones, mantenimientos o cambios.
-No garantizamos disponibilidad ininterrumpida.
+El usuario será responsable de toda actividad realizada desde su cuenta.
 
-## 7. Responsabilidad
+## 5. Servicios ofrecidos
 
-- En la medida permitida por la legislación argentina vigente, Saque no es
-  responsable por los acuerdos, pagos, conductas o daños que surjan **entre
-  profesores y alumnos**, por ser ajena a esa relación.
-- Nada en estos Términos limita los derechos que la Ley 24.240 de Defensa del
-  Consumidor reconoce a los usuarios. Las cláusulas que resulten abusivas se
-  tendrán por no escritas.
+Saque permite, entre otras funcionalidades:
 
-## 8. Suspensión y baja de cuentas
+- Gestión de alumnos.
+- Gestión de clases y turnos.
+- Registro de asistencia.
+- Organización de grupos.
+- Gestión administrativa de cobranzas.
+- Comunicación entre profesores y alumnos.
 
-Podemos suspender o dar de baja cuentas que incumplan estos Términos, que sean
-denunciadas por fraude o suplantación, o que pongan en riesgo a otros usuarios.
-También podés solicitar la baja de tu cuenta cuando quieras escribiendo a
-[correo de contacto].
+Las funcionalidades podrán modificarse, ampliarse o discontinuarse en cualquier
+momento.
 
-## 9. Cambios en los Términos
+## 6. Relación entre profesores y alumnos
 
-Podemos actualizar estos Términos. Si los cambios son relevantes, lo
-informaremos dentro de la app o por correo. El uso continuado implica la
-aceptación de la versión vigente.
+Saque no es una academia, club deportivo ni institución educativa. Saque no
+contrata profesores ni organiza actividades deportivas. La plataforma únicamente
+facilita herramientas de gestión. Por lo tanto:
 
-## 10. Ley aplicable y jurisdicción
+- No garantiza la identidad, experiencia, formación o idoneidad de los profesores.
+- No garantiza la conducta de profesores o alumnos.
+- No participa en la contratación de servicios deportivos.
+- No interviene en la fijación de precios.
+- No interviene en la ejecución de las clases.
+- No actúa como representante de ninguna de las partes.
 
-Estos Términos se rigen por las leyes de la República Argentina. Para las
-relaciones de consumo, será competente el tribunal correspondiente al domicilio
-del consumidor, conforme a la normativa de defensa del consumidor.
+Toda relación contractual, económica o personal entre profesores y alumnos es
+exclusiva responsabilidad de dichas partes.
 
-## 11. Contacto
+## 7. Pagos y cobranzas
 
-Responsable: [Nombre o razón social] — [CUIT, si corresponde]
-Correo de contacto: [correo de contacto]
+Saque no procesa pagos ni actúa como intermediario financiero, salvo que
+expresamente se informe lo contrario en futuras versiones. Los importes,
+condiciones de pago, descuentos, reembolsos y cualquier cuestión económica son
+acordados directamente entre profesores y alumnos. Saque no será responsable por:
+
+- Incumplimientos de pago.
+- Reclamos económicos.
+- Cancelaciones de clases.
+- Reembolsos.
+- Deudas entre usuarios.
+
+## 8. Uso permitido
+
+El usuario se compromete a utilizar la plataforma de manera lícita y de buena fe.
+Queda prohibido:
+
+- Suplantar identidades.
+- Utilizar información falsa.
+- Publicar contenido ilícito.
+- Realizar actividades fraudulentas.
+- Vulnerar medidas de seguridad.
+- Intentar acceder a información de terceros.
+- Utilizar la plataforma para enviar spam o comunicaciones no solicitadas.
+
+## 9. Datos personales
+
+El tratamiento de datos personales se realiza conforme a la legislación argentina
+vigente y a la Política de Privacidad de Saque. Los usuarios declaran contar con
+las autorizaciones necesarias para incorporar a la plataforma los datos de
+terceros que registren, incluyendo alumnos y contactos.
+
+## 10. Propiedad intelectual
+
+La aplicación, su diseño, código fuente, funcionalidades, marcas, logotipos y
+contenidos son propiedad de Saque o de sus respectivos titulares. El uso de la
+plataforma no concede derechos de propiedad intelectual al usuario. Queda
+prohibida la reproducción, distribución o explotación no autorizada de cualquier
+componente de la aplicación.
+
+## 11. Disponibilidad del servicio
+
+Saque realizará esfuerzos razonables para mantener la disponibilidad del servicio.
+Sin embargo, no garantiza:
+
+- Disponibilidad permanente.
+- Funcionamiento ininterrumpido.
+- Ausencia de errores.
+- Compatibilidad con todos los dispositivos.
+
+Podrán producirse interrupciones por mantenimiento, actualizaciones o causas
+ajenas a nuestro control.
+
+## 12. Limitación de responsabilidad
+
+En la máxima medida permitida por la legislación aplicable, Saque no será
+responsable por daños directos o indirectos derivados de:
+
+- La utilización de la aplicación.
+- La imposibilidad de utilizarla.
+- Errores en la información cargada por usuarios.
+- Conductas de profesores o alumnos.
+- Acuerdos celebrados entre usuarios.
+- Pérdida de información ocasionada por causas ajenas al control razonable de la
+  plataforma.
+
+Nada de lo dispuesto en estos Términos limita o excluye derechos reconocidos por
+normas de orden público, incluida la Ley N.º 24.240 de Defensa del Consumidor.
+
+## 13. Suspensión y cancelación de cuentas
+
+Saque podrá suspender, restringir o cancelar cuentas cuando detecte:
+
+- Incumplimientos de estos Términos.
+- Actividades fraudulentas.
+- Riesgos de seguridad.
+- Uso abusivo de la plataforma.
+
+Asimismo, cualquier usuario podrá solicitar la eliminación de su cuenta mediante
+los canales de contacto habilitados.
+
+## 14. Modificaciones
+
+Saque podrá modificar estos Términos y Condiciones en cualquier momento. Las
+modificaciones entrarán en vigencia desde su publicación dentro de la aplicación
+o desde su notificación al usuario. La continuidad en el uso de la plataforma
+implicará la aceptación de los nuevos términos.
+
+## 15. Legislación aplicable y jurisdicción
+
+Estos Términos se regirán por las leyes de la República Argentina. Cuando resulte
+aplicable una relación de consumo, serán competentes los tribunales
+correspondientes al domicilio del consumidor, conforme la normativa vigente.
+
+## 16. Contacto
+
+Para consultas relacionadas con estos Términos y Condiciones:
+emilio.watemberg@gmail.com
+
+## 17. Política de Privacidad
+
+El uso de la aplicación se encuentra sujeto también a la Política de Privacidad de
+Saque, la cual forma parte integrante de estos Términos y Condiciones.
