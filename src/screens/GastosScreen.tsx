@@ -47,7 +47,12 @@ export function GastosScreen() {
   const [aBorrar, setABorrar] = useState<Gasto | null>(null)
 
   const reload = useCallback(() => {
-    getGastos().then(setGastos)
+    getGastos()
+      .then(setGastos)
+      .catch(() => {
+        setGastos([])
+        toast('No se pudieron cargar los gastos. Intentá de nuevo.', 'error')
+      })
   }, [])
   useEffect(() => {
     reload()

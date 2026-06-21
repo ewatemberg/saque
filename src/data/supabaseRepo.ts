@@ -659,7 +659,8 @@ export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
     ])
   if (e1) throw e1
   if (e2) throw e2
-  if (e3) throw e3
+  // gastos es opcional: si la tabla no existe todavía, no rompe el histórico.
+  void e3
 
   const cobradoPorMes = new Map<string, number>()
   for (const c of cuotas ?? []) {
@@ -703,7 +704,8 @@ export async function getBalance(): Promise<ResumenBalance> {
     ])
   if (e1) throw e1
   if (e2) throw e2
-  if (e3) throw e3
+  // gastos es opcional: si la tabla no existe todavía, no rompe el balance.
+  void e3
 
   const activos = (turnos ?? []).filter((t) => t.estado !== 'suspendido')
   const ingresoBruto = (cuotas ?? []).reduce((s, c) => s + (c.monto_pagado as number), 0)
