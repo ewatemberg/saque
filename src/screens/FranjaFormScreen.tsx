@@ -90,8 +90,18 @@ export function FranjaFormScreen() {
     if (c) setCosto(String(c.costoPorHora))
   }
 
+  const cuposNum = Number(cupos) || 0
+
   const toggleAlumno = (aid: string) => {
-    setAlumnoIds((prev) => (prev.includes(aid) ? prev.filter((x) => x !== aid) : [...prev, aid]))
+    if (alumnoIds.includes(aid)) {
+      setAlumnoIds((prev) => prev.filter((x) => x !== aid))
+      return
+    }
+    if (alumnoIds.length >= cuposNum) {
+      toast(`La franja tiene ${cuposNum} cupos. Quitá un alumno o subí los cupos.`, 'error')
+      return
+    }
+    setAlumnoIds((prev) => [...prev, aid])
   }
 
   const q = normalizar(buscaAlumno)
@@ -110,6 +120,10 @@ export function FranjaFormScreen() {
   const guardar = async () => {
     const cancha = canchas.find((x) => x.id === canchaId)
     if (!hora.trim() || !cancha) return
+    if (alumnoIds.length > cuposNum) {
+      toast(`Tenés ${alumnoIds.length} alumnos fijos pero solo ${cuposNum} cupos. Ajustá los cupos o quitá alumnos.`, 'error')
+      return
+    }
     setGuardando(true)
     const data = {
       diaSemana,
@@ -259,7 +273,9 @@ export function FranjaFormScreen() {
 
           <div className="field-label">
             Alumnos fijos del turno
-            {alumnoIds.length > 0 && <span className="card-meta"> · {alumnoIds.length} seleccionado{alumnoIds.length === 1 ? '' : 's'}</span>}
+            <span className="card-meta" style={alumnoIds.length >= cuposNum && cuposNum > 0 ? { color: 'var(--danger)' } : undefined}>
+              {' '}· {alumnoIds.length}/{cuposNum} cupos
+            </span>
           </div>
           {alumnos.length === 0 && <p className="card-meta">Todavía no hay alumnos para asignar.</p>}
 
@@ -281,12 +297,25 @@ export function FranjaFormScreen() {
           {alumnos.length > 0 && alumnosFiltrados.length === 0 && (
             <p className="card-meta">Ningún alumno coincide con “{buscaAlumno}”.</p>
           )}
-          {alumnosFiltrados.map((a) => (
-            <label key={a.id} className="login-acepto" style={{ margin: '4px 0' }}>
-              <input type="checkbox" checked={alumnoIds.includes(a.id)} onChange={() => toggleAlumno(a.id)} />
-              <span>{a.nombre} <span className="card-meta">· {a.categoria}</span></span>
-            </label>
-          ))}
+          {alumnosFiltrados.map((a) => {
+            const elegido = alumnoIds.includes(a.id)
+            const lleno = !elegido && alumnoIds.length >= cuposNum
+            return (
+              <label
+                key={a.id}
+                className="login-acepto"
+                style={{ margin: '4px 0', opacity: lleno ? 0.45 : 1 }}
+              >
+                <input
+                  type="checkbox"
+                  checked={elegido}
+                  disabled={lleno}
+                  onChange={() => toggleAlumno(a.id)}
+                />
+                <span>{a.nombre} <span className="card-meta">· {a.categoria}</span></span>
+              </label>
+            )
+          })}
 
           <button className="btn btn-accent btn-block" style={{ marginTop: 16 }} onClick={guardar} disabled={guardando || !hora.trim()}>
             <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Guardar franja'}
