@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { ConfirmDialog } from '../components/ConfirmDialog'
+import { HoraInput } from '../components/HoraInput'
 import { Icon } from '../components/Icon'
 import {
   actualizarFranja,
@@ -233,7 +234,7 @@ export function FranjaFormScreen() {
             </div>
             <div style={{ flex: 1 }}>
               <label className="field-label" htmlFor="hora">Hora</label>
-              <input id="hora" className="input" type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
+              <HoraInput id="hora" value={hora} onChange={setHora} />
             </div>
           </div>
 

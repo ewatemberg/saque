@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
+import { HoraInput } from '../components/HoraInput'
 import { Icon } from '../components/Icon'
 import { actualizarTurno, crearTurno, getCanchas, getTurno } from '../data/repo'
 import { useDeporte } from '../lib/auth'
@@ -188,7 +189,7 @@ export function TurnoFormScreen() {
             </div>
             <div style={{ flex: 1 }}>
               <label className="field-label" htmlFor="hora">Hora</label>
-              <input id="hora" className="input" type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
+              <HoraInput id="hora" value={hora} onChange={setHora} />
             </div>
           </div>
 

@@ -47,6 +47,7 @@
 - [x] Diálogo de confirmación propio (ConfirmDialog) para eliminar profe, en vez del window.confirm del navegador
 - [x] Eliminar alumno con el mismo ConfirmDialog (+ toast de éxito y manejo de error que faltaban)
 - [x] Todos los confirm() del navegador reemplazados por el ConfirmDialog propio (dar de baja, eliminar turno/franja, generar turnos + sobrescribir, "crear cancha igual")
+- [x] Selector de hora propio (hora+minutos) en vez del input type=time, que abría un diálogo de reloj nativo que se cortaba en algunos Android
 - [x] Validar que el roster de la franja no supere los cupos (deshabilita extras + aviso al guardar)
 - [x] Desactivar/reactivar alumno (soft-delete): conserva historial, sale de listas/cuotas/selectores; filtro de inactivos; métricas separan activos/inactivos. Eliminar queda como acción secundaria
 - [x] Anti-bot en el signup: widget de CAPTCHA (Cloudflare Turnstile) en el login, se activa con VITE_TURNSTILE_SITE_KEY (falta que el admin habilite Captcha en Supabase + cargue keys)

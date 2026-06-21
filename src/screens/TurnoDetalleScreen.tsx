@@ -2,6 +2,7 @@ import { type CSSProperties, useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Cargando } from '../components/Cargando'
 import { ConfirmDialog } from '../components/ConfirmDialog'
+import { HoraInput } from '../components/HoraInput'
 import { Icon } from '../components/Icon'
 import {
   anotarAlumno,
@@ -141,22 +142,17 @@ export function TurnoDetalleScreen() {
             </button>
           ) : (
             <>
-              <div className="row-sub" style={{ marginBottom: 6 }}>Nueva fecha y hora</div>
-              <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-                <input
-                  type="date"
-                  aria-label="Fecha del recupero"
-                  value={nuevaFecha}
-                  onChange={(e) => setNuevaFecha(e.target.value)}
-                  style={inputRecupero}
-                />
-                <input
-                  type="time"
-                  aria-label="Hora del recupero"
-                  value={nuevaHora}
-                  onChange={(e) => setNuevaHora(e.target.value)}
-                  style={inputRecupero}
-                />
+              <div className="row-sub" style={{ marginBottom: 6 }}>Nueva fecha</div>
+              <input
+                type="date"
+                aria-label="Fecha del recupero"
+                value={nuevaFecha}
+                onChange={(e) => setNuevaFecha(e.target.value)}
+                style={{ ...inputRecupero, marginBottom: 8 }}
+              />
+              <div className="row-sub" style={{ marginBottom: 6 }}>Nueva hora</div>
+              <div style={{ marginBottom: 10 }}>
+                <HoraInput value={nuevaHora} onChange={setNuevaHora} />
               </div>
               <button className="btn btn-accent btn-block" onClick={confirmarRecupero}>
                 <Icon name="check" size={16} /> Confirmar recupero
