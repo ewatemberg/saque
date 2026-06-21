@@ -5,6 +5,7 @@ import type {
   Deporte,
   EstadoCobranza,
   Franja,
+  Gasto,
   HistoricoMes,
   ItemCobranza,
   MetodoPago,
@@ -186,12 +187,20 @@ export function calcularResumenHoy(lista: Turno[]) {
   return { turnos: lista.length, alumnos: alumnosHoy, netoDia: ingreso - costo }
 }
 
-const balanceMes: ResumenBalance = {
+const balanceBase = {
   ingresoBruto: 240000,
   costoCanchas: 96000,
-  gananciaNeta: 144000,
   ocupacionPct: 78,
   netoPorHora: 9000,
+}
+
+let gastos: Gasto[] = [
+  { id: 'g1', concepto: 'Pelotas', cantidad: 4, monto: 18000, fecha: `${fechaISO(new Date()).slice(0, 8)}05` },
+  { id: 'g2', concepto: 'Grips', cantidad: 6, monto: 9000, fecha: `${fechaISO(new Date()).slice(0, 8)}12` },
+]
+
+function gastosDelPeriodo(periodo: string): number {
+  return gastos.filter((g) => g.fecha.slice(0, 7) === periodo).reduce((s, g) => s + g.monto, 0)
 }
 
 function clonar(t: Turno): Turno {
@@ -417,7 +426,14 @@ export async function generarAbonosDelMes(montoDefault: number): Promise<number>
 }
 
 export async function getBalance(): Promise<ResumenBalance> {
-  return balanceMes
+  const now = new Date()
+  const periodo = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  const g = gastosDelPeriodo(periodo)
+  return {
+    ...balanceBase,
+    gastos: g,
+    gananciaNeta: balanceBase.ingresoBruto - balanceBase.costoCanchas - g,
+  }
 }
 
 export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
@@ -427,10 +443,26 @@ export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
   for (let i = meses - 1; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
     const periodo = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-    const neto = ejemploNeto[(meses - 1 - i) % ejemploNeto.length]
-    res.push({ periodo, etiqueta: MESES[d.getMonth()].slice(0, 3), cobrado: neto + 96000, costo: 96000, neto })
+    const base = ejemploNeto[(meses - 1 - i) % ejemploNeto.length]
+    const neto = base - gastosDelPeriodo(periodo)
+    res.push({ periodo, etiqueta: MESES[d.getMonth()].slice(0, 3), cobrado: base + 96000, costo: 96000, neto })
   }
   return res
+}
+
+export async function getGastos(): Promise<Gasto[]> {
+  return gastos
+    .slice()
+    .sort((a, b) => b.fecha.localeCompare(a.fecha))
+    .map((g) => ({ ...g }))
+}
+
+export async function crearGasto(data: Omit<Gasto, 'id'>): Promise<void> {
+  gastos.push({ id: `g_${gastos.length + 1}_${Math.random().toString(36).slice(2, 7)}`, ...data })
+}
+
+export async function eliminarGasto(id: string): Promise<void> {
+  gastos = gastos.filter((g) => g.id !== id)
 }
 
 export async function getConteos(deporte?: Deporte): Promise<{ canchas: number; alumnos: number; franjas: number }> {

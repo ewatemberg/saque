@@ -33,7 +33,7 @@ export function BalanceScreen() {
           <div className="card" style={{ textAlign: 'center', padding: '20px 14px' }}>
             <div style={{ fontSize: 13, color: 'var(--text-2)' }}>Ganancia neta del mes</div>
             <div style={{ fontSize: 34, fontWeight: 500, marginTop: 4 }}>{formatPesos(balance.gananciaNeta)}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 4 }}>ingreso bruto − alquiler de canchas</div>
+            <div style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 4 }}>ingreso bruto − alquiler de canchas − gastos</div>
           </div>
 
           <div className="metrics" style={{ marginTop: 4 }}>
@@ -48,6 +48,16 @@ export function BalanceScreen() {
             <div className="metric">
               <div className="label">$ real / hora</div>
               <div className="value">{formatPesos(balance.netoPorHora)}</div>
+            </div>
+          </div>
+
+          <div className="card clickable" style={{ marginTop: 4 }} onClick={() => navigate('/gastos')}>
+            <div className="card-top">
+              <div>
+                <div className="row-name" style={{ color: 'var(--danger)' }}>{formatPesos(balance.gastos)} en gastos</div>
+                <div className="card-meta">Insumos del mes (pelotas, grips…)</div>
+              </div>
+              <Icon name="chevron-right" size={18} />
             </div>
           </div>
 

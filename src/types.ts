@@ -130,9 +130,18 @@ export interface MetricasAdmin {
   porProfe: ProfeMetrica[]
 }
 
+export interface Gasto {
+  id: string
+  concepto: string
+  cantidad: number | null
+  monto: number
+  fecha: string
+}
+
 export interface ResumenBalance {
   ingresoBruto: number
   costoCanchas: number
+  gastos: number
   gananciaNeta: number
   ocupacionPct: number
   netoPorHora: number

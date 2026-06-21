@@ -5,6 +5,7 @@ import type {
   Categoria,
   Deporte,
   Franja,
+  Gasto,
   HistoricoMes,
   EstadoCobranza,
   EstadoTurno,
@@ -650,12 +651,15 @@ export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
   const desde = `${inicio.getFullYear()}-${String(inicio.getMonth() + 1).padStart(2, '0')}-01`
   const periodoDesde = desde.slice(0, 7)
 
-  const [{ data: cuotas, error: e1 }, { data: turnos, error: e2 }] = await Promise.all([
-    db().from('cuotas').select('periodo,monto_pagado').gte('periodo', periodoDesde),
-    db().from('turnos').select('fecha,costo_cancha,estado').gte('fecha', desde),
-  ])
+  const [{ data: cuotas, error: e1 }, { data: turnos, error: e2 }, { data: gastosRows, error: e3 }] =
+    await Promise.all([
+      db().from('cuotas').select('periodo,monto_pagado').gte('periodo', periodoDesde),
+      db().from('turnos').select('fecha,costo_cancha,estado').gte('fecha', desde),
+      db().from('gastos').select('fecha,monto').gte('fecha', desde),
+    ])
   if (e1) throw e1
   if (e2) throw e2
+  if (e3) throw e3
 
   const cobradoPorMes = new Map<string, number>()
   for (const c of cuotas ?? []) {
@@ -667,13 +671,18 @@ export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
     const per = (t.fecha as string).slice(0, 7)
     costoPorMes.set(per, (costoPorMes.get(per) ?? 0) + (t.costo_cancha as number))
   }
+  const gastosPorMes = new Map<string, number>()
+  for (const g of gastosRows ?? []) {
+    const per = (g.fecha as string).slice(0, 7)
+    gastosPorMes.set(per, (gastosPorMes.get(per) ?? 0) + (g.monto as number))
+  }
 
   const res: HistoricoMes[] = []
   for (let i = meses - 1; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
     const periodo = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     const cobrado = cobradoPorMes.get(periodo) ?? 0
-    const costo = costoPorMes.get(periodo) ?? 0
+    const costo = (costoPorMes.get(periodo) ?? 0) + (gastosPorMes.get(periodo) ?? 0)
     res.push({ periodo, etiqueta: MESES_CORTOS[d.getMonth()], cobrado, costo, neto: cobrado - costo })
   }
   return res
@@ -682,20 +691,24 @@ export async function getHistorico(meses = 6): Promise<HistoricoMes[]> {
 export async function getBalance(): Promise<ResumenBalance> {
   const { desde, hasta } = rangoMes()
 
-  const [{ data: turnos, error: e1 }, { data: cuotas, error: e2 }] = await Promise.all([
-    db()
-      .from('turnos')
-      .select('precio,cupos,duracion_min,estado,costo_cancha,inscripciones(id)')
-      .gte('fecha', desde)
-      .lte('fecha', hasta),
-    db().from('cuotas').select('monto_pagado').eq('periodo', periodoActual()),
-  ])
+  const [{ data: turnos, error: e1 }, { data: cuotas, error: e2 }, { data: gastosMes, error: e3 }] =
+    await Promise.all([
+      db()
+        .from('turnos')
+        .select('precio,cupos,duracion_min,estado,costo_cancha,inscripciones(id)')
+        .gte('fecha', desde)
+        .lte('fecha', hasta),
+      db().from('cuotas').select('monto_pagado').eq('periodo', periodoActual()),
+      db().from('gastos').select('monto').gte('fecha', desde).lte('fecha', hasta),
+    ])
   if (e1) throw e1
   if (e2) throw e2
+  if (e3) throw e3
 
   const activos = (turnos ?? []).filter((t) => t.estado !== 'suspendido')
   const ingresoBruto = (cuotas ?? []).reduce((s, c) => s + (c.monto_pagado as number), 0)
   const costoCanchas = activos.reduce((s, t) => s + (t.costo_cancha as number), 0)
+  const gastos = (gastosMes ?? []).reduce((s, g) => s + (g.monto as number), 0)
   const horas = activos.reduce((s, t) => s + (t.duracion_min as number), 0) / 60
 
   let ocupacionAcum = 0
@@ -705,13 +718,43 @@ export async function getBalance(): Promise<ResumenBalance> {
     ocupacionAcum += inscriptos / cupos
   }
   const ocupacionPct = activos.length ? Math.round((ocupacionAcum / activos.length) * 100) : 0
-  const gananciaNeta = ingresoBruto - costoCanchas
+  const gananciaNeta = ingresoBruto - costoCanchas - gastos
 
   return {
     ingresoBruto,
     costoCanchas,
+    gastos,
     gananciaNeta,
     ocupacionPct,
     netoPorHora: horas ? Math.round(gananciaNeta / horas) : 0,
   }
+}
+
+export async function getGastos(): Promise<Gasto[]> {
+  const { data, error } = await db().from('gastos').select('*').order('fecha', { ascending: false })
+  if (error) throw error
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    concepto: r.concepto,
+    cantidad: (r.cantidad as number | null) ?? null,
+    monto: r.monto,
+    fecha: r.fecha,
+  }))
+}
+
+export async function crearGasto(data: Omit<Gasto, 'id'>): Promise<void> {
+  const { data: userData } = await db().auth.getUser()
+  const { error } = await db().from('gastos').insert({
+    profe_id: userData.user?.id ?? null,
+    concepto: data.concepto,
+    cantidad: data.cantidad,
+    monto: data.monto,
+    fecha: data.fecha,
+  })
+  if (error) throw error
+}
+
+export async function eliminarGasto(id: string): Promise<void> {
+  const { error } = await db().from('gastos').delete().eq('id', id)
+  if (error) throw error
 }
