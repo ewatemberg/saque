@@ -65,11 +65,14 @@
 - [x] Generar los abonos del mes con un botón (cuota mensual por alumno fijo)
 - [x] Franjas recurrentes (plantilla con roster + generar turnos del mes con manejo de choques)
 - [x] Setup de build Android (Capacitor como WebView del sitio + íconos)
+- [x] Publicación en Play Store (cuenta dev, AAB firmado, ficha, prueba interna/cerrada) — en prueba cerrada
+- [x] En la app nativa, priorizar "Entrar con Google" + nota (el link mágico por email no vuelve al WebView)
 - [x] Deploy de la web en Vercel (saque.vercel.app) con auto-deploy en cada push
 - [x] Página pública "Mi página": el profe carga nombre/WhatsApp y comparte el link
 - [x] Avisos por WhatsApp: lugar libre, recordatorio de cobro y recupero de turno
 - [ ] Importar contacto en la app nativa de iOS (en Android y web ya funciona)
 - [ ] Aviso de cambio de precio por WhatsApp
+- [ ] Deep link / Android App Links para que el login por email funcione dentro de la app nativa
 - [ ] Pruebas con el primer profe (testeo real)
 
 ## Fase 2 — Mejoras

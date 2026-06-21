@@ -4,7 +4,10 @@ import { Captcha, captchaActivo } from '../components/Captcha'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
 import { signInEmail, signInGoogle } from '../lib/auth'
+import { esAppNativa } from '../lib/plataforma'
 import { APP_VERSION } from '../version'
+
+const esApp = esAppNativa()
 
 export function LoginScreen() {
   const [email, setEmail] = useState('')
@@ -91,25 +94,47 @@ export function LoginScreen() {
               </p>
             )}
 
-            <form onSubmit={enviarLink}>
-              <input
-                type="email"
-                placeholder="tu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <Captcha onToken={setCaptchaToken} />
-              <button className="btn btn-accent btn-block" type="submit" disabled={cargando}>
-                {cargando ? 'Enviando…' : 'Entrar con email'}
-              </button>
-            </form>
+            {esApp && (
+              <p className="login-sub" style={{ marginTop: 0, marginBottom: 12, fontSize: 12.5 }}>
+                En la app entrá con <strong>Google</strong>. El acceso por email funciona desde el navegador.
+              </p>
+            )}
 
-            <div className="login-divider">o</div>
-
-            <button className="btn btn-block" onClick={entrarGoogle}>
-              <Icon name="user" size={16} /> Entrar con Google
-            </button>
+            {(() => {
+              const formEmail = (
+                <form onSubmit={enviarLink}>
+                  <input
+                    type="email"
+                    placeholder="tu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <Captcha onToken={setCaptchaToken} />
+                  <button className={`btn btn-block${esApp ? '' : ' btn-accent'}`} type="submit" disabled={cargando}>
+                    {cargando ? 'Enviando…' : 'Entrar con email'}
+                  </button>
+                </form>
+              )
+              const botonGoogle = (
+                <button className={`btn btn-block${esApp ? ' btn-accent' : ''}`} onClick={entrarGoogle}>
+                  <Icon name="user" size={16} /> Entrar con Google
+                </button>
+              )
+              return esApp ? (
+                <>
+                  {botonGoogle}
+                  <div className="login-divider">o</div>
+                  {formEmail}
+                </>
+              ) : (
+                <>
+                  {formEmail}
+                  <div className="login-divider">o</div>
+                  {botonGoogle}
+                </>
+              )
+            })()}
 
             {error && <p className="login-error">{error}</p>}
           </>
