@@ -1,7 +1,7 @@
 {
   "name": "saque",
   "private": true,
-  "version": "0.50.1",
+  "version": "0.51.0",
   "type": "module",
   "description": "Gestion de clases para profes de padel y tenis",
   "scripts": {
@@ -15,6 +15,8 @@
     "icons": "capacitor-assets generate --android"
   },
   "dependencies": {
+    "@capacitor/app": "^6.0.3",
+    "@capacitor/browser": "^6.0.6",
     "@capacitor/core": "^6.1.2",
     "@supabase/supabase-js": "^2.45.4",
     "react": "^18.3.1",

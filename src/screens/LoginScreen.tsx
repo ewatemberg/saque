@@ -94,12 +94,6 @@ export function LoginScreen() {
               </p>
             )}
 
-            {esApp && (
-              <p className="login-sub" style={{ marginTop: 0, marginBottom: 12, fontSize: 12.5 }}>
-                En la app entrá con <strong>Google</strong>. El acceso por email funciona desde el navegador.
-              </p>
-            )}
-
             {(() => {
               const formEmail = (
                 <form onSubmit={enviarLink}>

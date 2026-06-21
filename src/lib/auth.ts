@@ -1,7 +1,14 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
+import { App as CapApp } from '@capacitor/app'
+import { Browser } from '@capacitor/browser'
 import { supabase } from './supabase'
+import { esAppNativa } from './plataforma'
 import type { Deporte } from '../types'
+
+// Deep link al que Google (y el link mágico) redirigen para volver a la app
+// nativa. El intent-filter del scheme `app.saque` está en AndroidManifest.xml.
+const DEEP_LINK = 'app.saque://login'
 
 // Contexto de sesión: lo provee App una vez resuelta la sesión, así cualquier
 // pantalla lee el deporte de forma SÍNCRONA (sin la condición de carrera de
@@ -39,21 +46,65 @@ export function useSession(): { session: Session | null; loading: boolean } {
 /** Envia un link magico al email (sin contrasena). captchaToken si el CAPTCHA está activo. */
 export async function signInEmail(email: string, captchaToken?: string): Promise<void> {
   if (!supabase) return
+  const emailRedirectTo = esAppNativa() ? DEEP_LINK : window.location.origin
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: window.location.origin, captchaToken },
+    options: { emailRedirectTo, captchaToken },
   })
   if (error) throw error
 }
 
-/** Inicia sesion con Google (redirige y vuelve a la app). */
+/**
+ * Inicia sesion con Google.
+ * - Web: redirige en la misma pestaña y vuelve al origen.
+ * - App nativa: abre el selector de cuenta en un Custom Tab y vuelve por el
+ *   deep link `app.saque://login`, que captura registrarDeepLinks() para canjear
+ *   el código. Así la sesión queda en la WebView (persiste, no pide login cada vez).
+ */
 export async function signInGoogle(): Promise<void> {
   if (!supabase) return
+  if (esAppNativa()) {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: DEEP_LINK, skipBrowserRedirect: true },
+    })
+    if (error) throw error
+    if (data?.url) await Browser.open({ url: data.url })
+    return
+  }
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin },
   })
   if (error) throw error
+}
+
+/**
+ * Registra el listener de deep links de la app nativa. Cuando Google (o el link
+ * mágico) vuelve por `app.saque://login?code=...`, canjea el código por sesión y
+ * cierra el Custom Tab. Devuelve una función para desuscribir. No hace nada en web.
+ */
+export function registrarDeepLinks(): () => void {
+  if (!supabase || !esAppNativa()) return () => {}
+  const handle = CapApp.addListener('appUrlOpen', async ({ url }) => {
+    if (!url || !url.startsWith('app.saque://')) return
+    try {
+      const query = url.split('?')[1] ?? ''
+      const code = new URLSearchParams(query).get('code')
+      if (code) await supabase!.auth.exchangeCodeForSession(code)
+    } catch {
+      // Si falla el canje, el usuario sigue en el login y puede reintentar.
+    } finally {
+      try {
+        await Browser.close()
+      } catch {
+        // En algunos navegadores no hay nada que cerrar; se ignora.
+      }
+    }
+  })
+  return () => {
+    void handle.then((h) => h.remove())
+  }
 }
 
 export async function signOut(): Promise<void> {

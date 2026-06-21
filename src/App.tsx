@@ -4,7 +4,7 @@ import { aplicarTema } from './lib/tema'
 import { AppLayout } from './components/AppLayout'
 import { ToastHost } from './components/ToastHost'
 import { Cargando } from './components/Cargando'
-import { deporteDeSesion, SesionContext, useSession } from './lib/auth'
+import { deporteDeSesion, registrarDeepLinks, SesionContext, useSession } from './lib/auth'
 import { usandoMock } from './lib/supabase'
 import { HoyScreen } from './screens/HoyScreen'
 import { SemanaScreen } from './screens/SemanaScreen'
@@ -55,6 +55,8 @@ function RequireAuth() {
 }
 
 export default function App() {
+  // Captura el redirect de Google/email por deep link en la app nativa (no-op en web).
+  useEffect(() => registrarDeepLinks(), [])
   return (
     <HashRouter>
       <Routes>
