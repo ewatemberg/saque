@@ -65,7 +65,9 @@ const PASOS: Paso[] = [
     cuerpo: (
       <>
         En <strong>Balance</strong> ves tu <strong>ganancia neta</strong> (lo cobrado menos el alquiler
-        de canchas), el dinero real por hora, cuánto te falta cobrar y cómo venís mes a mes.
+        de canchas y tus gastos), el dinero real por hora, cuánto te falta cobrar y cómo venís mes a mes.
+        Registrá tus compras de insumos (pelotas, grips) en <strong>Gastos</strong> para que el balance
+        sea real; también te muestra hace cuánto compraste por última vez.
       </>
     ),
     accion: { label: 'Ir a Balance', to: '/balance' },

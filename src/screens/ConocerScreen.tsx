@@ -8,7 +8,7 @@ const FEATURES: { key: DemoKey; icon: IconName; titulo: string; texto: string }[
   { key: 'agenda', icon: 'calendar', titulo: 'Tu día de un vistazo', texto: 'Todos tus turnos, con cupos y estado, apenas abrís la app.' },
   { key: 'franjas', icon: 'check', titulo: 'Turnos que se arman solos', texto: 'Cargás tu franja una vez (ej. martes 19hs) y generás los turnos de todo el mes.' },
   { key: 'cobranzas', icon: 'cash', titulo: 'Cobranzas sin vueltas', texto: 'Generás las cuotas del mes y marcás el pago con un solo toque. A los que deben, les recordás por WhatsApp.' },
-  { key: 'balance', icon: 'chart', titulo: 'Tu ganancia real', texto: 'Balance neto descontando el alquiler de la cancha, con la evolución mes a mes.' },
+  { key: 'balance', icon: 'chart', titulo: 'Tu ganancia real', texto: 'Balance neto descontando el alquiler de la cancha y tus gastos de insumos (pelotas, grips), con la evolución mes a mes.' },
   { key: 'alumnos', icon: 'users', titulo: 'Tus alumnos ordenados', texto: 'Categoría, contacto y asistencia, todo junto y a un toque de WhatsApp.' },
   { key: 'multi', icon: 'download', titulo: 'En el celu y la compu', texto: 'Instalala como app en el teléfono o usala desde el navegador. Gratis.' },
 ]
