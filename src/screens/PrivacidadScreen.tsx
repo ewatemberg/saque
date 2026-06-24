@@ -4,7 +4,7 @@ import { Icon } from '../components/Icon'
 export function PrivacidadScreen() {
   const navigate = useNavigate()
   return (
-    <div className="legal" style={{ maxWidth: 760, margin: '0 auto', padding: '16px' }}>
+    <div className="legal" style={{ maxWidth: 760, margin: '0 auto', padding: 'calc(16px + env(safe-area-inset-top)) 16px 16px' }}>
       <div className="screen-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <button className="icon-btn" aria-label="Volver" onClick={() => navigate(-1)}>

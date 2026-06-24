@@ -36,7 +36,8 @@ a {
   width: 100%;
   max-width: 760px;
   margin: 0 auto;
-  padding: 16px 16px 88px;
+  /* El top suma la safe-area para no quedar debajo de la barra de estado del SO (app nativa). */
+  padding: calc(16px + env(safe-area-inset-top)) 16px 88px;
 }
 
 .sidebar {
@@ -608,7 +609,7 @@ a {
 .landing {
   max-width: 820px;
   margin: 0 auto;
-  padding: 28px 18px 56px;
+  padding: calc(28px + env(safe-area-inset-top)) 18px 56px;
 }
 .landing-hero {
   text-align: center;
