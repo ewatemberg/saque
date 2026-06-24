@@ -120,7 +120,14 @@ export function FranjaFormScreen() {
 
   const guardar = async () => {
     const cancha = canchas.find((x) => x.id === canchaId)
-    if (!hora.trim() || !cancha) return
+    if (!cancha) {
+      toast('Elegí una cancha para la franja.', 'error')
+      return
+    }
+    if (!hora.trim()) {
+      toast('Elegí la hora de la franja.', 'error')
+      return
+    }
     if (alumnoIds.length > cuposNum) {
       toast(`Tenés ${alumnoIds.length} alumnos fijos pero solo ${cuposNum} cupos. Ajustá los cupos o quitá alumnos.`, 'error')
       return
@@ -318,7 +325,7 @@ export function FranjaFormScreen() {
             )
           })}
 
-          <button className="btn btn-accent btn-block" style={{ marginTop: 16 }} onClick={guardar} disabled={guardando || !hora.trim()}>
+          <button className="btn btn-accent btn-block" style={{ marginTop: 16 }} onClick={guardar} disabled={guardando}>
             <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Guardar franja'}
           </button>
 

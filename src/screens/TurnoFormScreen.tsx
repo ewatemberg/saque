@@ -90,7 +90,14 @@ export function TurnoFormScreen() {
 
   const guardar = async () => {
     const cancha = canchas.find((x) => x.id === canchaId)
-    if (!hora.trim() || !cancha) return
+    if (!cancha) {
+      toast('Elegí una cancha para el turno.', 'error')
+      return
+    }
+    if (!hora.trim()) {
+      toast('Elegí la hora del turno.', 'error')
+      return
+    }
     setGuardando(true)
     const data = {
       fecha,
@@ -228,7 +235,7 @@ export function TurnoFormScreen() {
             className="btn btn-accent btn-block"
             style={{ marginTop: 16 }}
             onClick={guardar}
-            disabled={guardando || !hora.trim()}
+            disabled={guardando}
           >
             <Icon name="check" size={16} /> {guardando ? 'Guardando…' : 'Guardar turno'}
           </button>
